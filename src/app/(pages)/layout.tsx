@@ -20,7 +20,7 @@ export default function MyPageLayout({
           <div className="fixed hidden md:block">
             <Navigation />
           </div>
-          <div className="w-full bg-[#FDF4EC] p-2 md:ml-64 md:p-6">
+          <div className="w-full bg-[#FDF4EC] md:ml-64 md:p-6">
             {children}
           </div>
           <div className="md:hidden">

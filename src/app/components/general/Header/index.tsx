@@ -17,8 +17,8 @@ export default function Header() {
     <div className="relative">
       <header className="fixed top-0 z-[11] flex w-full items-center justify-between bg-white p-3 text-xs text-gray-400 shadow-sm">
         <Image
-          src="/images/rogo.png"
-          alt="HPP HOPE ロゴ"
+          src="/score-graph.png"
+          alt="ScoreGraphロゴ"
           width={150}
           height={50}
           className="mr-4"
