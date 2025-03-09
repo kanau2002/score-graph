@@ -7,6 +7,7 @@ import {
   MessageCircleMore,
   ListFilter,
   BookmarkIcon,
+  ArrowRightToLine,
 } from "lucide-react";
 import {
   Line,
@@ -27,20 +28,23 @@ interface TestResult {
   year: string;
   teacherScore: number;
   studentScore: number;
+  memo: string;
 }
 
 interface TestResultCardProps {
-  userName: string;
   testResults: TestResult[];
   subject: string;
   referenceScoreTarget?: number;
   referenceScoreLowest?: number;
   description?: string;
-  profileInfo: { targetUniversity: string[]; comment: string };
+  profileInfo: {
+    userName: string;
+    targetUniversity: string[];
+    comment: string;
+  };
 }
 
 export default function TestResultCard({
-  userName,
   subject,
   testResults,
   referenceScoreTarget = 80,
@@ -113,7 +117,10 @@ export default function TestResultCard({
             className="rounded-full object-cover"
           />
         </div>
-        <div className="text-xs font-bold">{userName}</div>
+        <div className="text-xs flex">
+          <p className="font-bold">{profileInfo.userName}</p>
+          <p>　{subject}</p>
+        </div>
       </div>
 
       {/* グラフ部分 */}
@@ -197,7 +204,7 @@ export default function TestResultCard({
       {/* アクションボタン */}
       <div className="flex items-center px-2">
         <button
-          className="p-2 text-gray-500"
+          className="p-2"
           onClick={() => setShowProfileInfo(!showProfileInfo)}
           aria-expanded={showProfileInfo}
         >
@@ -208,7 +215,7 @@ export default function TestResultCard({
           />
         </button>
         <button
-          className="p-2 text-gray-500"
+          className="p-2"
           onClick={() => setShowFullDescription(!showFullDescription)}
           aria-expanded={showFullDescription}
         >
@@ -219,7 +226,7 @@ export default function TestResultCard({
           />
         </button>
         <button
-          className="p-2 text-gray-500"
+          className="p-2 "
           onClick={() => setShowTable(!showTable)}
           aria-expanded={showTable}
         >
@@ -229,7 +236,10 @@ export default function TestResultCard({
             }`}
           />
         </button>
-        <button className="p-2 ml-auto text-gray-500">
+        <button
+          onClick={() => alert("今後実装予定の機能です。")}
+          className="p-2 ml-auto"
+        >
           <BookmarkIcon className="w-6 h-6" />
         </button>
       </div>
@@ -299,24 +309,32 @@ export default function TestResultCard({
         }}
       >
         <div ref={tableRef}>
-          <table className="w-full border-collapse">
+          <table className="w-full border-collapse text-sm text-gray-600">
             <thead>
-              <tr className="text-gray-600 border-b">
-                <th className="px-4 py-3 text-left">
-                  解いた日 <span className="inline-block ml-1">↓</span>
-                </th>
-                <th className="px-4 py-3 text-left">年度</th>
-                <th className="px-4 py-3 text-left">点数</th>
-                <th className="w-10 px-4 py-3 text-center">✕</th>
+              <tr className="border-b border-gray-200">
+                <th className="p-2 w-12">解いた日</th>
+                <th className="p-2 w-12">点数</th>
+                <th className="p-2 w-12">年度</th>
+                <th className="p-2">メモ</th>
+                <th className="p-2 w-12">詳細</th>
               </tr>
             </thead>
             <tbody>
               {testResults.map((result: TestResult, index: number) => (
-                <tr key={index} className="border-b">
-                  <td className="px-4 py-3">{result.date}</td>
-                  <td className="px-4 py-3">{result.year}</td>
-                  <td className="px-4 py-3">{result.teacherScore}</td>
-                  <td className="px-4 py-3 text-center text-gray-400">✕</td>
+                <tr key={index} className="border-b border-gray-200">
+                  <td className="p-2 text-center">{result.date}</td>
+                  <td className="p-2 text-center font-bold">
+                    {result.teacherScore}
+                  </td>
+                  <td className="p-2 text-center">{result.year}</td>
+                  <td className="p-2 text-center truncate max-w-[150px]">
+                    {result.memo}
+                  </td>
+                  <td className="p-2 text-gray-400">
+                    <button onClick={() => alert("詳細ボタンが押されました")}>
+                      <ArrowRightToLine size={16} className="ml-2" />
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
