@@ -1,7 +1,9 @@
-import TestResultCard from "@/app/components/general/TestResultCard";
+//src/app/(pages)/profile/page.tsx
+import TestResultCard from "@/app/(pages)/profile/_components/TestResultCard";
 
 // テスト結果の型定義
 interface TestResult {
+  id: number;
   date: string;
   year: string;
   teacherScore: number;
@@ -13,6 +15,7 @@ export default function ProfilePage() {
   // テストデータ - 講師と生徒両方の点数を含む
   const testResults: TestResult[] = [
     {
+      id: 8,
       date: "2024/08/01",
       year: "2018",
       teacherScore: 80,
@@ -20,6 +23,7 @@ export default function ProfilePage() {
       memo: "この日は調子が悪かったのでしょうがなかった。",
     },
     {
+      id: 7,
       date: "2024/07/01",
       year: "2017",
       teacherScore: 70,
@@ -27,6 +31,7 @@ export default function ProfilePage() {
       memo: "この日は調子が悪かったのでしょうがなかった。",
     },
     {
+      id: 6,
       date: "2024/06/01",
       year: "2016",
       teacherScore: 85,
@@ -34,6 +39,7 @@ export default function ProfilePage() {
       memo: "この日は調子が悪かったのでしょうがなかった。",
     },
     {
+      id: 5,
       date: "2024/05/01",
       year: "2015",
       teacherScore: 90,
@@ -41,6 +47,7 @@ export default function ProfilePage() {
       memo: "この日は調子が悪かったのでしょうがなかった。",
     },
     {
+      id: 4,
       date: "2024/04/01",
       year: "2014",
       teacherScore: 80,
@@ -48,6 +55,7 @@ export default function ProfilePage() {
       memo: "この日は調子が悪かったのでしょうがなかった。",
     },
     {
+      id: 3,
       date: "2024/03/01",
       year: "2013",
       teacherScore: 60,
@@ -55,6 +63,7 @@ export default function ProfilePage() {
       memo: "この日は調子が悪かったのでしょうがなかった。",
     },
     {
+      id: 2,
       date: "2024/02/01",
       year: "2012",
       teacherScore: 40,
@@ -62,6 +71,7 @@ export default function ProfilePage() {
       memo: "この日は調子が悪かったのでしょうがなかった。",
     },
     {
+      id: 1,
       date: "2024/01/01",
       year: "2011",
       teacherScore: 10,

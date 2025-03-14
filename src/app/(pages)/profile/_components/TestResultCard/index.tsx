@@ -1,4 +1,4 @@
-// app/components/general/TestResultCard/index.tsx
+//src/app/(pages)/profile/_components/TestResultCard/index.tsx
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -21,9 +21,11 @@ import {
   ComposedChart,
 } from "recharts";
 import Image from "next/image";
+import Link from "next/link";
 
 // 型定義
 interface TestResult {
+  id: number;
   date: string;
   year: string;
   teacherScore: number;
@@ -165,7 +167,6 @@ export default function TestResultCard({
 
             <YAxis
               domain={[0, 100]}
-              label={{ value: "%", position: "insideLeft", angle: -90, dy: 10 }}
             />
 
             <Tooltip />
@@ -331,9 +332,9 @@ export default function TestResultCard({
                     {result.memo}
                   </td>
                   <td className="p-2 text-gray-400">
-                    <button onClick={() => alert("詳細ボタンが押されました")}>
+                    <Link href={`/profile/english?year=${result.year}`}>
                       <ArrowRightToLine size={16} className="ml-2" />
-                    </button>
+                    </Link>
                   </td>
                 </tr>
               ))}

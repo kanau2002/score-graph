@@ -1,11 +1,7 @@
-import { nextui } from "@nextui-org/react";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       colors: {
@@ -14,6 +10,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [nextui()], // NextUIプラグインを追加
+  plugins: [],
 };
 export default config;
