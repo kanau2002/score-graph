@@ -46,6 +46,13 @@ interface TestResultCardProps {
   };
 }
 
+export const displaySubjectName = (subject: string) => {
+  if (subject === "R") return "英語";
+  if (subject === "1A") return "数1A";
+  if (subject === "2B") return "数2B";
+  return "Not Exist subjectName";
+};
+
 export default function TestResultCard({
   subject,
   testResults,
@@ -121,7 +128,7 @@ export default function TestResultCard({
         </div>
         <div className="text-xs flex">
           <p className="font-bold">{profileInfo.userName}</p>
-          <p>　{subject}</p>
+          <p>　{displaySubjectName(subject)}</p>
         </div>
       </div>
 
@@ -165,9 +172,7 @@ export default function TestResultCard({
               }}
             />
 
-            <YAxis
-              domain={[0, 100]}
-            />
+            <YAxis domain={[0, 100]} />
 
             <Tooltip />
 
@@ -295,7 +300,7 @@ export default function TestResultCard({
       >
         <div ref={descriptionRef} className="px-4 pb-2">
           <p className="text-sm">
-            ＜{subject}＞<br />
+            ＜{displaySubjectName(subject)}＞<br />
             {description}
           </p>
         </div>
@@ -332,7 +337,7 @@ export default function TestResultCard({
                     {result.memo}
                   </td>
                   <td className="p-2 text-gray-400">
-                    <Link href={`/profile/english?year=${result.year}`}>
+                    <Link href={`/profile/${subject}?year=${result.year}`}>
                       <ArrowRightToLine size={16} className="ml-2" />
                     </Link>
                   </td>

@@ -1,13 +1,13 @@
 //src/app/(pages)/profile/english/2018/page.tsx
 import React from "react";
-import { profileService } from "@/app/services/profileService";
+import { profileService } from "@/core/profile/profileService";
 import TestResultClient from "../_components/TestResultClient";
 
 // 型定義
 export interface TestScore {
   questionNumber: number;
   score: number | null;
-  correctAnswer: number;
+  correctAnswer: number | null;
 }
 
 export interface TestSection {
@@ -19,7 +19,7 @@ export interface TestSection {
 }
 
 export interface TestData {
-  subjectName: string,
+  subject: string,
   year: number;
   maxScore: number;
   testStructure: TestSection[];
@@ -83,7 +83,7 @@ type Props = {
   searchParams: { year: string };
 };
 
-export default async function EnglishPage({ params, searchParams }: Props) {
+export default async function DetailDisplayPage({ params, searchParams }: Props) {
   const { subject } = params;
   const year = Number(searchParams.year);
   // サーバーコンポーネントでデータを取得

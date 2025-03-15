@@ -94,7 +94,7 @@ export default function ProfilePage() {
     <>
       <TestResultCard
         profileInfo={profileInfo}
-        subject="英語"
+        subject="R"
         testResults={testResults}
         referenceScoreTarget={84}
         referenceScoreLowest={70}
@@ -104,7 +104,7 @@ export default function ProfilePage() {
       />
       <TestResultCard
         profileInfo={profileInfo}
-        subject="数1A"
+        subject="1A"
         testResults={testResults}
         referenceScoreTarget={75}
         referenceScoreLowest={60}
@@ -112,7 +112,7 @@ export default function ProfilePage() {
       />
       <TestResultCard
         profileInfo={profileInfo}
-        subject="数2B"
+        subject="2B"
         testResults={testResults}
         referenceScoreTarget={75}
         referenceScoreLowest={60}
