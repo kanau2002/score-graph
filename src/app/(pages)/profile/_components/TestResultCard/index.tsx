@@ -23,43 +23,44 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-// 型定義
 interface TestResult {
   id: number;
   date: string;
   year: string;
-  teacherScore: number;
+  targetScore: number;
   studentScore: number;
   memo: string;
 }
+export interface ProfileData {
+  userName: string;
+  targetUniversity: string[];
+  memo: string;
+}
+export interface CardData {
+  subject: string;
+  finalScoreTarget: number;
+  finalScoreLowest: number;
+  memo: string;
+  testResults: TestResult[];
+}
 
 interface TestResultCardProps {
-  testResults: TestResult[];
-  subject: string;
-  referenceScoreTarget?: number;
-  referenceScoreLowest?: number;
-  description?: string;
-  profileInfo: {
-    userName: string;
-    targetUniversity: string[];
-    comment: string;
-  };
+  profileInfo: ProfileData;
+  cardData: CardData;
 }
 
 export const displaySubjectName = (subject: string) => {
-  if (subject === "R") return "英語";
-  if (subject === "1A") return "数1A";
-  if (subject === "2B") return "数2B";
+  if (subject === "Reading") return "英語";
+  if (subject === "Math1A") return "数1A";
+  if (subject === "Math2B") return "数2B";
+  if (subject === "Chemistry") return "化学";
+  if (subject === "Biorogy") return "生物";
   return "Not Exist subjectName";
 };
 
 export default function TestResultCard({
-  subject,
-  testResults,
-  referenceScoreTarget = 80,
-  referenceScoreLowest = 70,
-  description = "",
   profileInfo,
+  cardData,
 }: TestResultCardProps) {
   const [showTable, setShowTable] = useState(false);
   const [tableHeight, setTableHeight] = useState<number>(0);
@@ -77,7 +78,7 @@ export default function TestResultCard({
       const height = tableRef.current.scrollHeight;
       setTableHeight(showTable ? height : 0);
     }
-  }, [showTable, testResults]);
+  }, [showTable, cardData.subject]);
 
   // 説明文の高さを測定
   useEffect(() => {
@@ -85,7 +86,7 @@ export default function TestResultCard({
       const height = descriptionRef.current.scrollHeight;
       setDescriptionHeight(showFullDescription ? height : 0);
     }
-  }, [showFullDescription, description]);
+  }, [showFullDescription, cardData.memo]);
 
   // プロフィール情報の高さを測定
   useEffect(() => {
@@ -96,7 +97,7 @@ export default function TestResultCard({
   }, [showProfileInfo, profileInfo]);
 
   // グラフデータの作成
-  const chartData = testResults
+  const chartData = cardData.testResults
     .map((result: TestResult) => {
       const date = new Date(result.date);
       const month = date.getMonth() + 1; // JavaScriptの月は0から始まるため+1
@@ -104,7 +105,7 @@ export default function TestResultCard({
 
       return {
         month: `${year}/${month.toString().padStart(2, "0")}`,
-        teacherScore: result.teacherScore,
+        targetScore: result.targetScore,
         studentScore: result.studentScore,
       };
     })
@@ -128,7 +129,7 @@ export default function TestResultCard({
         </div>
         <div className="text-xs flex">
           <p className="font-bold">{profileInfo.userName}</p>
-          <p>　{displaySubjectName(subject)}</p>
+          <p>　{displaySubjectName(cardData.subject)}</p>
         </div>
       </div>
 
@@ -142,7 +143,7 @@ export default function TestResultCard({
             {/* 講師の点数（線グラフ） */}
             <Line
               type="monotone"
-              dataKey="teacherScore"
+              dataKey="targetScore"
               stroke="#6366F1"
               strokeWidth={2}
               dot={{ r: 4, fill: "#6366F1" }}
@@ -178,11 +179,11 @@ export default function TestResultCard({
 
             {/* 目標スコアのリファレンスライン */}
             <ReferenceLine
-              y={referenceScoreTarget}
+              y={cardData.finalScoreTarget}
               stroke="orange"
               strokeDasharray="3 3"
               label={{
-                value: `${referenceScoreTarget}点`,
+                value: `${cardData.finalScoreTarget}点`,
                 position: "insideRight",
                 fill: "orange",
                 fontSize: 12,
@@ -192,11 +193,11 @@ export default function TestResultCard({
 
             {/* 最低ラインのリファレンスライン */}
             <ReferenceLine
-              y={referenceScoreLowest}
+              y={cardData.finalScoreLowest}
               stroke="red"
               strokeDasharray="3 3"
               label={{
-                value: `${referenceScoreLowest}点`,
+                value: `${cardData.finalScoreLowest}点`,
                 position: "insideRight",
                 fill: "red",
                 fontSize: 12,
@@ -266,7 +267,7 @@ export default function TestResultCard({
             <br />・{profileInfo.targetUniversity[1]}
             <br />・{profileInfo.targetUniversity[2]}
           </p>
-          <p className="mt-1 text-sm">{profileInfo.comment}</p>
+          <p className="mt-1 text-sm">{profileInfo.memo}</p>
         </div>
       </div>
 
@@ -300,8 +301,8 @@ export default function TestResultCard({
       >
         <div ref={descriptionRef} className="px-4 pb-2">
           <p className="text-sm">
-            ＜{displaySubjectName(subject)}＞<br />
-            {description}
+            ＜{displaySubjectName(cardData.subject)}＞<br />
+            {cardData.memo}
           </p>
         </div>
       </div>
@@ -326,18 +327,20 @@ export default function TestResultCard({
               </tr>
             </thead>
             <tbody>
-              {testResults.map((result: TestResult, index: number) => (
+              {cardData.testResults.map((result: TestResult, index: number) => (
                 <tr key={index} className="border-b border-gray-200">
                   <td className="p-2 text-center">{result.date}</td>
                   <td className="p-2 text-center font-bold">
-                    {result.teacherScore}
+                    {result.targetScore}
                   </td>
                   <td className="p-2 text-center">{result.year}</td>
                   <td className="p-2 text-center truncate max-w-[150px]">
                     {result.memo}
                   </td>
                   <td className="p-2 text-gray-400">
-                    <Link href={`/profile/${subject}?year=${result.year}`}>
+                    <Link
+                      href={`/profile/${cardData.subject}?year=${result.year}`}
+                    >
                       <ArrowRightToLine size={16} className="ml-2" />
                     </Link>
                   </td>

@@ -6,6 +6,10 @@ import {
   Friend,
   TestData,
 } from "@/app/(pages)/profile/[subject]/page";
+import {
+  CardData,
+  ProfileData,
+} from "@/app/(pages)/profile/_components/TestResultCard";
 
 // 1000: ⚪︎
 // 1001: ×
@@ -723,7 +727,7 @@ const mockFriendsData_1A_2015: Friend[] = [
 ];
 
 const mockTestData_R_2015: TestData = {
-  subject: "R",
+  subject: "Reading",
   year: 2015,
   maxScore: 200,
   testStructure: [
@@ -822,7 +826,7 @@ const mockTestData_R_2015: TestData = {
 };
 
 const mockTestData_R_2016: TestData = {
-  subject: "R",
+  subject: "Reading",
   year: 2016,
   maxScore: 200,
   testStructure: [
@@ -921,7 +925,7 @@ const mockTestData_R_2016: TestData = {
 };
 
 const mockTestData_R_2017: TestData = {
-  subject: "R",
+  subject: "Reading",
   year: 2017,
   maxScore: 200,
   testStructure: [
@@ -1020,7 +1024,7 @@ const mockTestData_R_2017: TestData = {
 };
 
 const mockTestData_R_2018: TestData = {
-  subject: "R",
+  subject: "Reading",
   year: 2018,
   maxScore: 200,
   testStructure: [
@@ -1116,7 +1120,7 @@ const mockTestData_R_2018: TestData = {
 };
 
 const mockTestData_R_2019: TestData = {
-  subject: "R",
+  subject: "Reading",
   year: 2019,
   maxScore: 200,
   testStructure: [
@@ -1214,7 +1218,7 @@ const mockTestData_R_2019: TestData = {
 };
 
 const mockTestData_R_2020: TestData = {
-  subject: "R",
+  subject: "Reading",
   year: 2020,
   maxScore: 200,
   testStructure: [
@@ -1312,7 +1316,7 @@ const mockTestData_R_2020: TestData = {
 };
 
 const mockTestData_1A_2015: TestData = {
-  subject: "1A",
+  subject: "Math1A",
   year: 2015,
   maxScore: 100,
   testStructure: [
@@ -1395,7 +1399,7 @@ const mockTestData_1A_2015: TestData = {
 
 // 2016年 数学I・数学A テストデータ
 const mockTestData_1A_2016: TestData = {
-  subject: "1A",
+  subject: "Math1A",
   year: 2016,
   maxScore: 100,
   testStructure: [
@@ -1477,7 +1481,7 @@ const mockTestData_1A_2016: TestData = {
 
 // 2017年 数学I・数学A テストデータ
 const mockTestData_1A_2017: TestData = {
-  subject: "1A",
+  subject: "Math1A",
   year: 2017,
   maxScore: 100,
   testStructure: [
@@ -1564,7 +1568,7 @@ const mockTestData_1A_2017: TestData = {
 
 // 2018年 数学I・数学A テストデータ
 const mockTestData_1A_2018: TestData = {
-  subject: "1A",
+  subject: "Math1A",
   year: 2018,
   maxScore: 100,
   testStructure: [
@@ -1647,7 +1651,7 @@ const mockTestData_1A_2018: TestData = {
 
 // 2019年 数学I・数学A テストデータ
 const mockTestData_1A_2019: TestData = {
-  subject: "1A",
+  subject: "Math1A",
   year: 2019,
   maxScore: 100,
   testStructure: [
@@ -1736,7 +1740,7 @@ const mockTestData_1A_2019: TestData = {
 
 // 2020年 数学I・数学A テストデータ
 const mockTestData_1A_2020: TestData = {
-  subject: "1A",
+  subject: "Math1A",
   year: 2020,
   maxScore: 100,
   testStructure: [
@@ -1819,7 +1823,7 @@ const mockTestData_1A_2020: TestData = {
 
 // 2015年 数学II・数学B（旧数学II・旧数学B）テストデータ
 const mockTestData_2B_2015: TestData = {
-  subject: "2B",
+  subject: "Math2B",
   year: 2015,
   maxScore: 100,
   testStructure: [
@@ -1936,7 +1940,7 @@ const mockTestData_2B_2015: TestData = {
 
 // 2016年 数学II・数学B テストデータ
 const mockTestData_2B_2016: TestData = {
-  subject: "2B",
+  subject: "Math2B",
   year: 2016,
   maxScore: 100,
   testStructure: [
@@ -2044,7 +2048,7 @@ const mockTestData_2B_2016: TestData = {
 
 // 2017年 数学II・数学B テストデータ
 const mockTestData_2B_2017: TestData = {
-  subject: "2B",
+  subject: "Math2B",
   year: 2017,
   maxScore: 100,
   testStructure: [
@@ -2138,7 +2142,7 @@ const mockTestData_2B_2017: TestData = {
 
 // 2018年 数学II・数学B テストデータ
 const mockTestData_2B_2018: TestData = {
-  subject: "2B",
+  subject: "Math2B",
   year: 2018,
   maxScore: 100,
   testStructure: [
@@ -2239,7 +2243,7 @@ const mockTestData_2B_2018: TestData = {
 
 // 2019年 数学II・数学B テストデータ
 const mockTestData_2B_2019: TestData = {
-  subject: "2B",
+  subject: "Math2B",
   year: 2019,
   maxScore: 100,
   testStructure: [
@@ -2344,7 +2348,7 @@ const mockTestData_2B_2019: TestData = {
 
 // 2020年 数学II・数学B テストデータの続き
 const mockTestData_2B_2020: TestData = {
-  subject: "2B",
+  subject: "Math2B",
   year: 2020,
   maxScore: 100,
   testStructure: [
@@ -2443,6 +2447,307 @@ const mockTestData_2B_2020: TestData = {
   ],
 };
 
+const profileData = {
+  userName: "数1Aは32点だけど千葉大に受かりたい人",
+  targetUniversity: [
+    "千葉大学-理学部-地球科学科",
+    "明治大学-農学部-農学科",
+    "東京農業大学-農学部-農学科",
+  ],
+  memo: "サッカー部の活動時間が長く、勉強時間が1日2時間程度しか取れていないため、内職をして時間を確保したり、過去問をもとに本当に必要なものを優先したりと工夫して勉強しています。",
+};
+
+const cardDatas = [
+  {
+    subject: "Reading",
+    finalScoreTarget: 84,
+    finalScoreLowest: 70,
+    memo: "英語は1月から英語長文ポラリス1の文を例文としてスラスラ言えるレベルをテーマに30分/日音読をしたことで伸びた気がします。",
+    testResults: [
+      {
+        id: 8,
+        date: "2024/08/01",
+        year: "2018",
+        targetScore: 80,
+        studentScore: 75,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 7,
+        date: "2024/07/01",
+        year: "2017",
+        targetScore: 70,
+        studentScore: 65,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 6,
+        date: "2024/06/01",
+        year: "2016",
+        targetScore: 85,
+        studentScore: 80,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 5,
+        date: "2024/05/01",
+        year: "2015",
+        targetScore: 90,
+        studentScore: 85,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 4,
+        date: "2024/04/01",
+        year: "2014",
+        targetScore: 80,
+        studentScore: 75,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 3,
+        date: "2024/03/01",
+        year: "2013",
+        targetScore: 60,
+        studentScore: 55,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 2,
+        date: "2024/02/01",
+        year: "2012",
+        targetScore: 40,
+        studentScore: 45,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 1,
+        date: "2024/01/01",
+        year: "2011",
+        targetScore: 10,
+        studentScore: 15,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+    ],
+  },
+  {
+    subject: "Math1A",
+    finalScoreTarget: 75,
+    finalScoreLowest: 60,
+    memo: "数1Aは基礎問を2周回したら70点台に乗りました。とてもおすすめなのでぜひやってみてください。",
+    testResults: [
+      {
+        id: 8,
+        date: "2024/08/01",
+        year: "2018",
+        targetScore: 80,
+        studentScore: 75,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 7,
+        date: "2024/07/01",
+        year: "2017",
+        targetScore: 70,
+        studentScore: 65,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 6,
+        date: "2024/06/01",
+        year: "2016",
+        targetScore: 85,
+        studentScore: 80,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 5,
+        date: "2024/05/01",
+        year: "2015",
+        targetScore: 90,
+        studentScore: 85,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 4,
+        date: "2024/04/01",
+        year: "2014",
+        targetScore: 80,
+        studentScore: 75,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 3,
+        date: "2024/03/01",
+        year: "2013",
+        targetScore: 60,
+        studentScore: 55,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 2,
+        date: "2024/02/01",
+        year: "2012",
+        targetScore: 40,
+        studentScore: 45,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 1,
+        date: "2024/01/01",
+        year: "2011",
+        targetScore: 10,
+        studentScore: 15,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+    ],
+  },
+  {
+    subject: "Math2B",
+    finalScoreTarget: 75,
+    finalScoreLowest: 60,
+    memo: "数2Bは基礎問を3周回したら70点台に乗りました。たくさん演習を積むことが大事だと思います。",
+    testResults: [
+      {
+        id: 8,
+        date: "2024/08/01",
+        year: "2018",
+        targetScore: 80,
+        studentScore: 75,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 7,
+        date: "2024/07/01",
+        year: "2017",
+        targetScore: 70,
+        studentScore: 65,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 6,
+        date: "2024/06/01",
+        year: "2016",
+        targetScore: 85,
+        studentScore: 80,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 5,
+        date: "2024/05/01",
+        year: "2015",
+        targetScore: 90,
+        studentScore: 85,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 4,
+        date: "2024/04/01",
+        year: "2014",
+        targetScore: 80,
+        studentScore: 75,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 3,
+        date: "2024/03/01",
+        year: "2013",
+        targetScore: 60,
+        studentScore: 55,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 2,
+        date: "2024/02/01",
+        year: "2012",
+        targetScore: 40,
+        studentScore: 45,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 1,
+        date: "2024/01/01",
+        year: "2011",
+        targetScore: 10,
+        studentScore: 15,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+    ],
+  },
+  {
+    subject: "Chemistry",
+    finalScoreTarget: 75,
+    finalScoreLowest: 65,
+    memo: "共通テストの化学は本当に難しいので目標の点数は低めに設定しました。",
+    testResults: [
+      {
+        id: 8,
+        date: "2024/08/01",
+        year: "2018",
+        targetScore: 80,
+        studentScore: 75,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 7,
+        date: "2024/07/01",
+        year: "2017",
+        targetScore: 70,
+        studentScore: 65,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 6,
+        date: "2024/06/01",
+        year: "2016",
+        targetScore: 85,
+        studentScore: 80,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 5,
+        date: "2024/05/01",
+        year: "2015",
+        targetScore: 90,
+        studentScore: 85,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 4,
+        date: "2024/04/01",
+        year: "2014",
+        targetScore: 80,
+        studentScore: 75,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 3,
+        date: "2024/03/01",
+        year: "2013",
+        targetScore: 60,
+        studentScore: 55,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 2,
+        date: "2024/02/01",
+        year: "2012",
+        targetScore: 40,
+        studentScore: 45,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+      {
+        id: 1,
+        date: "2024/01/01",
+        year: "2011",
+        targetScore: 10,
+        studentScore: 15,
+        memo: "この日は調子が悪かったのでしょうがなかった。",
+      },
+    ],
+  },
+];
+
 const mockTestDatas = [
   mockTestData_R_2015,
   mockTestData_R_2016,
@@ -2450,7 +2755,6 @@ const mockTestDatas = [
   mockTestData_R_2018,
   mockTestData_R_2019,
   mockTestData_R_2020,
-  mockTestData_1A_2015,
   mockTestData_1A_2015,
   mockTestData_1A_2016,
   mockTestData_1A_2017,
@@ -2466,17 +2770,27 @@ const mockTestDatas = [
 ];
 
 class ProfileService {
+  async fetchProfileData(): Promise<ProfileData> {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(profileData), 100);
+    });
+  }
+  async fetchCardDatas(): Promise<CardData[]> {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve(cardDatas), 100);
+    });
+  }
   // 生徒データを取得するメソッド
   async fetchStudentData(subject: string, year: number): Promise<StudentData> {
     return new Promise((resolve) => {
-      setTimeout(() => resolve(mockStudentData_1A_2015), 100);
+      setTimeout(() => resolve(mockStudentData_R_2018), 100);
     });
   }
 
   // フレンドデータを取得するメソッド
   async fetchFriendsData(subject: string, year: number): Promise<Friend[]> {
     return new Promise((resolve) => {
-      setTimeout(() => resolve(mockFriendsData_1A_2015), 100);
+      setTimeout(() => resolve(mockFriendsData_R_2018), 100);
     });
   }
 

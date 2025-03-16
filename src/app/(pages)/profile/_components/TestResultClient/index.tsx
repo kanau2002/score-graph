@@ -172,7 +172,7 @@ export default function TestResultClient({
                 <span className="text-xl font-bold text-blue-600">
                   {studentData.score}
                 </span>
-                <span className="text-sm text-gray-500 ml-1">/200</span>
+                <span className="text-sm text-gray-500 ml-1">/{testData.maxScore}</span>
                 <span className="ml-2 bg-blue-100 text-blue-800 text-xs font-medium py-0.5 px-2 rounded">
                   {studentData.percentage}%
                 </span>
