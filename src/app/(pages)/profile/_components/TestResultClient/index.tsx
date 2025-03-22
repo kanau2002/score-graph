@@ -7,31 +7,19 @@ import {
   FriendRadarChart,
   StudentRadarChart,
 } from "@/app/(pages)/profile/_components/SectionRadarChart";
-import FriendSelector from "@/app/(pages)/profile/_components/FriendSelecter";
-import { Friend, StudentData, TestData } from "../../[subject]/page";
 import Link from "next/link";
 import { displaySubjectName } from "../TestResultCard";
+import {
+  Answer,
+  AnsweredData,
+  ClientTestSection,
+  TestData,
+} from "@/core/profile/type";
+import FriendSelector from "../FriendSelecter";
 
-// テストセクションの型定義（クライアント側で扱う拡張型）
-interface ClientTestSection {
-  section: number;
-  questions: {
-    questionNumber: number;
-    score: number | null;
-    correctAnswer: number | null;
-    studentAnswer?: number;
-    friendAnswer?: number;
-  }[];
-  sectionTotal: {
-    score: number;
-    studentTotal?: number;
-    friendTotal?: number;
-  };
-}
-
-interface TestResultClientProps {
-  studentData: StudentData;
-  friendsData: Friend[];
+interface Props {
+  studentData: AnsweredData;
+  friendsData: AnsweredData[];
   testData: TestData;
 }
 
@@ -39,9 +27,11 @@ export default function TestResultClient({
   studentData,
   friendsData,
   testData,
-}: TestResultClientProps) {
+}: Props) {
   // 選択中のフレンド（初期状態ではnull）
-  const [selectedFriend, setSelectedFriend] = useState<Friend | null>(null);
+  const [selectedFriend, setSelectedFriend] = useState<AnsweredData | null>(
+    null
+  );
 
   // 初期化時に一度だけテストデータを構築
   const initialTestSections = React.useMemo(() => {
@@ -102,11 +92,15 @@ export default function TestResultClient({
   }, [selectedFriend, initialTestSections]);
 
   // 正解不正解の判定関数
-  const isCorrect = (correct: number | null, answered: number | undefined) => {
-    if (answered === 1000) return "bg-blue-100";
-    if (answered === 1001) return "bg-red-100";
-    if (correct === answered) return "bg-blue-100";
-    if (correct !== answered) return "bg-red-100";
+  const isCorrect = (
+    correct: number | null,
+    answer: number | Answer | undefined
+  ) => {
+    if (answer === Answer.CORRECT) return "bg-blue-100";
+    if (answer === Answer.INCORRECT) return "bg-red-100";
+    if (answer === Answer.SKIPPED) return false;
+    if (correct === answer) return "bg-blue-100";
+    if (correct !== answer) return "bg-red-100";
     return false;
   };
 
@@ -121,10 +115,10 @@ export default function TestResultClient({
     }
   };
 
-  const renderAnswer = (answer: number | undefined) => {
-    if (answer === 1000) return <Circle size={16} />;
-    if (answer === 1001) return <X size={16} />;
-    if (answer === 1002) return <Minus size={16} />;
+  const renderAnswer = (answer: number | Answer | undefined) => {
+    if (answer === Answer.CORRECT) return <Circle size={16} />;
+    if (answer === Answer.INCORRECT) return <X size={16} />;
+    if (answer === Answer.SKIPPED) return <Minus size={16} />;
     return answer;
   };
 
@@ -172,7 +166,9 @@ export default function TestResultClient({
                 <span className="text-xl font-bold text-blue-600">
                   {studentData.score}
                 </span>
-                <span className="text-sm text-gray-500 ml-1">/{testData.maxScore}</span>
+                <span className="text-sm text-gray-500 ml-1">
+                  /{testData.maxScore}
+                </span>
                 <span className="ml-2 bg-blue-100 text-blue-800 text-xs font-medium py-0.5 px-2 rounded">
                   {studentData.percentage}%
                 </span>

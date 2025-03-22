@@ -1,4 +1,5 @@
 //src/app/(pages)/profile/_components/SectionRadarChart/index.tsx
+import { ChartDataPoint, CustomTooltipType, FriendRadarChartProps, SectionPercentages, SectionRadarChartProps, StudentRadarChartProps } from "@/core/profile/type";
 import {
   RadarChart,
   PolarGrid,
@@ -7,58 +8,9 @@ import {
   Radar,
   ResponsiveContainer,
   Tooltip,
-  TooltipProps,
 } from "recharts";
 
-interface SectionPercentages {
-  [sectionIndex: number]: number;
-}
 
-interface ChartDataPoint {
-  subject: string;
-  score: number;
-  target?: number;
-  fullMark: number;
-}
-
-interface StudentData {
-  name: string;
-  score: number;
-  percentage: number;
-  sectionPercentages: SectionPercentages;
-  targetSectionPercentages?: SectionPercentages;
-}
-
-interface SectionRadarChartProps {
-  data: ChartDataPoint[];
-  color?: string;
-  targetColor?: string;
-  size?: number;
-  showTarget?: boolean;
-}
-
-interface StudentRadarChartProps {
-  studentData: StudentData;
-}
-
-interface FriendRadarChartProps {
-  friendData: StudentData;
-}
-
-// カスタムツールチップの型定義
-type CustomTooltipType = TooltipProps<number, string> & {
-  payload?: Array<{
-    value: number;
-    dataKey: string;
-    color: string;
-    name?: string;
-    payload?: {
-      subject: string;
-      score: number;
-      target?: number;
-    };
-  }>;
-};
 
 // カスタムツールチップ
 const CustomTooltip = ({ active, payload, label }: CustomTooltipType) => {

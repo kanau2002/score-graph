@@ -1,39 +1,14 @@
 //src/app/(pages)/profile/_components/FriendSelecter/index.tsx
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
+import { AnsweredData } from "@/core/profile/type";
 
-interface FriendSelectorProps {
-  friendsData: Friend[];
-  selectedFriend: Friend | null;
+interface Props {
+  friendsData: AnsweredData[];
+  selectedFriend: AnsweredData | null;
   onFriendSelect: (friendId: string) => void;
 }
-
-export interface Friend {
-  id: number;
-  name: string;
-  score: number;
-  percentage: number;
-  targetPercentage?: number;
-  date: string;
-  memo?: string;
-  sectionTotals: {
-    [sectionIndex: number]: number;
-  };
-  sectionPercentages: {
-    [sectionIndex: number]: number;
-  };
-  targetSectionTotals?: {
-    [sectionIndex: number]: number;
-  };
-  targetSectionPercentages?: {
-    [sectionIndex: number]: number;
-  };
-  answers: {
-    [questionNumber: number]: number;
-  };
-}
-
-const FriendSelector: React.FC<FriendSelectorProps> = ({
+const FriendSelector: React.FC<Props> = ({
   friendsData,
   selectedFriend,
   onFriendSelect,

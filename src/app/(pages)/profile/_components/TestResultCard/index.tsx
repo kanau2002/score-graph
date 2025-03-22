@@ -22,46 +22,36 @@ import {
 } from "recharts";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  CardData,
+  ProfileData,
+  Subject,
+  TestResult,
+} from "@/core/profile/type";
 
-interface TestResult {
-  id: number;
-  date: string;
-  year: string;
-  targetScore: number;
-  studentScore: number;
-  memo: string;
-}
-export interface ProfileData {
-  userName: string;
-  targetUniversity: string[];
-  memo: string;
-}
-export interface CardData {
-  subject: string;
-  finalScoreTarget: number;
-  finalScoreLowest: number;
-  memo: string;
-  testResults: TestResult[];
-}
-
-interface TestResultCardProps {
+interface Props {
   profileInfo: ProfileData;
   cardData: CardData;
 }
 
-export const displaySubjectName = (subject: string) => {
-  if (subject === "Reading") return "英語";
-  if (subject === "Math1A") return "数1A";
-  if (subject === "Math2B") return "数2B";
-  if (subject === "Chemistry") return "化学";
-  if (subject === "Biorogy") return "生物";
-  return "Not Exist subjectName";
+export const displaySubjectName = (subject: Subject): string => {
+  switch (subject) {
+    case Subject.READING:
+      return "英語";
+    case Subject.MATH1A:
+      return "数1A";
+    case Subject.MATH2B:
+      return "数2B";
+    case Subject.CHEMISTRY:
+      return "化学";
+    case Subject.BIOLOGY:
+      return "生物";
+    default:
+      return "不明な科目";
+  }
 };
 
-export default function TestResultCard({
-  profileInfo,
-  cardData,
-}: TestResultCardProps) {
+export default function TestResultCard({ profileInfo, cardData }: Props) {
   const [showTable, setShowTable] = useState(false);
   const [tableHeight, setTableHeight] = useState<number>(0);
   const [showFullDescription, setShowFullDescription] = useState(false);
@@ -113,7 +103,7 @@ export default function TestResultCard({
 
   // プロフィール情報の短縮表示用
   const shortProfileInfo =
-    profileInfo.targetUniversity[1].substring(0, 10) + "...";
+    profileInfo.targetUniversities[1].substring(0, 10) + "...";
 
   return (
     <div className="w-full max-w-xl mx-auto bg-white rounded-lg shadow">
@@ -263,9 +253,9 @@ export default function TestResultCard({
         <div ref={profileInfoRef} className="px-4 pb-4">
           <p className="text-sm">
             〜志望校〜
-            <br />・{profileInfo.targetUniversity[0]}
-            <br />・{profileInfo.targetUniversity[1]}
-            <br />・{profileInfo.targetUniversity[2]}
+            <br />・{profileInfo.targetUniversities[0]}
+            <br />・{profileInfo.targetUniversities[1]}
+            <br />・{profileInfo.targetUniversities[2]}
           </p>
           <p className="mt-1 text-sm">{profileInfo.memo}</p>
         </div>
@@ -278,7 +268,7 @@ export default function TestResultCard({
           <div className="px-4 mt-2">
             <p className="text-sm mb-2">
               〜志望校〜
-              <br />・{profileInfo.targetUniversity[0]}
+              <br />・{profileInfo.targetUniversities[0]}
               <br />・{shortProfileInfo}
               <button
                 className="text-gray-500 font-medium ml-1"
