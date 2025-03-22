@@ -1,30 +1,22 @@
 // src/core/profile/repositories/infra.ts
 import { pool } from "@/lib/db";
-import {
-  ProfileData,
-  CardData,
-  AnsweredData,
-  Subject,
-  Answer,
-} from "../type";
+import { ProfileData, CardData, AnsweredData, Subject, Answer } from "../type";
 
 export class ProfileRepository {
   // プロフィールデータの取得
   async fetchProfileData(): Promise<ProfileData> {
     const query = `
       SELECT 
-        p.id, 
-        p.user_name, 
-        p.memo,
-        array_agg(tu.university_name ORDER BY tu.display_order) AS target_universities
+        u.id, 
+        u.user_name, 
+        u.memo,
+        u.targetUniversity_1,
+        u.targetUniversity_2,
+        u.targetUniversity_3
       FROM 
-        profiles p
-      JOIN 
-        target_universities tu ON p.id = tu.profile_id
+        users u
       WHERE 
-        p.id = 1
-      GROUP BY 
-        p.id, p.user_name, p.memo
+        u.id = 1
     `;
 
     try {
@@ -34,9 +26,18 @@ export class ProfileRepository {
         throw new Error("プロフィールデータが見つかりません");
       }
 
+      // 志望大学データを配列に変換
+      const targetUniversities = [];
+      if (result.rows[0].targetuniversity_1)
+        targetUniversities.push(result.rows[0].targetuniversity_1);
+      if (result.rows[0].targetuniversity_2)
+        targetUniversities.push(result.rows[0].targetuniversity_2);
+      if (result.rows[0].targetuniversity_3)
+        targetUniversities.push(result.rows[0].targetuniversity_3);
+
       const profileData: ProfileData = {
         userName: result.rows[0].user_name,
-        targetUniversities: result.rows[0].target_universities,
+        targetUniversities: targetUniversities,
         memo: result.rows[0].memo,
       };
 
@@ -51,29 +52,29 @@ export class ProfileRepository {
   async fetchCardDatas(): Promise<CardData[]> {
     const query = `
       SELECT 
-        sc.id,
-        sc.subject,
-        sc.final_score_target,
-        sc.final_score_lowest,
-        sc.memo,
+        us.id,
+        us.subject,
+        us.final_score_target,
+        us.final_score_lowest,
+        us.memo,
         json_agg(
           json_build_object(
-            'id', tr.id,
-            'date', to_char(tr.date, 'YYYY/MM/DD'),
-            'year', tr.year,
-            'targetScore', tr.target_score,
-            'studentScore', tr.student_score,
-            'memo', tr.memo
-          ) ORDER BY tr.date DESC
+            'id', t.id,
+            'date', to_char(t.date, 'YYYY/MM/DD'),
+            'year', t.year,
+            'targetScore', t.target_percentage,
+            'studentScore', t.percentage,
+            'memo', t.memo
+          ) ORDER BY t.date DESC
         ) AS test_results
       FROM 
-        subject_cards sc
+        user_subject us
       JOIN 
-        test_results tr ON sc.id = tr.subject_card_id
+        tests t ON us.subject = t.subject AND us.user_id = t.user_id
       WHERE 
-        sc.profile_id = 1
+        us.user_id = 1
       GROUP BY 
-        sc.id, sc.subject, sc.final_score_target, sc.final_score_lowest, sc.memo
+        us.id, us.subject, us.final_score_target, us.final_score_lowest, us.memo
     `;
 
     try {
@@ -94,110 +95,61 @@ export class ProfileRepository {
     }
   }
 
-//   // テスト構造データの取得
-//   async fetchTestStructure(subject: string, year: number): Promise<TestData> {
-//     const query = `
-//       SELECT 
-//         t.id,
-//         t.subject,
-//         t.year,
-//         t.max_score,
-//         json_agg(
-//           json_build_object(
-//             'section', s.section_number,
-//             'questions', (
-//               SELECT json_agg(
-//                 json_build_object(
-//                   'questionNumber', q.question_number,
-//                   'score', q.score,
-//                   'correctAnswer', q.correct_answer
-//                 ) ORDER BY q.question_number
-//               )
-//               FROM questions q
-//               WHERE q.section_id = s.id
-//             ),
-//             'sectionTotal', json_build_object(
-//               'score', s.total_score
-//             )
-//           ) ORDER BY s.section_number
-//         ) AS test_structure
-//       FROM 
-//         tests t
-//       JOIN 
-//         sections s ON t.id = s.test_id
-//       WHERE 
-//         t.subject = $1 AND t.year = $2
-//       GROUP BY 
-//         t.id, t.subject, t.year, t.max_score
-//     `;
-
-//     try {
-//       const result = await pool.query(query, [subject, year]);
-
-//       if (result.rows.length === 0) {
-//         throw new Error(`テスト構造データが見つかりません: ${subject} ${year}`);
-//       }
-
-//       const row = result.rows[0];
-//       const testData: TestData = {
-//         subject: row.subject as Subject,
-//         year: row.year,
-//         maxScore: row.max_score,
-//         testStructure: row.test_structure,
-//       };
-
-//       return testData;
-//     } catch (error) {
-//       console.error("テスト構造データ取得エラー:", error);
-//       throw error;
-//     }
-//   }
-
   // 生徒のテスト結果データの取得
-  async fetchStudentData(subject: string, year: number): Promise<AnsweredData> {
+  async fetchStudentData(subject: string, year: string): Promise<AnsweredData> {
     const query = `
       SELECT 
-        ad.id,
-        ad.name,
-        ad.score,
-        ad.percentage,
-        ad.target_percentage,
-        to_char(ad.date, 'YYYY/MM/DD') as date,
-        ad.memo,
-        (
-          SELECT json_object_agg(section_number, score)
-          FROM section_scores
-          WHERE answered_data_id = ad.id
+        t.id,
+        'あなた' as name,
+        t.score,
+        t.percentage,
+        t.target_percentage,
+        to_char(t.date, 'YYYY/MM/DD') as date,
+        t.memo,
+        json_build_object(
+          1, t.score_section1,
+          2, t.score_section2,
+          3, t.score_section3,
+          4, t.score_section4,
+          5, t.score_section5,
+          6, t.score_section6
         ) AS section_totals,
-        (
-          SELECT json_object_agg(section_number, percentage)
-          FROM section_scores
-          WHERE answered_data_id = ad.id
+        json_build_object(
+          1, t.percentage_section1,
+          2, t.percentage_section2,
+          3, t.percentage_section3,
+          4, t.percentage_section4,
+          5, t.percentage_section5,
+          6, t.percentage_section6
         ) AS section_percentages,
-        (
-          SELECT json_object_agg(section_number, target_score)
-          FROM section_scores
-          WHERE answered_data_id = ad.id
+        json_build_object(
+          1, t.target_score_section1,
+          2, t.target_score_section2,
+          3, t.target_score_section3,
+          4, t.target_score_section4,
+          5, t.target_score_section5,
+          6, t.target_score_section6
         ) AS target_section_totals,
-        (
-          SELECT json_object_agg(section_number, target_percentage)
-          FROM section_scores
-          WHERE answered_data_id = ad.id
+        json_build_object(
+          1, t.target_percentage_section1,
+          2, t.target_percentage_section2,
+          3, t.target_percentage_section3,
+          4, t.target_percentage_section4,
+          5, t.target_percentage_section5,
+          6, t.target_percentage_section6
         ) AS target_section_percentages,
         (
           SELECT json_object_agg(
             question_number, 
             COALESCE(enum_answer::text, numeric_answer::text)
           )
-          FROM answers
-          WHERE answered_data_id = ad.id
+          FROM test_answer
+          WHERE user_id = t.user_id AND subject = t.subject AND year = t.year
         ) AS answers
       FROM 
-        answered_data ad
-      JOIN 
-        tests t ON ad.test_id = t.id
+        tests t
       WHERE 
-        t.subject = $1 AND t.year = $2 AND ad.profile_id = 1
+        t.subject = $1 AND t.year = $2 AND t.user_id = 1
       LIMIT 1
     `;
 
@@ -211,6 +163,17 @@ export class ProfileRepository {
       }
 
       const row = result.rows[0];
+
+      // NULL値を除去するためにオブジェクトをフィルタリング
+      const sectionTotals = this.filterNullValues(row.section_totals);
+      const sectionPercentages = this.filterNullValues(row.section_percentages);
+      const targetSectionTotals = this.filterNullValues(
+        row.target_section_totals
+      );
+      const targetSectionPercentages = this.filterNullValues(
+        row.target_section_percentages
+      );
+
       const studentData: AnsweredData = {
         id: row.id,
         name: row.name,
@@ -219,10 +182,10 @@ export class ProfileRepository {
         targetPercentage: row.target_percentage,
         date: row.date,
         memo: row.memo,
-        sectionTotals: row.section_totals || {},
-        sectionPercentages: row.section_percentages || {},
-        targetSectionTotals: row.target_section_totals || {},
-        targetSectionPercentages: row.target_section_percentages || {},
+        sectionTotals: sectionTotals,
+        sectionPercentages: sectionPercentages,
+        targetSectionTotals: targetSectionTotals,
+        targetSectionPercentages: targetSectionPercentages,
         answers: this.parseAnswers(row.answers || {}),
       };
 
@@ -236,80 +199,119 @@ export class ProfileRepository {
   // フレンドのテスト結果データの取得
   async fetchFriendsData(
     subject: string,
-    year: number
+    year: string
   ): Promise<AnsweredData[]> {
     const query = `
       SELECT 
-        ad.id,
-        ad.name,
-        ad.score,
-        ad.percentage,
-        ad.target_percentage,
-        to_char(ad.date, 'YYYY/MM/DD') as date,
-        ad.memo,
-        (
-          SELECT json_object_agg(section_number, score)
-          FROM section_scores
-          WHERE answered_data_id = ad.id
+        t.id,
+        u.user_name as name,
+        t.score,
+        t.percentage,
+        t.target_percentage,
+        to_char(t.date, 'YYYY/MM/DD') as date,
+        t.memo,
+        json_build_object(
+          1, t.score_section1,
+          2, t.score_section2,
+          3, t.score_section3,
+          4, t.score_section4,
+          5, t.score_section5,
+          6, t.score_section6
         ) AS section_totals,
-        (
-          SELECT json_object_agg(section_number, percentage)
-          FROM section_scores
-          WHERE answered_data_id = ad.id
+        json_build_object(
+          1, t.percentage_section1,
+          2, t.percentage_section2,
+          3, t.percentage_section3,
+          4, t.percentage_section4,
+          5, t.percentage_section5,
+          6, t.percentage_section6
         ) AS section_percentages,
-        (
-          SELECT json_object_agg(section_number, target_score)
-          FROM section_scores
-          WHERE answered_data_id = ad.id
+        json_build_object(
+          1, t.target_score_section1,
+          2, t.target_score_section2,
+          3, t.target_score_section3,
+          4, t.target_score_section4,
+          5, t.target_score_section5,
+          6, t.target_score_section6
         ) AS target_section_totals,
-        (
-          SELECT json_object_agg(section_number, target_percentage)
-          FROM section_scores
-          WHERE answered_data_id = ad.id
+        json_build_object(
+          1, t.target_percentage_section1,
+          2, t.target_percentage_section2,
+          3, t.target_percentage_section3,
+          4, t.target_percentage_section4,
+          5, t.target_percentage_section5,
+          6, t.target_percentage_section6
         ) AS target_section_percentages,
         (
           SELECT json_object_agg(
             question_number, 
             COALESCE(enum_answer::text, numeric_answer::text)
           )
-          FROM answers
-          WHERE answered_data_id = ad.id
+          FROM test_answer
+          WHERE user_id = t.user_id AND subject = t.subject AND year = t.year
         ) AS answers
       FROM 
-        answered_data ad
-      JOIN 
-        tests t ON ad.test_id = t.id
+        tests t
       JOIN
-        friends f ON ad.name = f.name
+        users u ON t.user_id = u.id
       WHERE 
-        t.subject = $1 AND t.year = $2
+        t.subject = $1 AND t.year = $2 AND u.id != 1
       ORDER BY
-        ad.name
+        u.user_name
     `;
 
     try {
       const result = await pool.query(query, [subject, year]);
 
-      const friendsData: AnsweredData[] = result.rows.map((row) => ({
-        id: row.id,
-        name: row.name,
-        score: row.score,
-        percentage: row.percentage,
-        targetPercentage: row.target_percentage,
-        date: row.date,
-        memo: row.memo,
-        sectionTotals: row.section_totals || {},
-        sectionPercentages: row.section_percentages || {},
-        targetSectionTotals: row.target_section_totals || {},
-        targetSectionPercentages: row.target_section_percentages || {},
-        answers: this.parseAnswers(row.answers || {}),
-      }));
+      const friendsData: AnsweredData[] = result.rows.map((row) => {
+        // NULL値を除去するためにオブジェクトをフィルタリング
+        const sectionTotals = this.filterNullValues(row.section_totals);
+        const sectionPercentages = this.filterNullValues(
+          row.section_percentages
+        );
+        const targetSectionTotals = this.filterNullValues(
+          row.target_section_totals
+        );
+        const targetSectionPercentages = this.filterNullValues(
+          row.target_section_percentages
+        );
+
+        return {
+          id: row.id,
+          name: row.name,
+          score: row.score,
+          percentage: row.percentage,
+          targetPercentage: row.target_percentage,
+          date: row.date,
+          memo: row.memo,
+          sectionTotals: sectionTotals,
+          sectionPercentages: sectionPercentages,
+          targetSectionTotals: targetSectionTotals,
+          targetSectionPercentages: targetSectionPercentages,
+          answers: this.parseAnswers(row.answers || {}),
+        };
+      });
 
       return friendsData;
     } catch (error) {
       console.error("フレンドのテスト結果データ取得エラー:", error);
       throw error;
     }
+  }
+
+  // NULL値をフィルタリングするヘルパーメソッド
+  private filterNullValues(
+    obj: Record<string, number | null>
+  ): Record<number, number> {
+    const filtered: Record<number, number> = {};
+
+    for (const [key, value] of Object.entries(obj)) {
+      if (value !== null) {
+        filtered[Number(key)] = value as number;
+      }
+    }
+
+    return filtered;
   }
 
   // 解答データの変換処理（数値または列挙型に変換）
