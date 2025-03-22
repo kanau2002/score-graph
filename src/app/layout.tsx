@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="ja" className="h-full">
       <body className="h-full">
         {/* <ToastProvider> */}
-        <div className="min-h-full bg-[#FDF4EC]">{children}</div>
+        <div className="min-h-full">{children}</div>
         {/* </ToastProvider> */}
       </body>
     </html>

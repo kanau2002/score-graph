@@ -3,14 +3,7 @@
 import { ROUTES } from "@/constants";
 import Link from "next/link";
 import React from "react";
-import {
-  Home,
-  Activity,
-  BookOpen,
-  Users,
-  Bell,
-  X,
-} from "lucide-react";
+import { X } from "lucide-react";
 import {
   HomeIcon,
   UsersRound,
@@ -60,7 +53,7 @@ export default function Navigation({ setIsOpen }: Props) {
     },
     {
       label: "",
-      href: '',
+      href: "",
       icon: Tally1,
       activeIcon: Tally1,
     },
@@ -79,7 +72,7 @@ export default function Navigation({ setIsOpen }: Props) {
   ];
 
   return (
-    <div className="h-screen w-64 bg-orange-500 p-4 text-white">
+    <div className="h-screen w-64 bg-gray-400 p-4 text-white">
       {setIsOpen && (
         <div className="mb-6 flex justify-end">
           <button
@@ -96,7 +89,7 @@ export default function Navigation({ setIsOpen }: Props) {
             <li key={index}>
               <Link
                 href={item.href}
-                className="flex items-center space-x-3 rounded-lg p-2 transition-colors hover:bg-orange-600"
+                className="flex items-center space-x-3 rounded-lg p-2 transition-colors hover:bg-gray-500"
                 onClick={() => setIsOpen?.(false)}
               >
                 {React.createElement(item.icon, { className: "size-6" })}
