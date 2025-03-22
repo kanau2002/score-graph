@@ -141,7 +141,7 @@ export class ProfileRepository {
         (
           SELECT json_object_agg(
             question_number, 
-            COALESCE(enum_answer::text, numeric_answer::text)
+            answer::text
           )
           FROM test_answer
           WHERE user_id = t.user_id AND subject = t.subject AND year = t.year
@@ -245,7 +245,7 @@ export class ProfileRepository {
         (
           SELECT json_object_agg(
             question_number, 
-            COALESCE(enum_answer::text, numeric_answer::text)
+            answer::text
           )
           FROM test_answer
           WHERE user_id = t.user_id AND subject = t.subject AND year = t.year
@@ -314,37 +314,44 @@ export class ProfileRepository {
     return filtered;
   }
 
-  // 解答データの変換処理（数値または列挙型に変換）
-  private parseAnswers(
-    rawAnswers: Record<string, string>
-  ): Record<number, number | Answer> {
-    const result: Record<number, number | Answer> = {};
+  // 解答データの変換処理（文字列から適切な型に変換）
+  private parseAnswers(rawAnswers: Record<string, string>): {
+    [questionNumber: number]: Answer;
+  } {
+    const result: { [questionNumber: number]: Answer } = {};
 
     for (const [key, value] of Object.entries(rawAnswers)) {
       const questionNumber = parseInt(key);
 
-      // 数値の場合は数値型に、そうでない場合はAnswer型として扱う
-      if (!isNaN(parseInt(value))) {
-        result[questionNumber] = parseInt(value);
-      } else {
-        // 文字列をAnswer enum型に変換
-        switch (value) {
-          case "CORRECT":
-            result[questionNumber] = Answer.CORRECT;
-            break;
-          case "INCORRECT":
-            result[questionNumber] = Answer.INCORRECT;
-            break;
-          case "SKIPPED":
-            result[questionNumber] = Answer.SKIPPED;
-            break;
-          default:
-            console.warn(
-              `Unknown answer value: ${value} for question ${questionNumber}`
-            );
-            // デフォルトでは何らかの適切な値を設定
-            result[questionNumber] = Answer.SKIPPED;
-        }
+      // 文字列値をAnswer型に変換
+      switch (value) {
+        case "1":
+          result[questionNumber] = Answer.ONE;
+          break;
+        case "2":
+          result[questionNumber] = Answer.TWO;
+          break;
+        case "3":
+          result[questionNumber] = Answer.THREE;
+          break;
+        case "4":
+          result[questionNumber] = Answer.FOUR;
+          break;
+        case "CORRECT":
+          result[questionNumber] = Answer.CORRECT;
+          break;
+        case "INCORRECT":
+          result[questionNumber] = Answer.INCORRECT;
+          break;
+        case "SKIPPED":
+          result[questionNumber] = Answer.SKIPPED;
+          break;
+        default:
+          console.warn(
+            `Unknown answer value: ${value} for question ${questionNumber}`
+          );
+          // デフォルトでは何らかの適切な値を設定
+          result[questionNumber] = Answer.SKIPPED;
       }
     }
 

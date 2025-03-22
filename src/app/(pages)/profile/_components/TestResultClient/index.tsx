@@ -94,13 +94,13 @@ export default function TestResultClient({
   // 正解不正解の判定関数
   const isCorrect = (
     correct: number | null,
-    answer: number | Answer | undefined
+    answer: Answer | undefined
   ) => {
     if (answer === Answer.CORRECT) return "bg-blue-100";
     if (answer === Answer.INCORRECT) return "bg-red-100";
     if (answer === Answer.SKIPPED) return false;
-    if (correct === answer) return "bg-blue-100";
-    if (correct !== answer) return "bg-red-100";
+    if (String(correct) === answer) return "bg-blue-100";
+    if (String(correct) !== answer) return "bg-red-100";
     return false;
   };
 
