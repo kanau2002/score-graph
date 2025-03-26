@@ -10,9 +10,13 @@ export enum Subject {
 }
 
 export enum Answer {
+  ONE = "1",
+  TWO = "2",
+  THREE = "3",
+  FOUR = "4",
   CORRECT = "CORRECT",
   INCORRECT = "INCORRECT",
-  SKIPPED = "SKIPPED"
+  SKIPPED = "SKIPPED",
 }
 
 // テストのベース情報
@@ -138,7 +142,7 @@ export interface AnsweredData {
     [sectionIndex: number]: number;
   };
   answers: {
-    [questionNumber: number]: number | Answer;
+    [questionNumber: number]: Answer;
   };
 }
 
@@ -173,8 +177,8 @@ export interface ClientTestSection {
     questionNumber: number;
     score: number | null;
     correctAnswer: number | null;
-    studentAnswer?: number | Answer;
-    friendAnswer?: number | Answer;
+    studentAnswer?: Answer;
+    friendAnswer?: Answer;
   }[];
   sectionTotal: {
     score: number;

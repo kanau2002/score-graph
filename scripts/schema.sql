@@ -9,6 +9,10 @@ CREATE TYPE subject_enum AS ENUM (
 
 -- 解答状態enum型
 CREATE TYPE answer_enum AS ENUM (
+  '1',
+  '2',
+  '3',
+  '4',
   'CORRECT',
   'INCORRECT',
   'SKIPPED'
@@ -86,15 +90,10 @@ CREATE TABLE test_answer (
   subject subject_enum NOT NULL,
   year VARCHAR(10) NOT NULL,
   question_number INTEGER NOT NULL,
-  numeric_answer INTEGER,
-  enum_answer answer_enum,
+  answer answer_enum,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE (user_id, subject, year, question_number),
-  CHECK (
-    (numeric_answer IS NOT NULL AND enum_answer IS NULL) OR
-    (numeric_answer IS NULL AND enum_answer IS NOT NULL)
-  )
+  UNIQUE (user_id, subject, year, question_number)
 );
 
 -- フレンドデータを保存するためのテーブル
