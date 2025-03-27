@@ -96,14 +96,6 @@ CREATE TABLE test_answer (
   UNIQUE (user_id, subject, year, question_number)
 );
 
--- フレンドデータを保存するためのテーブル
-CREATE TABLE friends (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
 -- 更新タイムスタンプを自動的に更新するための関数
 CREATE OR REPLACE FUNCTION update_modified_column()
 RETURNS TRIGGER AS $$
@@ -112,6 +104,17 @@ BEGIN
   RETURN NEW;
 END;
 $$ language 'plpgsql';
+
+-- フォロー関係を管理するテーブル
+CREATE TABLE user_follows (
+  id SERIAL PRIMARY KEY,
+  follower_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  following_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE (follower_id, following_id),
+  CHECK (follower_id != following_id) -- 自分自身をフォローできないようにする
+);
 
 -- 各テーブルに対してトリガーを作成
 CREATE TRIGGER update_users_modtime 
@@ -130,6 +133,7 @@ CREATE TRIGGER update_test_answer_modtime
 BEFORE UPDATE ON test_answer 
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
-CREATE TRIGGER update_friends_modtime 
-BEFORE UPDATE ON friends 
+CREATE TRIGGER update_user_follows_modtime 
+BEFORE UPDATE ON user_follows 
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+

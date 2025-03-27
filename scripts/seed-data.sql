@@ -7,7 +7,6 @@ ALTER SEQUENCE users_id_seq RESTART WITH 1;
 ALTER SEQUENCE user_subject_id_seq RESTART WITH 1;
 ALTER SEQUENCE tests_id_seq RESTART WITH 1;
 ALTER SEQUENCE test_answer_id_seq RESTART WITH 1;
-ALTER SEQUENCE friends_id_seq RESTART WITH 1;
 
 -- プロフィールデータの挿入
 INSERT INTO users (user_name, memo, targetUniversity_1, targetUniversity_2, targetUniversity_3)
@@ -31,12 +30,6 @@ VALUES
   (1, 'MATH2B', 75, 60, '数2Bは基礎問を3周回したら70点台に乗りました。たくさん演習を積むことが大事だと思います。'),
   (1, 'CHEMISTRY', 75, 65, '共通テストの化学は本当に難しいので目標の点数は低めに設定しました。');
 
--- フレンドデータの挿入
-INSERT INTO friends (id, name)
-VALUES 
-  (1, '大貫しもん'),
-  (2, '磯辺恵美理'),
-  (3, '藤岡優仁');
 
 -- =========== ここからトランザクションの依存関係に注意 ===========
 
@@ -599,6 +592,16 @@ VALUES
 (1, 'CHEMISTRY', '2020', 80, 80, 80, '2024-06-26', 'この日は調子が悪かったんだ。'),
 (1, 'CHEMISTRY', '2021', 90, 90, 90, '2024-07-26', 'この日は調子が悪かったんだ。'),
 (1, 'CHEMISTRY', '2022', 80, 80, 80, '2024-08-26', 'この日は調子が悪かったんだ。');
+
+-- ユーザー1が他のユーザーをフォロー
+INSERT INTO user_follows (follower_id, following_id) VALUES
+(1, 2),
+(1, 3),
+(2, 1),
+(3, 1),
+(4, 1),
+(1, 4);
+
 
 -- トランザクションをコミット
 COMMIT;

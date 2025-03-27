@@ -196,7 +196,7 @@ export class ProfileRepository {
     }
   }
 
-  // フレンドのテスト結果データの取得
+  // 相互フォローしているフレンドのテスト結果データのみを取得
   async fetchFriendsData(
     subject: string,
     year: string
@@ -255,7 +255,15 @@ export class ProfileRepository {
       JOIN
         users u ON t.user_id = u.id
       WHERE 
-        t.subject = $1 AND t.year = $2 AND u.id != 1
+        t.subject = $1 
+        AND t.year = $2 
+        AND u.id != 1
+        AND EXISTS (
+          -- 相互フォロー関係のチェック：現在のユーザーがフォローしており、かつ相手にもフォローされている
+          SELECT 1 FROM user_follows f1
+          JOIN user_follows f2 ON f1.following_id = f2.follower_id AND f1.follower_id = f2.following_id
+          WHERE f1.follower_id = 1 AND f1.following_id = u.id
+        )
       ORDER BY
         u.user_name
     `;
@@ -295,6 +303,170 @@ export class ProfileRepository {
       return friendsData;
     } catch (error) {
       console.error("フレンドのテスト結果データ取得エラー:", error);
+      throw error;
+    }
+  }
+
+  // フォロー関連操作のメソッド
+
+  // ユーザーをフォローする
+  async followUser(userId: number, targetUserId: number): Promise<void> {
+    const query = `
+      INSERT INTO user_follows (follower_id, following_id) 
+      VALUES ($1, $2)
+      ON CONFLICT (follower_id, following_id) DO NOTHING
+    `;
+
+    try {
+      await pool.query(query, [userId, targetUserId]);
+    } catch (error) {
+      console.error("ユーザーフォローエラー:", error);
+      throw error;
+    }
+  }
+
+  // ユーザーのフォローを解除する
+  async unfollowUser(userId: number, targetUserId: number): Promise<void> {
+    const query = `
+      DELETE FROM user_follows
+      WHERE follower_id = $1 AND following_id = $2
+    `;
+
+    try {
+      await pool.query(query, [userId, targetUserId]);
+    } catch (error) {
+      console.error("フォロー解除エラー:", error);
+      throw error;
+    }
+  }
+
+  // 相互フォローしているユーザー一覧を取得
+  async fetchMutualFollows(
+    userId: number
+  ): Promise<{ id: number; userName: string }[]> {
+    const query = `
+      SELECT u.id, u.user_name
+      FROM users u
+      JOIN user_follows f1 ON f1.following_id = u.id
+      JOIN user_follows f2 ON f2.follower_id = u.id
+      WHERE f1.follower_id = $1 AND f2.following_id = $1
+      ORDER BY u.user_name
+    `;
+
+    try {
+      const result = await pool.query(query, [userId]);
+
+      return result.rows.map((row) => ({
+        id: row.id,
+        userName: row.user_name,
+      }));
+    } catch (error) {
+      console.error("相互フォローユーザー取得エラー:", error);
+      throw error;
+    }
+  }
+
+  // 自分がフォローしているユーザー一覧を取得
+  async fetchFollowing(
+    userId: number
+  ): Promise<{ id: number; userName: string }[]> {
+    const query = `
+      SELECT u.id, u.user_name
+      FROM users u
+      JOIN user_follows f ON f.following_id = u.id
+      WHERE f.follower_id = $1
+      ORDER BY u.user_name
+    `;
+
+    try {
+      const result = await pool.query(query, [userId]);
+
+      return result.rows.map((row) => ({
+        id: row.id,
+        userName: row.user_name,
+      }));
+    } catch (error) {
+      console.error("フォロー中ユーザー取得エラー:", error);
+      throw error;
+    }
+  }
+
+  // 自分をフォローしているユーザー一覧を取得
+  async fetchFollowers(
+    userId: number
+  ): Promise<{ id: number; userName: string }[]> {
+    const query = `
+      SELECT u.id, u.user_name
+      FROM users u
+      JOIN user_follows f ON f.follower_id = u.id
+      WHERE f.following_id = $1
+      ORDER BY u.user_name
+    `;
+
+    try {
+      const result = await pool.query(query, [userId]);
+
+      return result.rows.map((row) => ({
+        id: row.id,
+        userName: row.user_name,
+      }));
+    } catch (error) {
+      console.error("フォロワー取得エラー:", error);
+      throw error;
+    }
+  }
+
+  // ユーザー検索機能
+  async searchUsers(
+    searchTerm: string,
+    currentUserId: number
+  ): Promise<{ id: number; userName: string }[]> {
+    const query = `
+      SELECT id, user_name
+      FROM users
+      WHERE 
+        id != $1 AND
+        user_name ILIKE $2
+      ORDER BY user_name
+      LIMIT 20
+    `;
+
+    try {
+      const result = await pool.query(query, [
+        currentUserId,
+        `%${searchTerm}%`,
+      ]);
+
+      return result.rows.map((row) => ({
+        id: row.id,
+        userName: row.user_name,
+      }));
+    } catch (error) {
+      console.error("ユーザー検索エラー:", error);
+      throw error;
+    }
+  }
+
+  // フォロー状態をチェック
+  async checkFollowStatus(
+    userId: number,
+    targetUserId: number
+  ): Promise<{ isFollowing: boolean; isFollower: boolean }> {
+    const query = `
+      SELECT 
+        EXISTS (SELECT 1 FROM user_follows WHERE follower_id = $1 AND following_id = $2) as is_following,
+        EXISTS (SELECT 1 FROM user_follows WHERE follower_id = $2 AND following_id = $1) as is_follower
+    `;
+
+    try {
+      const result = await pool.query(query, [userId, targetUserId]);
+
+      return {
+        isFollowing: result.rows[0].is_following,
+        isFollower: result.rows[0].is_follower,
+      };
+    } catch (error) {
+      console.error("フォロー状態チェックエラー:", error);
       throw error;
     }
   }
