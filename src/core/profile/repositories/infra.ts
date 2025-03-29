@@ -1,6 +1,13 @@
 // src/core/profile/repositories/infra.ts
 import { pool } from "@/lib/db";
-import { ProfileData, CardData, AnsweredData, Subject, Answer } from "../type";
+import {
+  ProfileData,
+  AnsweredData,
+  Subject,
+  Answer,
+  CardDataRaw,
+  TestResult,
+} from "../type";
 
 export class ProfileRepository {
   // プロフィールデータの取得
@@ -49,7 +56,7 @@ export class ProfileRepository {
   }
 
   // 科目カードデータの取得
-  async fetchCardDatas(): Promise<CardData[]> {
+  async fetchCardDatasRaw(): Promise<CardDataRaw[]> {
     const query = `
       SELECT 
         us.id,
@@ -80,15 +87,19 @@ export class ProfileRepository {
     try {
       const result = await pool.query(query);
 
-      const cardDatas: CardData[] = result.rows.map((row) => ({
+      const cardDatasRaw: CardDataRaw[] = result.rows.map((row) => ({
         subject: row.subject as Subject,
         finalScoreTarget: row.final_score_target,
         finalScoreLowest: row.final_score_lowest,
         memo: row.memo,
         testResults: row.test_results,
+        answeredYears: row.test_results.map((testResult: TestResult) =>
+          Number(testResult.year)
+        ),
+        // answeredYears = [2015, 2017, 2025];
       }));
 
-      return cardDatas;
+      return cardDatasRaw;
     } catch (error) {
       console.error("科目カードデータ取得エラー:", error);
       throw error;
@@ -371,12 +382,12 @@ export class ProfileRepository {
     userId: number
   ): Promise<{ id: number; userName: string }[]> {
     const query = `
-      SELECT u.id, u.user_name
-      FROM users u
-      JOIN user_follows f ON f.following_id = u.id
-      WHERE f.follower_id = $1
-      ORDER BY u.user_name
-    `;
+    SELECT u.id, u.user_name
+    FROM users u
+    JOIN user_follows f ON f.following_id = u.id
+    WHERE f.follower_id = $1
+    ORDER BY u.user_name
+  `;
 
     try {
       const result = await pool.query(query, [userId]);
@@ -391,58 +402,32 @@ export class ProfileRepository {
     }
   }
 
-  // 自分をフォローしているユーザー一覧を取得
-  async fetchFollowers(
-    userId: number
-  ): Promise<{ id: number; userName: string }[]> {
-    const query = `
-      SELECT u.id, u.user_name
-      FROM users u
-      JOIN user_follows f ON f.follower_id = u.id
-      WHERE f.following_id = $1
-      ORDER BY u.user_name
-    `;
-
-    try {
-      const result = await pool.query(query, [userId]);
-
-      return result.rows.map((row) => ({
-        id: row.id,
-        userName: row.user_name,
-      }));
-    } catch (error) {
-      console.error("フォロワー取得エラー:", error);
-      throw error;
-    }
-  }
-
   // ユーザー検索機能
-  async searchUsers(
-    searchTerm: string,
+  // ユーザーID検索機能
+  async searchUserById(
+    userId: number,
     currentUserId: number
-  ): Promise<{ id: number; userName: string }[]> {
+  ): Promise<{ id: number; userName: string } | null> {
     const query = `
-      SELECT id, user_name
-      FROM users
-      WHERE 
-        id != $1 AND
-        user_name ILIKE $2
-      ORDER BY user_name
-      LIMIT 20
-    `;
+    SELECT id, user_name
+    FROM users
+    WHERE 
+      id = $1 AND id != $2
+  `;
 
     try {
-      const result = await pool.query(query, [
-        currentUserId,
-        `%${searchTerm}%`,
-      ]);
+      const result = await pool.query(query, [userId, currentUserId]);
 
-      return result.rows.map((row) => ({
-        id: row.id,
-        userName: row.user_name,
-      }));
+      if (result.rows.length === 0) {
+        return null;
+      }
+
+      return {
+        id: result.rows[0].id,
+        userName: result.rows[0].user_name,
+      };
     } catch (error) {
-      console.error("ユーザー検索エラー:", error);
+      console.error("ユーザーID検索エラー:", error);
       throw error;
     }
   }

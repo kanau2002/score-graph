@@ -151,7 +151,7 @@ export interface AnsweredData {
 export interface TestResult {
   id: number;
   date: string;
-  year: string;
+  year: number;
   targetScore: number;
   studentScore: number;
   memo: string;
@@ -161,12 +161,22 @@ export interface ProfileData {
   targetUniversities: string[];
   memo: string;
 }
+
+export interface CardDataRaw {
+  subject: Subject;
+  finalScoreTarget: number;
+  finalScoreLowest: number;
+  memo: string;
+  testResults: TestResult[];
+  answeredYears: number[];
+}
 export interface CardData {
   subject: Subject;
   finalScoreTarget: number;
   finalScoreLowest: number;
   memo: string;
   testResults: TestResult[];
+  unAnsweredYears: number[];
 }
 
 //TestResultClient

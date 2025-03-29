@@ -1,12 +1,13 @@
 // src/core/profile/profileService.ts
 import { testDatas } from "./repositories/data";
 import { ProfileRepository } from "./repositories/infra";
-import { ProfileData, CardData, AnsweredData, TestData } from "./type";
-
-interface FollowUser {
-  id: number;
-  userName: string;
-}
+import {
+  ProfileData,
+  CardData,
+  AnsweredData,
+  TestData,
+  FollowUser,
+} from "./type";
 
 class ProfileService {
   private repository: ProfileRepository;
@@ -22,7 +23,36 @@ class ProfileService {
 
   // 科目カード情報の取得
   async fetchCardDatas(): Promise<CardData[]> {
-    return this.repository.fetchCardDatas();
+    const cardDatasRaw = await this.repository.fetchCardDatasRaw();
+
+    const cardDatas: CardData[] = cardDatasRaw.map((cardDataRaw) => {
+      const getUnAnsweredYears = (answeredYears: number[]) => {
+        console.log("answeredYears", answeredYears);
+        const allYears: number[] = testDatas
+          .filter((testData) => testData.subject === cardDataRaw.subject)
+          .map((testData) => testData.year);
+        console.log("allYears", allYears);
+        const unAnsweredYears: number[] = allYears.filter(
+          (year) => !answeredYears.includes(year)
+        );
+        console.log("unAnsweredYears", unAnsweredYears);
+        return unAnsweredYears;
+      };
+      // allYears = [2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024, 2025];
+      // answeredYears = [2015, 2017, 2025];
+      // unAnsweredYears = [2016, 2018, 2019, 2021, 2022, 2023, 2024];
+
+      return {
+        subject: cardDataRaw.subject,
+        finalScoreTarget: cardDataRaw.finalScoreTarget,
+        finalScoreLowest: cardDataRaw.finalScoreLowest,
+        memo: cardDataRaw.memo,
+        testResults: cardDataRaw.testResults,
+        unAnsweredYears: getUnAnsweredYears(cardDataRaw.answeredYears),
+      };
+    });
+
+    return cardDatas;
   }
 
   // テスト構造情報の取得
@@ -51,7 +81,12 @@ class ProfileService {
     return this.repository.fetchFriendsData(subject, year.toString());
   }
 
-  // 相互フォロー関連の機能追加
+  // ユーザーIDによる検索
+  async searchUserById(userId: number): Promise<FollowUser | null> {
+    // 現在のユーザーID（この実装では固定で1）
+    const currentUserId = 1;
+    return this.repository.searchUserById(userId, currentUserId);
+  }
 
   // ユーザーをフォローする
   async followUser(targetUserId: number): Promise<void> {
@@ -81,11 +116,13 @@ class ProfileService {
     return this.repository.fetchFollowing(currentUserId);
   }
 
-  // 自分をフォローしているユーザー一覧を取得
-  async fetchFollowers(): Promise<FollowUser[]> {
+  // フォロー状態をチェックする
+  async checkFollowStatus(
+    targetUserId: number
+  ): Promise<{ isFollowing: boolean; isFollower: boolean }> {
     // 現在のユーザーID（この実装では固定で1）
     const currentUserId = 1;
-    return this.repository.fetchFollowers(currentUserId);
+    return this.repository.checkFollowStatus(currentUserId, targetUserId);
   }
 }
 
