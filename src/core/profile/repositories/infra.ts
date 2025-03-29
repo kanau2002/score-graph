@@ -1,6 +1,13 @@
 // src/core/profile/repositories/infra.ts
 import { pool } from "@/lib/db";
-import { ProfileData, CardData, AnsweredData, Subject, Answer } from "../type";
+import {
+  ProfileData,
+  AnsweredData,
+  Subject,
+  Answer,
+  CardDataRaw,
+  TestResult,
+} from "../type";
 
 export class ProfileRepository {
   // プロフィールデータの取得
@@ -49,7 +56,7 @@ export class ProfileRepository {
   }
 
   // 科目カードデータの取得
-  async fetchCardDatas(): Promise<CardData[]> {
+  async fetchCardDatasRaw(): Promise<CardDataRaw[]> {
     const query = `
       SELECT 
         us.id,
@@ -80,15 +87,19 @@ export class ProfileRepository {
     try {
       const result = await pool.query(query);
 
-      const cardDatas: CardData[] = result.rows.map((row) => ({
+      const cardDatasRaw: CardDataRaw[] = result.rows.map((row) => ({
         subject: row.subject as Subject,
         finalScoreTarget: row.final_score_target,
         finalScoreLowest: row.final_score_lowest,
         memo: row.memo,
         testResults: row.test_results,
+        answeredYears: row.test_results.map((testResult: TestResult) =>
+          Number(testResult.year)
+        ),
+        // answeredYears = [2015, 2017, 2025];
       }));
 
-      return cardDatas;
+      return cardDatasRaw;
     } catch (error) {
       console.error("科目カードデータ取得エラー:", error);
       throw error;
@@ -141,7 +152,7 @@ export class ProfileRepository {
         (
           SELECT json_object_agg(
             question_number, 
-            COALESCE(enum_answer::text, numeric_answer::text)
+            answer::text
           )
           FROM test_answer
           WHERE user_id = t.user_id AND subject = t.subject AND year = t.year
@@ -196,7 +207,7 @@ export class ProfileRepository {
     }
   }
 
-  // フレンドのテスト結果データの取得
+  // 相互フォローしているフレンドのテスト結果データのみを取得
   async fetchFriendsData(
     subject: string,
     year: string
@@ -245,7 +256,7 @@ export class ProfileRepository {
         (
           SELECT json_object_agg(
             question_number, 
-            COALESCE(enum_answer::text, numeric_answer::text)
+            answer::text
           )
           FROM test_answer
           WHERE user_id = t.user_id AND subject = t.subject AND year = t.year
@@ -255,7 +266,15 @@ export class ProfileRepository {
       JOIN
         users u ON t.user_id = u.id
       WHERE 
-        t.subject = $1 AND t.year = $2 AND u.id != 1
+        t.subject = $1 
+        AND t.year = $2 
+        AND u.id != 1
+        AND EXISTS (
+          -- 相互フォロー関係のチェック：現在のユーザーがフォローしており、かつ相手にもフォローされている
+          SELECT 1 FROM user_follows f1
+          JOIN user_follows f2 ON f1.following_id = f2.follower_id AND f1.follower_id = f2.following_id
+          WHERE f1.follower_id = 1 AND f1.following_id = u.id
+        )
       ORDER BY
         u.user_name
     `;
@@ -299,6 +318,144 @@ export class ProfileRepository {
     }
   }
 
+  // フォロー関連操作のメソッド
+
+  // ユーザーをフォローする
+  async followUser(userId: number, targetUserId: number): Promise<void> {
+    const query = `
+      INSERT INTO user_follows (follower_id, following_id) 
+      VALUES ($1, $2)
+      ON CONFLICT (follower_id, following_id) DO NOTHING
+    `;
+
+    try {
+      await pool.query(query, [userId, targetUserId]);
+    } catch (error) {
+      console.error("ユーザーフォローエラー:", error);
+      throw error;
+    }
+  }
+
+  // ユーザーのフォローを解除する
+  async unfollowUser(userId: number, targetUserId: number): Promise<void> {
+    const query = `
+      DELETE FROM user_follows
+      WHERE follower_id = $1 AND following_id = $2
+    `;
+
+    try {
+      await pool.query(query, [userId, targetUserId]);
+    } catch (error) {
+      console.error("フォロー解除エラー:", error);
+      throw error;
+    }
+  }
+
+  // 相互フォローしているユーザー一覧を取得
+  async fetchMutualFollows(
+    userId: number
+  ): Promise<{ id: number; userName: string }[]> {
+    const query = `
+      SELECT u.id, u.user_name
+      FROM users u
+      JOIN user_follows f1 ON f1.following_id = u.id
+      JOIN user_follows f2 ON f2.follower_id = u.id
+      WHERE f1.follower_id = $1 AND f2.following_id = $1
+      ORDER BY u.user_name
+    `;
+
+    try {
+      const result = await pool.query(query, [userId]);
+
+      return result.rows.map((row) => ({
+        id: row.id,
+        userName: row.user_name,
+      }));
+    } catch (error) {
+      console.error("相互フォローユーザー取得エラー:", error);
+      throw error;
+    }
+  }
+
+  // 自分がフォローしているユーザー一覧を取得
+  async fetchFollowing(
+    userId: number
+  ): Promise<{ id: number; userName: string }[]> {
+    const query = `
+    SELECT u.id, u.user_name
+    FROM users u
+    JOIN user_follows f ON f.following_id = u.id
+    WHERE f.follower_id = $1
+    ORDER BY u.user_name
+  `;
+
+    try {
+      const result = await pool.query(query, [userId]);
+
+      return result.rows.map((row) => ({
+        id: row.id,
+        userName: row.user_name,
+      }));
+    } catch (error) {
+      console.error("フォロー中ユーザー取得エラー:", error);
+      throw error;
+    }
+  }
+
+  // ユーザー検索機能
+  // ユーザーID検索機能
+  async searchUserById(
+    userId: number,
+    currentUserId: number
+  ): Promise<{ id: number; userName: string } | null> {
+    const query = `
+    SELECT id, user_name
+    FROM users
+    WHERE 
+      id = $1 AND id != $2
+  `;
+
+    try {
+      const result = await pool.query(query, [userId, currentUserId]);
+
+      if (result.rows.length === 0) {
+        return null;
+      }
+
+      return {
+        id: result.rows[0].id,
+        userName: result.rows[0].user_name,
+      };
+    } catch (error) {
+      console.error("ユーザーID検索エラー:", error);
+      throw error;
+    }
+  }
+
+  // フォロー状態をチェック
+  async checkFollowStatus(
+    userId: number,
+    targetUserId: number
+  ): Promise<{ isFollowing: boolean; isFollower: boolean }> {
+    const query = `
+      SELECT 
+        EXISTS (SELECT 1 FROM user_follows WHERE follower_id = $1 AND following_id = $2) as is_following,
+        EXISTS (SELECT 1 FROM user_follows WHERE follower_id = $2 AND following_id = $1) as is_follower
+    `;
+
+    try {
+      const result = await pool.query(query, [userId, targetUserId]);
+
+      return {
+        isFollowing: result.rows[0].is_following,
+        isFollower: result.rows[0].is_follower,
+      };
+    } catch (error) {
+      console.error("フォロー状態チェックエラー:", error);
+      throw error;
+    }
+  }
+
   // NULL値をフィルタリングするヘルパーメソッド
   private filterNullValues(
     obj: Record<string, number | null>
@@ -314,37 +471,44 @@ export class ProfileRepository {
     return filtered;
   }
 
-  // 解答データの変換処理（数値または列挙型に変換）
-  private parseAnswers(
-    rawAnswers: Record<string, string>
-  ): Record<number, number | Answer> {
-    const result: Record<number, number | Answer> = {};
+  // 解答データの変換処理（文字列から適切な型に変換）
+  private parseAnswers(rawAnswers: Record<string, string>): {
+    [questionNumber: number]: Answer;
+  } {
+    const result: { [questionNumber: number]: Answer } = {};
 
     for (const [key, value] of Object.entries(rawAnswers)) {
       const questionNumber = parseInt(key);
 
-      // 数値の場合は数値型に、そうでない場合はAnswer型として扱う
-      if (!isNaN(parseInt(value))) {
-        result[questionNumber] = parseInt(value);
-      } else {
-        // 文字列をAnswer enum型に変換
-        switch (value) {
-          case "CORRECT":
-            result[questionNumber] = Answer.CORRECT;
-            break;
-          case "INCORRECT":
-            result[questionNumber] = Answer.INCORRECT;
-            break;
-          case "SKIPPED":
-            result[questionNumber] = Answer.SKIPPED;
-            break;
-          default:
-            console.warn(
-              `Unknown answer value: ${value} for question ${questionNumber}`
-            );
-            // デフォルトでは何らかの適切な値を設定
-            result[questionNumber] = Answer.SKIPPED;
-        }
+      // 文字列値をAnswer型に変換
+      switch (value) {
+        case "1":
+          result[questionNumber] = Answer.ONE;
+          break;
+        case "2":
+          result[questionNumber] = Answer.TWO;
+          break;
+        case "3":
+          result[questionNumber] = Answer.THREE;
+          break;
+        case "4":
+          result[questionNumber] = Answer.FOUR;
+          break;
+        case "CORRECT":
+          result[questionNumber] = Answer.CORRECT;
+          break;
+        case "INCORRECT":
+          result[questionNumber] = Answer.INCORRECT;
+          break;
+        case "SKIPPED":
+          result[questionNumber] = Answer.SKIPPED;
+          break;
+        default:
+          console.warn(
+            `Unknown answer value: ${value} for question ${questionNumber}`
+          );
+          // デフォルトでは何らかの適切な値を設定
+          result[questionNumber] = Answer.SKIPPED;
       }
     }
 

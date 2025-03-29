@@ -10,9 +10,13 @@ export enum Subject {
 }
 
 export enum Answer {
+  ONE = "1",
+  TWO = "2",
+  THREE = "3",
+  FOUR = "4",
   CORRECT = "CORRECT",
   INCORRECT = "INCORRECT",
-  SKIPPED = "SKIPPED"
+  SKIPPED = "SKIPPED",
 }
 
 // テストのベース情報
@@ -138,7 +142,7 @@ export interface AnsweredData {
     [sectionIndex: number]: number;
   };
   answers: {
-    [questionNumber: number]: number | Answer;
+    [questionNumber: number]: Answer;
   };
 }
 
@@ -147,7 +151,7 @@ export interface AnsweredData {
 export interface TestResult {
   id: number;
   date: string;
-  year: string;
+  year: number;
   targetScore: number;
   studentScore: number;
   memo: string;
@@ -157,12 +161,22 @@ export interface ProfileData {
   targetUniversities: string[];
   memo: string;
 }
+
+export interface CardDataRaw {
+  subject: Subject;
+  finalScoreTarget: number;
+  finalScoreLowest: number;
+  memo: string;
+  testResults: TestResult[];
+  answeredYears: number[];
+}
 export interface CardData {
   subject: Subject;
   finalScoreTarget: number;
   finalScoreLowest: number;
   memo: string;
   testResults: TestResult[];
+  unAnsweredYears: number[];
 }
 
 //TestResultClient
@@ -173,14 +187,44 @@ export interface ClientTestSection {
     questionNumber: number;
     score: number | null;
     correctAnswer: number | null;
-    studentAnswer?: number | Answer;
-    friendAnswer?: number | Answer;
+    studentAnswer?: Answer;
+    friendAnswer?: Answer;
   }[];
   sectionTotal: {
     score: number;
     studentTotal?: number;
     friendTotal?: number;
   };
+}
+
+export interface FollowUser {
+  id: number;
+  userName: string;
+}
+
+export interface FollowStatus {
+  isFollowing: boolean;
+  isFollowedBy: boolean;
+  isMutual: boolean;
+}
+
+// API 用の型定義
+export interface FollowRequest {
+  userId: number;
+  friendId: number;
+}
+
+export interface FollowResponse {
+  success: boolean;
+  isFollowing: boolean;
+  isFollowedBy: boolean;
+  isMutual: boolean;
+}
+
+export interface FollowsListResponse {
+  following: FollowUser[];
+  followers: FollowUser[];
+  mutualFollows: FollowUser[];
 }
 
 // export {

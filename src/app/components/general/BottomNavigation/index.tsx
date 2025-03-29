@@ -3,7 +3,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { HomeIcon, UsersRound, Pencil, CircleUserRound } from "lucide-react";
+import {
+  HomeIcon,
+  UsersRound,
+  MessageCircleMore,
+  CircleUserRound,
+} from "lucide-react";
 
 import { ROUTES } from "@/constants";
 
@@ -18,16 +23,16 @@ export default function BottomNavigation() {
       activeIcon: HomeIcon,
     },
     {
+      label: "メッセージ",
+      href: ROUTES.INPUT,
+      icon: MessageCircleMore,
+      activeIcon: MessageCircleMore,
+    },
+    {
       label: "フレンド",
       href: ROUTES.FRIEND,
       icon: UsersRound,
       activeIcon: UsersRound,
-    },
-    {
-      label: "入力",
-      href: ROUTES.INPUT,
-      icon: Pencil,
-      activeIcon: Pencil,
     },
     {
       label: "プロフィール",

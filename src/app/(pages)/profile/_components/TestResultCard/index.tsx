@@ -6,7 +6,6 @@ import {
   SquareUserRound,
   MessageCircleMore,
   ListFilter,
-  BookmarkIcon,
   ArrowRightToLine,
 } from "lucide-react";
 import {
@@ -28,6 +27,7 @@ import {
   Subject,
   TestResult,
 } from "@/core/profile/type";
+import YearSelecter from "../YearSelecter";
 
 interface Props {
   profileInfo: ProfileData;
@@ -233,12 +233,10 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
             }`}
           />
         </button>
-        <button
-          onClick={() => alert("今後実装予定の機能です。")}
-          className="p-2 ml-auto"
-        >
-          <BookmarkIcon className="w-6 h-6" />
-        </button>
+        <YearSelecter
+          subject={cardData.subject}
+          unAnsweredYears={cardData.unAnsweredYears}
+        />
       </div>
 
       {/* プロフィール情報（アニメーション付きトグル表示） */}
@@ -329,7 +327,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
                   </td>
                   <td className="p-2 text-gray-400">
                     <Link
-                      href={`/profile/${cardData.subject}?year=${result.year}`}
+                      href={`/profile/testRead?subject=${cardData.subject}&year=${result.year}`}
                     >
                       <ArrowRightToLine size={16} className="ml-2" />
                     </Link>

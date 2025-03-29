@@ -1,18 +1,14 @@
 //src/app/(pages)/profile/english/2018/page.tsx
 import React from "react";
 import { profileService } from "@/core/profile/profileService";
-import TestResultClient from "../_components/TestResultClient";
+import TestResultClient from "../../_components/TestResultClient";
 
 type Props = {
-  params: { subject: string };
-  searchParams: { year: string };
+  searchParams: { subject: string; year: string };
 };
 
-export default async function DetailDisplayPage({
-  params,
-  searchParams,
-}: Props) {
-  const { subject } = params;
+export default async function TestReadPage({ searchParams }: Props) {
+  const subject = searchParams.subject;
   const year = Number(searchParams.year);
   // サーバーコンポーネントでデータを取得
   const [studentData, friendsData, testData] = await Promise.all([
