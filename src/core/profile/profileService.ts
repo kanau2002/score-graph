@@ -27,15 +27,12 @@ class ProfileService {
 
     const cardDatas: CardData[] = cardDatasRaw.map((cardDataRaw) => {
       const getUnAnsweredYears = (answeredYears: number[]) => {
-        console.log("answeredYears", answeredYears);
         const allYears: number[] = testDatas
           .filter((testData) => testData.subject === cardDataRaw.subject)
           .map((testData) => testData.year);
-        console.log("allYears", allYears);
         const unAnsweredYears: number[] = allYears.filter(
           (year) => !answeredYears.includes(year)
         );
-        console.log("unAnsweredYears", unAnsweredYears);
         return unAnsweredYears;
       };
       // allYears = [2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024, 2025];
