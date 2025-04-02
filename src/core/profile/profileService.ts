@@ -7,6 +7,8 @@ import {
   AnsweredData,
   TestData,
   FollowUser,
+  TestSubmissionData,
+  TestSubmissionResult,
 } from "./type";
 
 class ProfileService {
@@ -120,6 +122,35 @@ class ProfileService {
     // 現在のユーザーID（この実装では固定で1）
     const currentUserId = 1;
     return this.repository.checkFollowStatus(currentUserId, targetUserId);
+  }
+
+  /**
+   * テストの回答を保存する
+   */
+  async saveTestAnswers(
+    data: Omit<TestSubmissionData, "userId">
+  ): Promise<TestSubmissionResult> {
+    try {
+      // 実際のアプリでは認証情報からユーザーIDを取得する
+      const userId = 1; // デフォルトのユーザーID
+
+      // repositoryを呼び出してデータを保存
+      const result = await this.repository.saveTestAnswers({
+        ...data,
+        userId,
+      });
+
+      return result;
+    } catch (error) {
+      console.error("テスト回答の保存処理でエラーが発生しました:", error);
+      return {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : "テスト回答の保存中にエラーが発生しました",
+      };
+    }
   }
 }
 

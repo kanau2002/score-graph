@@ -13,6 +13,9 @@ CREATE TYPE answer_enum AS ENUM (
   '2',
   '3',
   '4',
+  '5',
+  '6',
+  '7',
   'CORRECT',
   'INCORRECT',
   'SKIPPED'
