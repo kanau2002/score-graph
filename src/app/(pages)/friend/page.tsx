@@ -78,7 +78,7 @@ export default function FriendPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
+    <div className="max-w-md mx-auto p-4">
       {/* ユーザー検索セクション */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
         <h2 className="text-xl font-bold mb-4">ユーザー検索</h2>

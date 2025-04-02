@@ -7,6 +7,8 @@ import {
   Answer,
   CardDataRaw,
   TestResult,
+  TestSubmissionData,
+  TestSubmissionResult,
 } from "../type";
 
 export class ProfileRepository {
@@ -494,6 +496,15 @@ export class ProfileRepository {
         case "4":
           result[questionNumber] = Answer.FOUR;
           break;
+        case "5":
+          result[questionNumber] = Answer.FIVE;
+          break;
+        case "6":
+          result[questionNumber] = Answer.SIX;
+          break;
+        case "7":
+          result[questionNumber] = Answer.SEVEN;
+          break;
         case "CORRECT":
           result[questionNumber] = Answer.CORRECT;
           break;
@@ -513,5 +524,80 @@ export class ProfileRepository {
     }
 
     return result;
+  }
+
+  async saveTestAnswers(
+    data: TestSubmissionData
+  ): Promise<TestSubmissionResult> {
+    try {
+      // トランザクション開始
+      await pool.query("BEGIN");
+
+      // 1. testsテーブルに基本情報を挿入
+      const testResult = await pool.query(
+        `INSERT INTO tests 
+          (user_id, subject, year, score, percentage, date, memo, 
+          score_section1, score_section2, score_section3, score_section4, score_section5, score_section6,
+          percentage_section1, percentage_section2, percentage_section3, percentage_section4, percentage_section5, percentage_section6)
+         VALUES 
+          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+         RETURNING id`,
+        [
+          data.userId,
+          data.subject,
+          data.year.toString(),
+          data.score,
+          data.percentage,
+          data.date,
+          data.memo || "",
+          data.sectionTotals[1] || 0,
+          data.sectionTotals[2] || 0,
+          data.sectionTotals[3] || 0,
+          data.sectionTotals[4] || 0,
+          data.sectionTotals[5] || 0,
+          data.sectionTotals[6] || 0,
+          data.sectionPercentages[1] || 0,
+          data.sectionPercentages[2] || 0,
+          data.sectionPercentages[3] || 0,
+          data.sectionPercentages[4] || 0,
+          data.sectionPercentages[5] || 0,
+          data.sectionPercentages[6] || 0,
+        ]
+      );
+
+      const testId = testResult.rows[0]?.id;
+
+      // 2. 解答データをtest_answerテーブルに挿入（順番に処理）
+      for (const [questionNumber, answer] of Object.entries(data.answers)) {
+        await pool.query(
+          `INSERT INTO test_answer (user_id, subject, year, question_number, answer)
+           VALUES ($1, $2, $3, $4, $5)
+           ON CONFLICT (user_id, subject, year, question_number)
+           DO UPDATE SET answer = $5, updated_at = CURRENT_TIMESTAMP`,
+          [
+            data.userId,
+            data.subject,
+            data.year.toString(),
+            questionNumber,
+            answer,
+          ]
+        );
+      }
+
+      // トランザクションコミット
+      await pool.query("COMMIT");
+
+      return {
+        success: true,
+        testId,
+      };
+    } catch (error) {
+      // エラー発生時はロールバック
+      await pool.query("ROLLBACK");
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
   }
 }

@@ -14,6 +14,9 @@ export enum Answer {
   TWO = "2",
   THREE = "3",
   FOUR = "4",
+  FIVE = "5",
+  SIX = "6",
+  SEVEN = "7",
   CORRECT = "CORRECT",
   INCORRECT = "INCORRECT",
   SKIPPED = "SKIPPED",
@@ -236,3 +239,27 @@ export interface FollowsListResponse {
 //   FriendRadarChartProps,
 //   CustomTooltipType,
 // };
+export type TestSubmissionData = {
+  userId: number;
+  subject: Subject;
+  year: number;
+  score: number;
+  percentage: number;
+  date: string;
+  memo?: string;
+  sectionTotals: {
+    [sectionIndex: number]: number;
+  };
+  sectionPercentages: {
+    [sectionIndex: number]: number;
+  };
+  answers: {
+    [questionNumber: number]: Answer;
+  };
+};
+
+export type TestSubmissionResult = {
+  success: boolean;
+  testId?: number;
+  error?: string;
+};

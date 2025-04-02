@@ -106,7 +106,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
     profileInfo.targetUniversities[1].substring(0, 10) + "...";
 
   return (
-    <div className="w-full max-w-xl mx-auto bg-white rounded-lg shadow">
+    <div className="w-full max-w-md mx-auto bg-white rounded-lg shadow">
       {/* ヘッダー部分 */}
       <div className="flex items-center p-2 ">
         <div className="w-8 h-8 m-2 relative">
