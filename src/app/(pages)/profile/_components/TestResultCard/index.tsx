@@ -116,6 +116,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
             margin={{ top: 5, right: 20, bottom: 5, left: -10 }}
           >
             {/* 目標の得点率（線グラフ） */}
+            {/* 目標の得点率（線グラフ） */}
             <Line
               type="monotone"
               dataKey="targetPercentage"
@@ -288,6 +289,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
             <thead>
               <tr className="border-b border-gray-200">
                 <th className="p-2 w-12">解いた日</th>
+                <th className="p-2 w-12">結果</th>
                 <th className="p-2 w-12">結果</th>
                 <th className="p-2 w-12">年度</th>
                 <th className="p-2">メモ</th>

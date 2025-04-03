@@ -5,10 +5,10 @@ import {
   Subject,
   Answer,
   CardDataRaw,
-  TestResult,
   TestSubmissionData,
   TestSubmissionResult,
   FollowUser,
+  TestResult,
 } from "../type";
 
 export class ProfileRepository {
