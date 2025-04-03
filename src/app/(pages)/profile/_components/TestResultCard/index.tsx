@@ -130,7 +130,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
             data={chartData}
             margin={{ top: 5, right: 20, bottom: 5, left: -10 }}
           >
-            {/* 講師の点数（線グラフ） */}
+            {/* 目標の得点率（線グラフ） */}
             <Line
               type="monotone"
               dataKey="targetPercentage"
@@ -138,15 +138,15 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
               strokeWidth={2}
               dot={{ r: 4, fill: "#6366F1" }}
               activeDot={{ r: 6 }}
-              name="講師評価"
+              name="目標"
             />
 
-            {/* 生徒の点数（棒グラフ） */}
+            {/* 結果の得点率（棒グラフ） */}
             <Bar
               dataKey="percentage"
               fill="#8884d8"
               barSize={20}
-              name="自己評価"
+              name="結果"
             />
 
             <CartesianGrid
@@ -308,7 +308,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
             <thead>
               <tr className="border-b border-gray-200">
                 <th className="p-2 w-12">解いた日</th>
-                <th className="p-2 w-12">点数</th>
+                <th className="p-2 w-12">結果</th>
                 <th className="p-2 w-12">年度</th>
                 <th className="p-2">メモ</th>
                 <th className="p-2 w-12">詳細</th>
