@@ -54,7 +54,6 @@ CREATE TABLE tests (
   year VARCHAR(10) NOT NULL,
   score INTEGER NOT NULL,
   percentage INTEGER NOT NULL,
-  target_percentage INTEGER,
   date DATE NOT NULL,
   memo TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -71,6 +70,20 @@ CREATE TABLE tests (
   percentage_section4 INTEGER,
   percentage_section5 INTEGER,
   percentage_section6 INTEGER,
+  UNIQUE (user_id, subject, year)
+);
+
+-- テストのテストの目標管理テーブル
+CREATE TABLE tests_target (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  subject subject_enum NOT NULL,
+  target_score INTEGER NOT NULL,
+  target_percentage INTEGER NOT NULL,
+  target_month TEXT NOT NULL,
+  target_memo TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   target_score_section1 INTEGER,
   target_score_section2 INTEGER,
   target_score_section3 INTEGER,
@@ -83,7 +96,7 @@ CREATE TABLE tests (
   target_percentage_section4 INTEGER,
   target_percentage_section5 INTEGER,
   target_percentage_section6 INTEGER,
-  UNIQUE (user_id, subject, year)
+  UNIQUE (user_id, subject, target_month)
 );
 
 -- 問題への解答データテーブル
@@ -130,6 +143,10 @@ FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 CREATE TRIGGER update_tests_modtime 
 BEFORE UPDATE ON tests 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+CREATE TRIGGER update_tests_target_modtime 
+BEFORE UPDATE ON tests_target 
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 CREATE TRIGGER update_test_answer_modtime 

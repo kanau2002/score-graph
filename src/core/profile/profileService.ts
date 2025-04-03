@@ -1,4 +1,3 @@
-// src/core/profile/profileService.ts
 import { testDatas } from "./repositories/data";
 import { ProfileRepository } from "./repositories/infra";
 import {
@@ -9,6 +8,7 @@ import {
   FollowUser,
   TestSubmissionData,
   TestSubmissionResult,
+  Subject,
 } from "./type";
 
 class ProfileService {
@@ -152,7 +152,64 @@ class ProfileService {
       };
     }
   }
+
+  /**
+   * テストの目標を設定する
+   */
+  async saveTestTargets(data: {
+    subject: Subject;
+    year: number;
+    targetScore: number;
+    targetPercentage: number;
+    targetMonth: string;
+    targetMemo?: string;
+    targetSectionTotals: Record<number, number>;
+    targetSectionPercentages: Record<number, number>;
+  }): Promise<{ success: boolean; error?: string }> {
+    try {
+      // 実際のアプリでは認証情報からユーザーIDを取得する
+      const userId = 1; // デフォルトのユーザーID
+
+      // repositoryを呼び出してデータを保存
+      const result = await this.repository.saveTestTargets({
+        ...data,
+        userId,
+      });
+
+      return result;
+    } catch (error) {
+      console.error("テスト目標の設定処理でエラーが発生しました:", error);
+      return {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : "テスト目標の設定中にエラーが発生しました",
+      };
+    }
+  }
+
+  /**
+   * テストの目標を取得する
+   */
+  async fetchTestTarget(
+    subject: string,
+    year: number
+  ): Promise<{
+    targetScore: number;
+    targetPercentage: number;
+    targetMonth: string;
+    targetMemo?: string;
+    targetSectionTotals: Record<number, number>;
+    targetSectionPercentages: Record<number, number>;
+  } | null> {
+    try {
+      return await this.repository.fetchTestTarget(subject, year.toString());
+    } catch (error) {
+      console.error("テスト目標の取得処理でエラーが発生しました:", error);
+      throw error;
+    }
+  }
 }
 
-// シングルトンとしてエクスポート
 export const profileService = new ProfileService();

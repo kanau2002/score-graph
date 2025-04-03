@@ -22,34 +22,6 @@ export enum Answer {
   SKIPPED = "SKIPPED",
 }
 
-// テストのベース情報
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-interface Test {
-  id: string; // UUID または自動生成ID
-  subject: Subject;
-  year: number;
-  maxScore: number;
-}
-
-// セクション情報
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-interface Section {
-  id: string;
-  testId: string; // 外部キー
-  sectionNumber: number;
-  totalScore: number;
-}
-
-// 質問情報
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-interface Question {
-  id: string;
-  sectionId: string; // 外部キー
-  questionNumber: number;
-  score: number | null;
-  correctAnswer: number | null;
-}
-
 export interface SectionPercentages {
   [sectionIndex: number]: number;
 }
@@ -155,8 +127,8 @@ export interface TestResult {
   id: number;
   date: string;
   year: number;
-  targetScore: number;
-  studentScore: number;
+  targetPercentage: number;
+  percentage: number;
   memo: string;
 }
 export interface ProfileData {
@@ -230,15 +202,6 @@ export interface FollowsListResponse {
   mutualFollows: FollowUser[];
 }
 
-// export {
-//   SectionPercentages,
-//   ChartDataPoint,
-//   StudentData,
-//   SectionRadarChartProps,
-//   StudentRadarChartProps,
-//   FriendRadarChartProps,
-//   CustomTooltipType,
-// };
 export type TestSubmissionData = {
   userId: number;
   subject: Subject;

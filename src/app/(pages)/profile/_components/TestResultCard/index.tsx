@@ -86,19 +86,27 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
     }
   }, [showProfileInfo, profileInfo]);
 
-  // グラフデータの作成
+  // グラフデータの作成（修正版）
   const chartData = cardData.testResults
     .map((result: TestResult) => {
+      // date が空の場合は処理をスキップ
+      if (!result.date) return null;
+
       const date = new Date(result.date);
       const month = date.getMonth() + 1; // JavaScriptの月は0から始まるため+1
       const year = date.getFullYear();
 
       return {
         month: `${year}/${month.toString().padStart(2, "0")}`,
-        targetScore: result.targetScore,
-        studentScore: result.studentScore,
+        targetPercentage:
+          result.targetPercentage !== null
+            ? result.targetPercentage
+            : undefined,
+        percentage: result.percentage !== null ? result.percentage : undefined,
+        name: result.percentage !== null ? "実績" : "目標のみ", // データ種別の識別用
       };
     })
+    .filter(Boolean) // null を除外
     .reverse(); // 古い順に並べ替え
 
   // プロフィール情報の短縮表示用
@@ -130,23 +138,23 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
             data={chartData}
             margin={{ top: 5, right: 20, bottom: 5, left: -10 }}
           >
-            {/* 講師の点数（線グラフ） */}
+            {/* 目標の得点率（線グラフ） */}
             <Line
               type="monotone"
-              dataKey="targetScore"
+              dataKey="targetPercentage"
               stroke="#6366F1"
               strokeWidth={2}
               dot={{ r: 4, fill: "#6366F1" }}
               activeDot={{ r: 6 }}
-              name="講師評価"
+              name="目標"
             />
 
-            {/* 生徒の点数（棒グラフ） */}
+            {/* 結果の得点率（棒グラフ） */}
             <Bar
-              dataKey="studentScore"
+              dataKey="percentage"
               fill="#8884d8"
               barSize={20}
-              name="自己評価"
+              name="結果"
             />
 
             <CartesianGrid
@@ -308,7 +316,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
             <thead>
               <tr className="border-b border-gray-200">
                 <th className="p-2 w-12">解いた日</th>
-                <th className="p-2 w-12">点数</th>
+                <th className="p-2 w-12">結果</th>
                 <th className="p-2 w-12">年度</th>
                 <th className="p-2">メモ</th>
                 <th className="p-2 w-12">詳細</th>
@@ -319,7 +327,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
                 <tr key={index} className="border-b border-gray-200">
                   <td className="p-2 text-center">{result.date}</td>
                   <td className="p-2 text-center font-bold">
-                    {result.targetScore}
+                    {result.percentage}
                   </td>
                   <td className="p-2 text-center">{result.year}</td>
                   <td className="p-2 text-center truncate max-w-[150px]">
