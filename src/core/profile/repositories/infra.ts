@@ -57,39 +57,33 @@ export class ProfileRepository {
     }
   }
 
-  // 科目カードデータの取得（修正後）
+  // testsテーブルからデータを取得するメソッド
   async fetchCardDatasRaw(): Promise<CardDataRaw[]> {
     const query = `
-      SELECT 
-        us.id,
-        us.subject,
-        us.final_score_target,
-        us.final_score_lowest,
-        us.memo,
-        json_agg(
-          json_build_object(
-            'id', t.id,
-            'date', to_char(t.date, 'YYYY/MM/DD'),
-            'year', t.year,
-            'targetPercentage', COALESCE(tt.target_percentage, null),
-            'percentage', t.percentage,
-            'memo', t.memo
-          ) ORDER BY t.date DESC
-        ) AS test_results
-      FROM 
-        user_subject us
-      JOIN 
-        tests t ON us.subject = t.subject AND us.user_id = t.user_id
-      LEFT JOIN 
-        tests_target tt ON 
-          t.user_id = tt.user_id AND 
-          t.subject = tt.subject AND 
-          to_char(t.date, 'YYYY-MM') = tt.target_month
-      WHERE 
-        us.user_id = 1
-      GROUP BY 
-        us.id, us.subject, us.final_score_target, us.final_score_lowest, us.memo
-    `;
+    SELECT 
+      us.id,
+      us.subject,
+      us.final_score_target,
+      us.final_score_lowest,
+      us.memo,
+      json_agg(
+        json_build_object(
+          'id', t.id,
+          'date', to_char(t.date, 'YYYY/MM/DD'),
+          'year', t.year,
+          'percentage', t.percentage,
+          'memo', t.memo
+        ) ORDER BY t.date DESC
+      ) AS test_results
+    FROM 
+      user_subject us
+    JOIN 
+      tests t ON us.subject = t.subject AND us.user_id = t.user_id
+    WHERE 
+      us.user_id = 1
+    GROUP BY 
+      us.id, us.subject, us.final_score_target, us.final_score_lowest, us.memo
+  `;
 
     try {
       const result = await pool.query(query);
@@ -112,6 +106,37 @@ export class ProfileRepository {
     }
   }
 
+  // tests_targetテーブルから月次目標を取得するメソッド
+  async fetchMonthlyTargets(subject: Subject): Promise<
+    Array<{
+      targetMonth: string;
+      targetPercentage: number;
+    }>
+  > {
+    const query = `
+    SELECT 
+      target_month,
+      target_percentage
+    FROM 
+      tests_target
+    WHERE 
+      user_id = 1 AND subject = $1
+    ORDER BY
+      target_month
+  `;
+
+    try {
+      const result = await pool.query(query, [subject]);
+
+      return result.rows.map((row) => ({
+        targetMonth: row.target_month,
+        targetPercentage: row.target_percentage,
+      }));
+    } catch (error) {
+      console.error("月次目標データ取得エラー:", error);
+      throw error;
+    }
+  }
   // 生徒のテスト結果データの取得
   async fetchStudentData(subject: string, year: string): Promise<AnsweredData> {
     const query = `

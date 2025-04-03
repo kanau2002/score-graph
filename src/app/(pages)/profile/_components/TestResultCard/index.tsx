@@ -86,21 +86,6 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
     }
   }, [showProfileInfo, profileInfo]);
 
-  // グラフデータの作成
-  const chartData = cardData.testResults
-    .map((result: TestResult) => {
-      const date = new Date(result.date);
-      const month = date.getMonth() + 1; // JavaScriptの月は0から始まるため+1
-      const year = date.getFullYear();
-
-      return {
-        month: `${year}/${month.toString().padStart(2, "0")}`,
-        targetPercentage: result.targetPercentage,
-        percentage: result.percentage,
-      };
-    })
-    .reverse(); // 古い順に並べ替え
-
   // プロフィール情報の短縮表示用
   const shortProfileInfo =
     profileInfo.targetUniversities[1].substring(0, 10) + "...";
@@ -127,7 +112,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
       <div className="w-full">
         <ResponsiveContainer width="100%" aspect={2}>
           <ComposedChart
-            data={chartData}
+            data={cardData.chartData}
             margin={{ top: 5, right: 20, bottom: 5, left: -10 }}
           >
             {/* 目標の得点率（線グラフ） */}
@@ -142,12 +127,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
             />
 
             {/* 結果の得点率（棒グラフ） */}
-            <Bar
-              dataKey="percentage"
-              fill="#8884d8"
-              barSize={20}
-              name="結果"
-            />
+            <Bar dataKey="percentage" fill="#8884d8" barSize={20} name="結果" />
 
             <CartesianGrid
               stroke="#ccc"

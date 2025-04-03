@@ -9,6 +9,9 @@ import {
   TestSubmissionData,
   TestSubmissionResult,
   Subject,
+  MonthlyTarget,
+  ChartData,
+  TestResult,
 } from "./type";
 
 class ProfileService {
@@ -21,37 +24,6 @@ class ProfileService {
   // プロフィール情報の取得
   async fetchProfileData(): Promise<ProfileData> {
     return this.repository.fetchProfileData();
-  }
-
-  // 科目カード情報の取得
-  async fetchCardDatas(): Promise<CardData[]> {
-    const cardDatasRaw = await this.repository.fetchCardDatasRaw();
-
-    const cardDatas: CardData[] = cardDatasRaw.map((cardDataRaw) => {
-      const getUnAnsweredYears = (answeredYears: number[]) => {
-        const allYears: number[] = testDatas
-          .filter((testData) => testData.subject === cardDataRaw.subject)
-          .map((testData) => testData.year);
-        const unAnsweredYears: number[] = allYears.filter(
-          (year) => !answeredYears.includes(year)
-        );
-        return unAnsweredYears;
-      };
-      // allYears = [2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024, 2025];
-      // answeredYears = [2015, 2017, 2025];
-      // unAnsweredYears = [2016, 2018, 2019, 2021, 2022, 2023, 2024];
-
-      return {
-        subject: cardDataRaw.subject,
-        finalScoreTarget: cardDataRaw.finalScoreTarget,
-        finalScoreLowest: cardDataRaw.finalScoreLowest,
-        memo: cardDataRaw.memo,
-        testResults: cardDataRaw.testResults,
-        unAnsweredYears: getUnAnsweredYears(cardDataRaw.answeredYears),
-      };
-    });
-
-    return cardDatas;
   }
 
   // テスト構造情報の取得
@@ -209,6 +181,107 @@ class ProfileService {
       console.error("テスト目標の取得処理でエラーが発生しました:", error);
       throw error;
     }
+  }
+
+  // 科目カード情報の取得（更新版）
+  async fetchCardDatas(): Promise<CardData[]> {
+    // 基本データの取得
+    const cardDatasRaw = await this.repository.fetchCardDatasRaw();
+
+    // 各科目ごとに月次目標データを取得
+    const cardDatas: CardData[] = await Promise.all(
+      cardDatasRaw.map(async (cardDataRaw) => {
+        // 未回答年度の取得
+        const unAnsweredYears = this.getUnAnsweredYears(
+          cardDataRaw.subject,
+          cardDataRaw.answeredYears
+        );
+
+        // 月次目標データの取得
+        const monthlyTargets = await this.repository.fetchMonthlyTargets(
+          cardDataRaw.subject
+        );
+
+        // テスト結果と月次目標を統合したチャートデータの生成
+        const chartData = this.integrateChartData(
+          cardDataRaw.testResults,
+          monthlyTargets
+        );
+
+        return {
+          subject: cardDataRaw.subject,
+          finalScoreTarget: cardDataRaw.finalScoreTarget,
+          finalScoreLowest: cardDataRaw.finalScoreLowest,
+          memo: cardDataRaw.memo,
+          testResults: cardDataRaw.testResults,
+          unAnsweredYears: unAnsweredYears,
+          chartData: chartData,
+        };
+      })
+    );
+
+    return cardDatas;
+  }
+
+  // 未回答年度を計算するヘルパーメソッド
+  private getUnAnsweredYears(
+    subject: Subject,
+    answeredYears: number[]
+  ): number[] {
+    const allYears: number[] = testDatas
+      .filter((testData) => testData.subject === subject)
+      .map((testData) => testData.year);
+
+    return allYears.filter((year) => !answeredYears.includes(year));
+  }
+
+  // テスト結果と月次目標データを統合するヘルパーメソッド
+  private integrateChartData(
+    testResults: TestResult[],
+    monthlyTargets: MonthlyTarget[]
+  ): ChartData[] {
+    // 月別データを格納するためのマップ
+    const monthlyDataMap = new Map<string, ChartData>();
+
+    // 1. テスト結果データを処理
+    testResults.forEach((result: TestResult) => {
+      const date = new Date(result.date);
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+      const monthKey = `${year}/${month.toString().padStart(2, "0")}`;
+
+      monthlyDataMap.set(monthKey, {
+        month: monthKey,
+        percentage: result.percentage,
+      });
+    });
+
+    // 2. 月次目標データを統合
+    if (monthlyTargets && monthlyTargets.length > 0) {
+      monthlyTargets.forEach((target) => {
+        // target.targetMonth はフォーマット "YYYY-MM" で保存されていると仮定
+        const [year, month] = target.targetMonth.split("-");
+        const monthKey = `${year}/${month.padStart(2, "0")}`;
+
+        if (monthlyDataMap.has(monthKey)) {
+          // 既存のエントリがある場合は目標値を追加
+          const existingData = monthlyDataMap.get(monthKey)!;
+          existingData.targetPercentage = target.targetPercentage;
+          monthlyDataMap.set(monthKey, existingData);
+        } else {
+          // テスト結果のないエントリを作成
+          monthlyDataMap.set(monthKey, {
+            month: monthKey,
+            targetPercentage: target.targetPercentage,
+          });
+        }
+      });
+    }
+
+    // マップの値を配列に変換し、日付でソート
+    return Array.from(monthlyDataMap.values()).sort((a, b) =>
+      a.month.localeCompare(b.month)
+    );
   }
 }
 

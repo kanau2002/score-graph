@@ -26,7 +26,7 @@ export interface SectionPercentages {
   [sectionIndex: number]: number;
 }
 
-export interface ChartDataPoint {
+export interface RaderChartData {
   subject: string;
   score: number;
   target?: number;
@@ -39,14 +39,6 @@ export interface StudentData {
   percentage: number;
   sectionPercentages: SectionPercentages;
   targetSectionPercentages?: SectionPercentages;
-}
-
-export interface SectionRadarChartProps {
-  data: ChartDataPoint[];
-  color?: string;
-  targetColor?: string;
-  size?: number;
-  showTarget?: boolean;
 }
 
 export interface StudentRadarChartProps {
@@ -121,16 +113,26 @@ export interface AnsweredData {
   };
 }
 
-//TestResultCard
-
 export interface TestResult {
   id: number;
   date: string;
   year: number;
-  targetPercentage: number;
   percentage: number;
   memo: string;
 }
+
+// 月次目標の型定義
+export interface MonthlyTarget {
+  targetMonth: string;
+  targetPercentage: number;
+}
+
+export interface ChartData {
+  month: string;
+  percentage?: number;
+  targetPercentage?: number;
+}
+
 export interface ProfileData {
   userName: string;
   targetUniversities: string[];
@@ -145,6 +147,7 @@ export interface CardDataRaw {
   testResults: TestResult[];
   answeredYears: number[];
 }
+// CardData型に統合済みチャートデータを追加
 export interface CardData {
   subject: Subject;
   finalScoreTarget: number;
@@ -152,6 +155,7 @@ export interface CardData {
   memo: string;
   testResults: TestResult[];
   unAnsweredYears: number[];
+  chartData: ChartData[]; // 統合済みのチャートデータ
 }
 
 //TestResultClient
