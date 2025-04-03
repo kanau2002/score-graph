@@ -71,8 +71,8 @@ export class ProfileRepository {
             'id', t.id,
             'date', to_char(t.date, 'YYYY/MM/DD'),
             'year', t.year,
-            'targetScore', COALESCE(tt.target_percentage, null),
-            'studentScore', t.percentage,
+            'targetPercentage', COALESCE(tt.target_percentage, null),
+            'percentage', t.percentage,
             'memo', t.memo
           ) ORDER BY t.date DESC
         ) AS test_results

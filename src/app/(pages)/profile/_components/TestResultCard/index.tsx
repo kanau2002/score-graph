@@ -95,8 +95,8 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
 
       return {
         month: `${year}/${month.toString().padStart(2, "0")}`,
-        targetScore: result.targetScore,
-        studentScore: result.studentScore,
+        targetPercentage: result.targetPercentage,
+        percentage: result.percentage,
       };
     })
     .reverse(); // 古い順に並べ替え
@@ -133,7 +133,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
             {/* 講師の点数（線グラフ） */}
             <Line
               type="monotone"
-              dataKey="targetScore"
+              dataKey="targetPercentage"
               stroke="#6366F1"
               strokeWidth={2}
               dot={{ r: 4, fill: "#6366F1" }}
@@ -143,7 +143,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
 
             {/* 生徒の点数（棒グラフ） */}
             <Bar
-              dataKey="studentScore"
+              dataKey="percentage"
               fill="#8884d8"
               barSize={20}
               name="自己評価"
@@ -319,7 +319,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
                 <tr key={index} className="border-b border-gray-200">
                   <td className="p-2 text-center">{result.date}</td>
                   <td className="p-2 text-center font-bold">
-                    {result.targetScore}
+                    {result.percentage}
                   </td>
                   <td className="p-2 text-center">{result.year}</td>
                   <td className="p-2 text-center truncate max-w-[150px]">

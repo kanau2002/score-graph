@@ -52,7 +52,6 @@ class ProfileService {
     });
 
     return cardDatas;
-    return cardDatas;
   }
 
   // テスト構造情報の取得
