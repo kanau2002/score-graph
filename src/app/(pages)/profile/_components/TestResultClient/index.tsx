@@ -210,7 +210,7 @@ export default function TestResultClient({
                   <span className="text-xl font-bold text-green-600">
                     {selectedFriend.score}
                   </span>
-                  <span className="text-sm text-gray-500 ml-1">/200</span>
+                  <span className="text-sm text-gray-500 ml-1">/{testData.maxScore}</span>
                   <span className="ml-2 bg-green-100 text-green-800 text-xs font-medium py-0.5 px-2 rounded">
                     {selectedFriend.percentage}%
                   </span>
@@ -338,14 +338,14 @@ export default function TestResultClient({
               colSpan={3}
               className="border border-gray-300 px-3 py-2 text-center"
             >
-              合計 (200)
+              合計 ({testData.maxScore})
             </td>
             <td className="border border-gray-300 px-3 py-2 text-center">
               {studentData.score}
-              /200
+              /{testData.maxScore}
             </td>
             <td className="border border-gray-300 px-3 py-2 text-center">
-              {selectedFriend ? `${selectedFriend.score}/200` : "-"}
+              {selectedFriend ? `${selectedFriend.score}/${testData.maxScore}` : "-"}
             </td>
           </tr>
         </tbody>

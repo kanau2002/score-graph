@@ -74,7 +74,7 @@ export class ProfileRepository {
           'percentage', t.percentage,
           'memo', t.memo
         ) ORDER BY t.date DESC
-      ) AS test_results
+      ) AS "testResults"
     FROM 
       user_subject us
     JOIN 
@@ -93,8 +93,8 @@ export class ProfileRepository {
         finalScoreTarget: row.final_score_target,
         finalScoreLowest: row.final_score_lowest,
         memo: row.memo,
-        testResults: row.test_results,
-        answeredYears: row.test_results.map((testResult: TestResult) =>
+        testResults: row.testResults,
+        answeredYears: row.testResults.map((testResult: TestResult) =>
           Number(testResult.year)
         ),
       }));
@@ -146,7 +146,7 @@ export class ProfileRepository {
         t.score,
         t.percentage,
         tt.target_percentage,
-        to_char(t.date, 'YYYY/MM/DD') as date,
+        to_char(t.date, 'YYYY/MM/DD') as "date",
         t.memo,
         json_build_object(
           1, t.score_section1,
@@ -164,14 +164,6 @@ export class ProfileRepository {
           5, t.percentage_section5,
           6, t.percentage_section6
         ) AS section_percentages,
-        json_build_object(
-          1, tt.target_score_section1,
-          2, tt.target_score_section2,
-          3, tt.target_score_section3,
-          4, tt.target_score_section4,
-          5, tt.target_score_section5,
-          6, tt.target_score_section6
-        ) AS target_section_totals,
         json_build_object(
           1, tt.target_percentage_section1,
           2, tt.target_percentage_section2,
@@ -214,9 +206,6 @@ export class ProfileRepository {
       // NULL値を除去するためにオブジェクトをフィルタリング
       const sectionTotals = this.filterNullValues(row.section_totals);
       const sectionPercentages = this.filterNullValues(row.section_percentages);
-      const targetSectionTotals = this.filterNullValues(
-        row.target_section_totals
-      );
       const targetSectionPercentages = this.filterNullValues(
         row.target_section_percentages
       );
@@ -231,7 +220,6 @@ export class ProfileRepository {
         memo: row.memo,
         sectionTotals: sectionTotals,
         sectionPercentages: sectionPercentages,
-        targetSectionTotals: targetSectionTotals,
         targetSectionPercentages: targetSectionPercentages,
         answers: this.parseAnswers(row.answers || {}),
       };
@@ -273,14 +261,6 @@ export class ProfileRepository {
           5, t.percentage_section5,
           6, t.percentage_section6
         ) AS section_percentages,
-        json_build_object(
-          1, tt.target_score_section1,
-          2, tt.target_score_section2,
-          3, tt.target_score_section3,
-          4, tt.target_score_section4,
-          5, tt.target_score_section5,
-          6, tt.target_score_section6
-        ) AS target_section_totals,
         json_build_object(
           1, tt.target_percentage_section1,
           2, tt.target_percentage_section2,
@@ -329,9 +309,6 @@ export class ProfileRepository {
         const sectionPercentages = this.filterNullValues(
           row.section_percentages
         );
-        const targetSectionTotals = this.filterNullValues(
-          row.target_section_totals
-        );
         const targetSectionPercentages = this.filterNullValues(
           row.target_section_percentages
         );
@@ -346,7 +323,6 @@ export class ProfileRepository {
           memo: row.memo,
           sectionTotals: sectionTotals,
           sectionPercentages: sectionPercentages,
-          targetSectionTotals: targetSectionTotals,
           targetSectionPercentages: targetSectionPercentages,
           answers: this.parseAnswers(row.answers || {}),
         };
@@ -395,7 +371,7 @@ export class ProfileRepository {
   // 相互フォローしているユーザー一覧を取得
   async fetchMutualFollows(userId: number): Promise<FollowUser[]> {
     const query = `
-      SELECT u.id, u.user_name as userName
+      SELECT u.id, u.user_name as "userName"
       FROM users u
       JOIN user_follows f1 ON f1.following_id = u.id
       JOIN user_follows f2 ON f2.follower_id = u.id
@@ -415,7 +391,7 @@ export class ProfileRepository {
   // 自分がフォローしているユーザー一覧を取得
   async fetchFollowing(userId: number): Promise<FollowUser[]> {
     const query = `
-      SELECT u.id, u.user_name as userName
+      SELECT u.id, u.user_name as "userName"
       FROM users u
       JOIN user_follows f ON f.following_id = u.id
       WHERE f.follower_id = $1
@@ -438,7 +414,7 @@ export class ProfileRepository {
     currentUserId: number
   ): Promise<FollowUser | null> {
     const query = `
-      SELECT id, user_name as userName
+      SELECT id, user_name as "userName"
       FROM users
       WHERE 
         id = $1 AND id != $2
@@ -650,12 +626,9 @@ export class ProfileRepository {
   async saveTestTargets(data: {
     userId: number;
     subject: Subject;
-    year: number;
-    targetScore: number;
     targetPercentage: number;
     targetMonth: string;
     targetMemo?: string;
-    targetSectionTotals: Record<number, number>;
     targetSectionPercentages: Record<number, number>;
   }): Promise<{ success: boolean; error?: string }> {
     try {
@@ -664,45 +637,28 @@ export class ProfileRepository {
 
       await pool.query(
         `INSERT INTO tests_target
-          (user_id, subject, year, target_score, target_percentage, target_month, target_memo,
-          target_score_section1, target_score_section2, target_score_section3, 
-          target_score_section4, target_score_section5, target_score_section6,
+          (user_id, subject, target_percentage, target_month, target_memo,
           target_percentage_section1, target_percentage_section2, target_percentage_section3,
           target_percentage_section4, target_percentage_section5, target_percentage_section6)
          VALUES
-          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19)
+          ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
          ON CONFLICT (user_id, subject, target_month)
          DO UPDATE SET
-          target_score = $4,
-          target_percentage = $5,
-          target_memo = $7,
-          target_score_section1 = $8,
-          target_score_section2 = $9,
-          target_score_section3 = $10,
-          target_score_section4 = $11,
-          target_score_section5 = $12,
-          target_score_section6 = $13,
-          target_percentage_section1 = $14,
-          target_percentage_section2 = $15,
-          target_percentage_section3 = $16,
-          target_percentage_section4 = $17,
-          target_percentage_section5 = $18,
-          target_percentage_section6 = $19,
+          target_percentage = $3,
+          target_memo = $5,
+          target_percentage_section1 = $6,
+          target_percentage_section2 = $7,
+          target_percentage_section3 = $8,
+          target_percentage_section4 = $9,
+          target_percentage_section5 = $10,
+          target_percentage_section6 = $11,
           updated_at = CURRENT_TIMESTAMP`,
         [
           data.userId,
           data.subject,
-          data.year.toString(),
-          data.targetScore,
           data.targetPercentage,
           data.targetMonth,
           data.targetMemo || "",
-          data.targetSectionTotals[1] || null,
-          data.targetSectionTotals[2] || null,
-          data.targetSectionTotals[3] || null,
-          data.targetSectionTotals[4] || null,
-          data.targetSectionTotals[5] || null,
-          data.targetSectionTotals[6] || null,
           data.targetSectionPercentages[1] || null,
           data.targetSectionPercentages[2] || null,
           data.targetSectionPercentages[3] || null,
@@ -730,29 +686,18 @@ export class ProfileRepository {
   // テスト目標の取得
   async fetchTestTarget(
     subject: string,
-    year: string
+    targetMonth: string
   ): Promise<{
-    targetScore: number;
     targetPercentage: number;
     targetMonth: string;
     targetMemo?: string;
-    targetSectionTotals: Record<number, number>;
     targetSectionPercentages: Record<number, number>;
   } | null> {
     const query = `
       SELECT 
-        target_score,
         target_percentage,
         target_month,
         target_memo,
-        json_build_object(
-          1, target_score_section1,
-          2, target_score_section2,
-          3, target_score_section3,
-          4, target_score_section4,
-          5, target_score_section5,
-          6, target_score_section6
-        ) AS target_section_totals,
         json_build_object(
           1, target_percentage_section1,
           2, target_percentage_section2,
@@ -764,12 +709,12 @@ export class ProfileRepository {
       FROM 
         tests_target
       WHERE 
-        subject = $1 AND year = $2 AND user_id = 1
+        subject = $1 AND user_id = 1 AND target_month = $2
       LIMIT 1
     `;
 
     try {
-      const result = await pool.query(query, [subject, year]);
+      const result = await pool.query(query, [subject, targetMonth]);
 
       if (result.rows.length === 0) {
         return null;
@@ -778,19 +723,14 @@ export class ProfileRepository {
       const row = result.rows[0];
 
       // NULL値を除去するためにオブジェクトをフィルタリング
-      const targetSectionTotals = this.filterNullValues(
-        row.target_section_totals
-      );
       const targetSectionPercentages = this.filterNullValues(
         row.target_section_percentages
       );
 
       return {
-        targetScore: row.target_score,
         targetPercentage: row.target_percentage,
         targetMonth: row.target_month,
         targetMemo: row.target_memo,
-        targetSectionTotals,
         targetSectionPercentages,
       };
     } catch (error) {

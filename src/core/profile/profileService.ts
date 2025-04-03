@@ -130,12 +130,9 @@ class ProfileService {
    */
   async saveTestTargets(data: {
     subject: Subject;
-    year: number;
-    targetScore: number;
     targetPercentage: number;
     targetMonth: string;
     targetMemo?: string;
-    targetSectionTotals: Record<number, number>;
     targetSectionPercentages: Record<number, number>;
   }): Promise<{ success: boolean; error?: string }> {
     try {
@@ -166,17 +163,15 @@ class ProfileService {
    */
   async fetchTestTarget(
     subject: string,
-    year: number
+    targetMonth: string
   ): Promise<{
-    targetScore: number;
     targetPercentage: number;
     targetMonth: string;
     targetMemo?: string;
-    targetSectionTotals: Record<number, number>;
     targetSectionPercentages: Record<number, number>;
   } | null> {
     try {
-      return await this.repository.fetchTestTarget(subject, year.toString());
+      return await this.repository.fetchTestTarget(subject, targetMonth);
     } catch (error) {
       console.error("テスト目標の取得処理でエラーが発生しました:", error);
       throw error;

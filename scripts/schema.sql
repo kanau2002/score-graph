@@ -64,12 +64,16 @@ CREATE TABLE tests (
   score_section4 INTEGER,
   score_section5 INTEGER,
   score_section6 INTEGER,
+  score_section7 INTEGER,
+  score_section8 INTEGER,
   percentage_section1 INTEGER,
   percentage_section2 INTEGER,
   percentage_section3 INTEGER,
   percentage_section4 INTEGER,
   percentage_section5 INTEGER,
   percentage_section6 INTEGER,
+  percentage_section7 INTEGER,
+  percentage_section8 INTEGER,
   UNIQUE (user_id, subject, year)
 );
 
@@ -78,7 +82,7 @@ CREATE TABLE tests_target (
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   subject subject_enum NOT NULL,
-  target_score INTEGER NOT NULL,
+  target_score INTEGER,
   target_percentage INTEGER NOT NULL,
   target_month TEXT NOT NULL,
   target_memo TEXT,
@@ -90,12 +94,16 @@ CREATE TABLE tests_target (
   target_score_section4 INTEGER,
   target_score_section5 INTEGER,
   target_score_section6 INTEGER,
+  target_score_section7 INTEGER,
+  target_score_section8 INTEGER,
   target_percentage_section1 INTEGER,
   target_percentage_section2 INTEGER,
   target_percentage_section3 INTEGER,
   target_percentage_section4 INTEGER,
   target_percentage_section5 INTEGER,
   target_percentage_section6 INTEGER,
+  target_percentage_section7 INTEGER,
+  target_percentage_section8 INTEGER,
   UNIQUE (user_id, subject, target_month)
 );
 
