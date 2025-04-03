@@ -102,9 +102,6 @@ export interface AnsweredData {
   sectionPercentages: {
     [sectionIndex: number]: number;
   };
-  targetSectionTotals?: {
-    [sectionIndex: number]: number;
-  };
   targetSectionPercentages?: {
     [sectionIndex: number]: number;
   };

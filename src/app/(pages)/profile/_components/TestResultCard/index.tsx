@@ -290,7 +290,6 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
               <tr className="border-b border-gray-200">
                 <th className="p-2 w-12">解いた日</th>
                 <th className="p-2 w-12">結果</th>
-                <th className="p-2 w-12">結果</th>
                 <th className="p-2 w-12">年度</th>
                 <th className="p-2">メモ</th>
                 <th className="p-2 w-12">詳細</th>
