@@ -5,7 +5,6 @@ import {
   Subject,
   Answer,
   CardDataRaw,
-  TestResult,
   TestSubmissionData,
   TestSubmissionResult,
   FollowUser,
@@ -57,53 +56,124 @@ export class ProfileRepository {
     }
   }
 
-  // 科目カードデータの取得（修正後）
+  // 科目カードデータの取得（修正版）
   async fetchCardDatasRaw(): Promise<CardDataRaw[]> {
-    const query = `
-      SELECT 
-        us.id,
-        us.subject,
-        us.final_score_target,
-        us.final_score_lowest,
-        us.memo,
-        json_agg(
-          json_build_object(
-            'id', t.id,
-            'date', to_char(t.date, 'YYYY/MM/DD'),
-            'year', t.year,
-            'targetPercentage', COALESCE(tt.target_percentage, null),
-            'percentage', t.percentage,
-            'memo', t.memo
-          ) ORDER BY t.date DESC
-        ) AS test_results
-      FROM 
-        user_subject us
-      JOIN 
-        tests t ON us.subject = t.subject AND us.user_id = t.user_id
-      LEFT JOIN 
-        tests_target tt ON 
-          t.user_id = tt.user_id AND 
-          t.subject = tt.subject AND 
-          to_char(t.date, 'YYYY-MM') = tt.target_month
-      WHERE 
-        us.user_id = 1
-      GROUP BY 
-        us.id, us.subject, us.final_score_target, us.final_score_lowest, us.memo
-    `;
+    // まず、user_subject テーブルからすべての科目情報を取得
+    const subjectsQuery = `
+    SELECT 
+      us.id,
+      us.subject,
+      us.final_score_target,
+      us.final_score_lowest,
+      us.memo
+    FROM 
+      user_subject us
+    WHERE 
+      us.user_id = 1
+  `;
 
     try {
-      const result = await pool.query(query);
+      const subjectsResult = await pool.query(subjectsQuery);
+      const subjectsData = subjectsResult.rows;
 
-      const cardDatasRaw: CardDataRaw[] = result.rows.map((row) => ({
-        subject: row.subject as Subject,
-        finalScoreTarget: row.final_score_target,
-        finalScoreLowest: row.final_score_lowest,
-        memo: row.memo,
-        testResults: row.test_results,
-        answeredYears: row.test_results.map((testResult: TestResult) =>
-          Number(testResult.year)
-        ),
-      }));
+      // 各科目ごとに処理
+      const cardDatasRaw: CardDataRaw[] = [];
+
+      for (const subjectData of subjectsData) {
+        // テスト結果と目標を両方取得するクエリ
+        // UNION ALL で tests と tests_target からのデータを結合
+        const testResultsQuery = `
+        SELECT 
+          id,
+          date,
+          year,
+          percentage,
+          target_percentage,
+          memo
+        FROM (
+          -- tests テーブルからのデータ
+          SELECT 
+            t.id,
+            t.date,
+            t.year,
+            t.percentage,
+            tt.target_percentage,
+            t.memo
+          FROM 
+            tests t
+          LEFT JOIN 
+            tests_target tt ON 
+              t.user_id = tt.user_id AND 
+              t.subject = tt.subject AND 
+              to_char(t.date, 'YYYY-MM') = tt.target_month
+          WHERE 
+            t.user_id = 1 AND t.subject = $1
+          
+          UNION ALL
+          
+          -- tests_target テーブルのデータで、tests テーブルに対応するエントリがないもの
+          SELECT 
+            NULL as id,
+            to_date(tt.target_month || '-01', 'YYYY-MM-DD') as date,
+            SUBSTRING(tt.target_month, 1, 4) as year,
+            NULL as percentage,
+            tt.target_percentage,
+            tt.target_memo as memo
+          FROM 
+            tests_target tt
+          WHERE 
+            tt.user_id = 1 AND tt.subject = $1
+            AND NOT EXISTS (
+              SELECT 1
+              FROM tests t
+              WHERE 
+                t.user_id = tt.user_id AND 
+                t.subject = tt.subject AND 
+                to_char(t.date, 'YYYY-MM') = tt.target_month
+            )
+        ) AS combined_results
+        ORDER BY date DESC
+      `;
+
+        const testResultsResult = await pool.query(testResultsQuery, [
+          subjectData.subject,
+        ]);
+
+        // 重複を排除して年度の一覧を取得
+        const answeredYears = Array.from(
+          new Set(
+            testResultsResult.rows
+              .filter((row) => row.year)
+              .map((row) => Number(row.year))
+          )
+        );
+
+        // テスト結果データをフォーマット
+        const testResults = testResultsResult.rows.map((row) => ({
+          id: row.id || 0, // ターゲットのみのデータの場合、ID は NULL かもしれないので 0 に設定
+          date: row.date
+            ? new Date(row.date).toLocaleDateString("ja-JP", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })
+            : "",
+          year: row.year ? Number(row.year) : 0,
+          targetPercentage: row.target_percentage || null,
+          percentage: row.percentage || null,
+          memo: row.memo || "",
+        }));
+
+        // 科目カードデータの作成
+        cardDatasRaw.push({
+          subject: subjectData.subject as Subject,
+          finalScoreTarget: subjectData.final_score_target,
+          finalScoreLowest: subjectData.final_score_lowest,
+          memo: subjectData.memo,
+          testResults: testResults,
+          answeredYears: answeredYears,
+        });
+      }
 
       return cardDatasRaw;
     } catch (error) {
