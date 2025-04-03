@@ -86,29 +86,6 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
     }
   }, [showProfileInfo, profileInfo]);
 
-  // グラフデータの作成（修正版）
-  const chartData = cardData.testResults
-    .map((result: TestResult) => {
-      // date が空の場合は処理をスキップ
-      if (!result.date) return null;
-
-      const date = new Date(result.date);
-      const month = date.getMonth() + 1; // JavaScriptの月は0から始まるため+1
-      const year = date.getFullYear();
-
-      return {
-        month: `${year}/${month.toString().padStart(2, "0")}`,
-        targetPercentage:
-          result.targetPercentage !== null
-            ? result.targetPercentage
-            : undefined,
-        percentage: result.percentage !== null ? result.percentage : undefined,
-        name: result.percentage !== null ? "実績" : "目標のみ", // データ種別の識別用
-      };
-    })
-    .filter(Boolean) // null を除外
-    .reverse(); // 古い順に並べ替え
-
   // プロフィール情報の短縮表示用
   const shortProfileInfo =
     profileInfo.targetUniversities[1].substring(0, 10) + "...";
@@ -135,9 +112,10 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
       <div className="w-full">
         <ResponsiveContainer width="100%" aspect={2}>
           <ComposedChart
-            data={chartData}
+            data={cardData.chartData}
             margin={{ top: 5, right: 20, bottom: 5, left: -10 }}
           >
+            {/* 目標の得点率（線グラフ） */}
             {/* 目標の得点率（線グラフ） */}
             <Line
               type="monotone"
@@ -150,12 +128,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
             />
 
             {/* 結果の得点率（棒グラフ） */}
-            <Bar
-              dataKey="percentage"
-              fill="#8884d8"
-              barSize={20}
-              name="結果"
-            />
+            <Bar dataKey="percentage" fill="#8884d8" barSize={20} name="結果" />
 
             <CartesianGrid
               stroke="#ccc"
@@ -316,6 +289,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
             <thead>
               <tr className="border-b border-gray-200">
                 <th className="p-2 w-12">解いた日</th>
+                <th className="p-2 w-12">結果</th>
                 <th className="p-2 w-12">結果</th>
                 <th className="p-2 w-12">年度</th>
                 <th className="p-2">メモ</th>

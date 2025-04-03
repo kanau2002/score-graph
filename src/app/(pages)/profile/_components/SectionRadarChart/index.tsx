@@ -1,5 +1,11 @@
 //src/app/(pages)/profile/_components/SectionRadarChart/index.tsx
-import { ChartDataPoint, CustomTooltipType, FriendRadarChartProps, SectionPercentages, SectionRadarChartProps, StudentRadarChartProps } from "@/core/profile/type";
+import {
+  CustomTooltipType,
+  FriendRadarChartProps,
+  RaderChartData,
+  SectionPercentages,
+  StudentRadarChartProps,
+} from "@/core/profile/type";
 import {
   RadarChart,
   PolarGrid,
@@ -9,8 +15,6 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-
-
 
 // カスタムツールチップ
 const CustomTooltip = ({ active, payload, label }: CustomTooltipType) => {
@@ -33,7 +37,7 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipType) => {
 const createChartDataFromPercentages = (
   sectionPercentages: SectionPercentages,
   targetSectionPercentages?: SectionPercentages
-): ChartDataPoint[] => {
+): RaderChartData[] => {
   // データベースから取得したデータはすでに順序付けられていると仮定
   return Object.entries(sectionPercentages).map(([sectionKey, percentage]) => {
     const sectionNumber = parseInt(sectionKey);
@@ -48,7 +52,15 @@ const createChartDataFromPercentages = (
   });
 };
 
-const SectionRadarChart: React.FC<SectionRadarChartProps> = ({
+type Props = {
+  data: RaderChartData[];
+  color?: string;
+  targetColor?: string;
+  size?: number;
+  showTarget?: boolean;
+};
+
+const SectionRadarChart: React.FC<Props> = ({
   data,
   color = "#8884d8",
   targetColor = "#9CA3AF", // グレーの色
