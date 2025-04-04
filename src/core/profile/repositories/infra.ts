@@ -21,7 +21,8 @@ export class ProfileRepository {
         u.memo,
         u.targetUniversity_1,
         u.targetUniversity_2,
-        u.targetUniversity_3
+        u.targetUniversity_3,
+        u.thumbnail_url as "thumbnailUrl"
       FROM 
         users u
       WHERE 
@@ -48,6 +49,7 @@ export class ProfileRepository {
         userName: result.rows[0].user_name,
         targetUniversities: targetUniversities,
         memo: result.rows[0].memo,
+        thumbnailUrl: result.rows[0].thumbnailUrl,
       };
 
       return profileData;

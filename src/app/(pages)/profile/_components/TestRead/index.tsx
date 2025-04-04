@@ -154,7 +154,7 @@ export default function TestRead({
   };
 
   return (
-    <div className="container mx-auto max-w-md bg-gray-50 shadow rouded-lg">
+    <div className="container mx-auto max-w-md bg-gray-50 shadow rounded-lg">
       {/* ヘッダー部分 */}
       <div className="flex items-center p-4">
         <Link href="/profile" className="mr-3">

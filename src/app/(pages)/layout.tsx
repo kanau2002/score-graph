@@ -16,7 +16,7 @@ export default function MyPageLayout({
       {/* NextUIのPaginationを使用するにはNextUIProviderで囲う必要がある */}
       {/* <NextUIProvider> */}
         <Header />
-        <main className="relative top-16 flex">
+        <main className="relative top-16 flex bg-gray-100">
           <div className="fixed hidden md:block">
             <Navigation />
           </div>

@@ -30,7 +30,10 @@ CREATE TABLE users (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   targetUniversity_1 VARCHAR(100),
   targetUniversity_2 VARCHAR(100),
-  targetUniversity_3 VARCHAR(100)
+  targetUniversity_3 VARCHAR(100),
+  birth_date TIMESTAMP,
+  is_graduated BOOLEAN DEFAULT FALSE,
+  thumbnail_url TEXT
 );
 
 -- 科目カードテーブル

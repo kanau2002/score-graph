@@ -134,6 +134,7 @@ export interface ProfileData {
   userName: string;
   targetUniversities: string[];
   memo: string;
+  thumbnailUrl: string;
 }
 
 export interface CardDataRaw {
