@@ -335,6 +335,53 @@ export class ProfileRepository {
     }
   }
 
+
+  // テスト結果と解答データを削除するメソッド
+  async deleteTestResult(
+    userId: number,
+    subject: string,
+    year: string
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      // トランザクション開始
+      await pool.query("BEGIN");
+
+      // 1. test_answerテーブルからレコードを削除
+      await pool.query(
+        `DELETE FROM test_answer 
+       WHERE user_id = $1 AND subject = $2 AND year = $3`,
+        [userId, subject, year]
+      );
+
+      // 2. testsテーブルからレコードを削除
+      const deleteResult = await pool.query(
+        `DELETE FROM tests 
+       WHERE user_id = $1 AND subject = $2 AND year = $3
+       RETURNING id`,
+        [userId, subject, year]
+      );
+
+      // トランザクションコミット
+      await pool.query("COMMIT");
+
+      // 削除が成功したかどうかをチェック
+      const deleted = deleteResult.rowCount != null && deleteResult.rowCount > 0;
+
+      return {
+        success: deleted,
+        error: deleted ? undefined : "削除対象のレコードが見つかりませんでした",
+      };
+    } catch (error) {
+      // エラー発生時はロールバック
+      await pool.query("ROLLBACK");
+      console.error("テスト結果削除エラー:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+  }
+
   // フォロー関連操作のメソッド
 
   // ユーザーをフォローする

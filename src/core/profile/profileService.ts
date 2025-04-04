@@ -52,6 +52,37 @@ class ProfileService {
     return this.repository.fetchFriendsData(subject, year.toString());
   }
 
+  /**
+   * テスト結果と解答データを削除する
+   */
+  async deleteTestResult(
+    subject: string,
+    year: number
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      // 実際のアプリでは認証情報からユーザーIDを取得する
+      const userId = 1; // デフォルトのユーザーID
+
+      // repositoryを呼び出してデータを削除
+      const result = await this.repository.deleteTestResult(
+        userId,
+        subject,
+        year.toString()
+      );
+
+      return result;
+    } catch (error) {
+      console.error("テスト結果の削除処理でエラーが発生しました:", error);
+      return {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : "テスト結果の削除中にエラーが発生しました",
+      };
+    }
+  }
+
   // ユーザーIDによる検索
   async searchUserById(userId: number): Promise<FollowUser | null> {
     // 現在のユーザーID（この実装では固定で1）

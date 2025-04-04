@@ -16,6 +16,8 @@ import {
   TestData,
 } from "@/core/profile/type";
 import FriendSelector from "../FriendSelecter";
+import { useRouter } from "next/navigation";
+
 
 interface Props {
   studentData: AnsweredData;
@@ -23,11 +25,12 @@ interface Props {
   testData: TestData;
 }
 
-export default function TestResultClient({
+export default function TestRead({
   studentData,
   friendsData,
   testData,
 }: Props) {
+  const router = useRouter();
   // 選択中のフレンド（初期状態ではnull）
   const [selectedFriend, setSelectedFriend] = useState<AnsweredData | null>(
     null
@@ -92,10 +95,7 @@ export default function TestResultClient({
   }, [selectedFriend, initialTestSections]);
 
   // 正解不正解の判定関数
-  const isCorrect = (
-    correct: number | null,
-    answer: Answer | undefined
-  ) => {
+  const isCorrect = (correct: number | null, answer: Answer | undefined) => {
     if (answer === Answer.CORRECT) return "bg-blue-100";
     if (answer === Answer.INCORRECT) return "bg-red-100";
     if (answer === Answer.SKIPPED) return false;
@@ -120,6 +120,37 @@ export default function TestResultClient({
     if (answer === Answer.INCORRECT) return <X size={16} />;
     if (answer === Answer.SKIPPED) return <Minus size={16} />;
     return answer;
+  };
+
+
+  const handleDeleteTestResult = async () => {
+    if (
+      window.confirm(
+        "このテスト結果を削除してもよろしいですか？元に戻すことはできません。"
+      )
+    ) {
+      try {
+        const response = await fetch(
+          `/api/tests/delete?subject=${testData.subject}&year=${testData.year}`,
+          {
+            method: "DELETE",
+          }
+        );
+
+        const data = await response.json();
+
+        if (data.success) {
+          alert("テスト結果を削除しました");
+          // プロフィールページにリダイレクト
+          router.push("/profile");
+        } else {
+          alert(`削除エラー: ${data.error || "不明なエラーが発生しました"}`);
+        }
+      } catch (error) {
+        console.error("削除処理エラー:", error);
+        alert("テスト結果の削除中にエラーが発生しました。");
+      }
+    }
   };
 
   return (
@@ -210,7 +241,9 @@ export default function TestResultClient({
                   <span className="text-xl font-bold text-green-600">
                     {selectedFriend.score}
                   </span>
-                  <span className="text-sm text-gray-500 ml-1">/{testData.maxScore}</span>
+                  <span className="text-sm text-gray-500 ml-1">
+                    /{testData.maxScore}
+                  </span>
                   <span className="ml-2 bg-green-100 text-green-800 text-xs font-medium py-0.5 px-2 rounded">
                     {selectedFriend.percentage}%
                   </span>
@@ -341,22 +374,22 @@ export default function TestResultClient({
               合計 ({testData.maxScore})
             </td>
             <td className="border border-gray-300 px-3 py-2 text-center">
-              {studentData.score}
-              /{testData.maxScore}
+              {studentData.score}/{testData.maxScore}
             </td>
             <td className="border border-gray-300 px-3 py-2 text-center">
-              {selectedFriend ? `${selectedFriend.score}/${testData.maxScore}` : "-"}
+              {selectedFriend
+                ? `${selectedFriend.score}/${testData.maxScore}`
+                : "-"}
             </td>
           </tr>
         </tbody>
       </table>
 
       {/* CRUD操作できるセクション */}
-      <div className="bg-white rounded-lg shadow p-6 text-center mt-8">
+      <div className="bg-white rounded-lg shadow p-6 text-center mt-8 mb-64">
         <button
-          onClick={() =>
-            alert("削除ボタンが押下されました。現在実装中の機能です。")
-          }
+          onClick={handleDeleteTestResult}
+          className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md transition-colors"
         >
           削除
         </button>

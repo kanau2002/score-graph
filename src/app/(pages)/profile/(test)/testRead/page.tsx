@@ -1,7 +1,7 @@
 //src/app/(pages)/profile/english/2018/page.tsx
 import React from "react";
 import { profileService } from "@/core/profile/profileService";
-import TestResultClient from "../../_components/TestResultClient";
+import TestRead from "../../_components/TestRead";
 
 type Props = {
   searchParams: { subject: string; year: string };
@@ -18,7 +18,7 @@ export default async function TestReadPage({ searchParams }: Props) {
   ]);
 
   return (
-    <TestResultClient
+    <TestRead
       studentData={studentData}
       friendsData={friendsData}
       testData={testData}
