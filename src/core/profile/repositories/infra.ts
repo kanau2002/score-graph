@@ -9,6 +9,7 @@ import {
   TestSubmissionResult,
   FollowUser,
   TestResult,
+  ProfileUpdateResponse,
 } from "../type";
 
 export class ProfileRepository {
@@ -56,6 +57,57 @@ export class ProfileRepository {
     } catch (error) {
       console.error("プロフィールデータ取得エラー:", error);
       throw error;
+    }
+  }
+
+  // プロフィール情報の更新
+  async updateProfileData(data: {
+    userId: number;
+    userName: string;
+    targetUniversities: string[];
+    memo: string;
+    thumbnailUrl?: string;
+  }): Promise<ProfileUpdateResponse> {
+    try {
+      // トランザクション開始
+      await pool.query("BEGIN");
+
+      // usersテーブルを更新
+      await pool.query(
+        `UPDATE users
+       SET 
+        user_name = $1,
+        targetUniversity_1 = $2,
+        targetUniversity_2 = $3,
+        targetUniversity_3 = $4,
+        memo = $5,
+        thumbnail_url = $6,
+        updated_at = CURRENT_TIMESTAMP
+       WHERE 
+        id = $7`,
+        [
+          data.userName,
+          data.targetUniversities[0] || null,
+          data.targetUniversities[1] || null,
+          data.targetUniversities[2] || null,
+          data.memo,
+          data.thumbnailUrl || null,
+          data.userId,
+        ]
+      );
+
+      // トランザクションコミット
+      await pool.query("COMMIT");
+
+      return { success: true };
+    } catch (error) {
+      // エラー発生時はロールバック
+      await pool.query("ROLLBACK");
+      console.error("プロフィール更新エラー:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+      };
     }
   }
 
@@ -337,7 +389,6 @@ export class ProfileRepository {
     }
   }
 
-
   // テスト結果と解答データを削除するメソッド
   async deleteTestResult(
     userId: number,
@@ -367,7 +418,8 @@ export class ProfileRepository {
       await pool.query("COMMIT");
 
       // 削除が成功したかどうかをチェック
-      const deleted = deleteResult.rowCount != null && deleteResult.rowCount > 0;
+      const deleted =
+        deleteResult.rowCount != null && deleteResult.rowCount > 0;
 
       return {
         success: deleted,
