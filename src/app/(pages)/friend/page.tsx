@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useFollow } from "@/app/hooks/useFollow";
 import axios from "axios";
+import { CircleUserRound } from "lucide-react";
 
 interface User {
   id: number;
@@ -78,7 +79,7 @@ export default function FriendPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4">
+    <div className="max-w-md mx-auto p-2">
       {/* ユーザー検索セクション */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
         <h2 className="text-xl font-bold mb-4">ユーザー検索</h2>
@@ -118,11 +119,10 @@ export default function FriendPage() {
                   key={user.id}
                   className="flex items-center justify-between p-3 border rounded hover:bg-gray-50"
                 >
-                  <div>
-                    <span className="font-medium">{user.userName}</span>
-                    <span className="text-gray-500 ml-2">
-                      （ID: {user.id}）
-                    </span>
+                  <div className="flex items-center">
+                    <CircleUserRound className="w-6 h-6" />
+                    <span className="font-medium ml-2">{user.userName}</span>
+                    <span className="text-gray-500">（ID: {user.id}）</span>
                   </div>
 
                   {isFollowing(user.id) ? (
@@ -197,11 +197,10 @@ export default function FriendPage() {
                   key={user.id}
                   className="flex items-center justify-between p-3 border rounded hover:bg-gray-50"
                 >
-                  <div>
-                    <span className="font-medium">{user.userName}</span>
-                    <span className="text-gray-500 ml-2">
-                      （ID: {user.id}）
-                    </span>
+                  <div className="flex items-center">
+                    <CircleUserRound className="w-6 h-6" />
+                    <span className="font-medium ml-2">{user.userName}</span>
+                    <span className="text-gray-500">（ID: {user.id}）</span>
                   </div>
                   <button
                     onClick={() => unfollowUser(user.id)}

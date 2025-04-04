@@ -7,6 +7,7 @@ export const ROUTES = {
   FRIEND: '/friend',
   NEWS: '/news',
   PROFILE: '/profile',
+  PROFILE_UPDATE: '/profile/profileUpdate',
   HEART: '/heart',
   SETTING: '/setting',
   LOGOUT: '/logout',
