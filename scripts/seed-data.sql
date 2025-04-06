@@ -5,7 +5,7 @@ BEGIN;
 ALTER SEQUENCE tests_id_seq RESTART WITH 1;
 ALTER SEQUENCE tests_target_id_seq RESTART WITH 1;
 ALTER SEQUENCE users_id_seq RESTART WITH 1;
-ALTER SEQUENCE user_subject_id_seq RESTART WITH 1;
+ALTER SEQUENCE cards_id_seq RESTART WITH 1;
 ALTER SEQUENCE test_answer_id_seq RESTART WITH 1;
 
 -- プロフィールデータの挿入
@@ -24,7 +24,7 @@ VALUES (
 
 
 -- 科目カードデータの挿入
-INSERT INTO user_subject (user_id, subject, final_score_target, final_score_lowest, memo)
+INSERT INTO cards (user_id, subject, final_score_target, final_score_lowest, memo)
 VALUES 
   (1, 'READING', 84, 70, '英語は1月から英語長文ポラリス1の文を例文としてスラスラ言えるレベルをテーマに30分/日音読をしたことで伸びた気がします。'),
   (1, 'MATH1A', 75, 60, '数1Aは基礎問を2周回したら70点台に乗りました。とてもおすすめなのでぜひやってみてください。'),

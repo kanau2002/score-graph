@@ -1,10 +1,17 @@
 -- 科目enum型
 CREATE TYPE subject_enum AS ENUM (
   'READING',
+  'LISTENING',
   'MATH1A',
   'MATH2B',
   'CHEMISTRY',
-  'BIOLOGY'
+  'PHYSICS',
+  'BIOLOGY',
+  'JAPANESEHISTORY',
+  'WORLDHISTORY',
+  'GEOGRAPHY',
+  'CIVICS',
+  'INFORMATION'
 );
 
 -- 解答状態enum型
@@ -37,7 +44,7 @@ CREATE TABLE users (
 );
 
 -- 科目カードテーブル
-CREATE TABLE user_subject (
+CREATE TABLE cards (
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   subject subject_enum NOT NULL,
@@ -159,8 +166,8 @@ CREATE TRIGGER update_users_modtime
 BEFORE UPDATE ON users 
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
-CREATE TRIGGER update_user_modtime 
-BEFORE UPDATE ON user_subject 
+CREATE TRIGGER update_cards_modtime 
+BEFORE UPDATE ON cards 
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 CREATE TRIGGER update_tests_modtime 

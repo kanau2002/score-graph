@@ -115,11 +115,11 @@ export class ProfileRepository {
   async fetchCardDatasRaw(): Promise<CardDataRaw[]> {
     const query = `
     SELECT 
-      us.id,
-      us.subject,
-      us.final_score_target,
-      us.final_score_lowest,
-      us.memo,
+      c.id,
+      c.subject,
+      c.final_score_target,
+      c.final_score_lowest,
+      c.memo,
       json_agg(
         json_build_object(
           'id', t.id,
@@ -130,13 +130,13 @@ export class ProfileRepository {
         ) ORDER BY t.date DESC
       ) AS "testResults"
     FROM 
-      user_subject us
+      cards c
     JOIN 
-      tests t ON us.subject = t.subject AND us.user_id = t.user_id
+      tests t ON c.subject = t.subject AND c.user_id = t.user_id
     WHERE 
-      us.user_id = 1
+      c.user_id = 1
     GROUP BY 
-      us.id, us.subject, us.final_score_target, us.final_score_lowest, us.memo
+      c.id, c.subject, c.final_score_target, c.final_score_lowest, c.memo
   `;
 
     try {

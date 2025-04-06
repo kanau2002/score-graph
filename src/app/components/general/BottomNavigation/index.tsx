@@ -5,8 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   HomeIcon,
+  Newspaper,
   UsersRound,
-  MessageCircleMore,
   CircleUserRound,
 } from "lucide-react";
 
@@ -23,10 +23,10 @@ export default function BottomNavigation() {
       activeIcon: HomeIcon,
     },
     {
-      label: "メッセージ",
-      href: ROUTES.INPUT,
-      icon: MessageCircleMore,
-      activeIcon: MessageCircleMore,
+      label: "ニュース",
+      href: ROUTES.NEWS,
+      icon: Newspaper,
+      activeIcon: Newspaper,
     },
     {
       label: "フレンド",
