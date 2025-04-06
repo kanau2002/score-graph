@@ -350,6 +350,8 @@ export const testDatas = [
         section: 3,
         questions: [
           { questionNumber: 27, score: 5, correctAnswer: 2 },
+          { questionNumber: 28, score: 5, correctAnswer: 3 },
+          { questionNumber: 29, score: 5, correctAnswer: 2 },
           { questionNumber: 30, score: 6, correctAnswer: 1 },
           { questionNumber: 31, score: 6, correctAnswer: 3 },
           { questionNumber: 32, score: 6, correctAnswer: 4 },

@@ -1,6 +1,6 @@
 // src/app/(pages)/profile/_components/YearSelecter/index.tsx
 import React, { useState, useRef, useEffect } from "react";
-import { SquarePlus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Subject } from "@/core/profile/type";
 
@@ -43,7 +43,7 @@ const YearSelecter: React.FC<Props> = ({ subject, unAnsweredYears }) => {
     <div className="relative p-2 ml-auto" ref={dropdownRef}>
       {/* SquarePlusボタン */}
       <button onClick={() => setIsOpen(!isOpen)}>
-        <SquarePlus className="w-6 h-6" />
+        <Plus className="w-6 h-6" />
       </button>
 
       {/* ドロップダウンメニュー */}

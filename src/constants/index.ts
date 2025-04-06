@@ -8,6 +8,7 @@ export const ROUTES = {
   NEWS: '/news',
   PROFILE: '/profile',
   PROFILE_UPDATE: '/profile/profileUpdate',
+  CARD_CREATE: 'profile/cardCreate',
   HEART: '/heart',
   SETTING: '/setting',
   LOGOUT: '/logout',

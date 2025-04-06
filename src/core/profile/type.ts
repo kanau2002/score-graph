@@ -3,10 +3,17 @@ import { TooltipProps } from "recharts";
 
 export enum Subject {
   READING = "READING",
+  LISTENING = 'LISTENING',
   MATH1A = "MATH1A",
   MATH2B = "MATH2B",
   CHEMISTRY = "CHEMISTRY",
+  PHYSICS = "PHYSICS",
   BIOLOGY = "BIOLOGY",
+  JAPANESEHISTORY = "JAPANESEHISTORY",
+  WORLDHISTORY = "WORLDHISTORY",
+  GEOGRAPHY = "GEOGRAPHY",
+  CIVICS = "CIVICS",
+  INFORMATION = "INFORMATION",
 }
 
 export enum Answer {

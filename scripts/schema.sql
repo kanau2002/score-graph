@@ -1,10 +1,17 @@
 -- 科目enum型
 CREATE TYPE subject_enum AS ENUM (
   'READING',
+  'LISTENING',
   'MATH1A',
   'MATH2B',
   'CHEMISTRY',
-  'BIOLOGY'
+  'PHYSICS',
+  'BIOLOGY',
+  'JAPANESEHISTORY',
+  'WORLDHISTORY',
+  'GEOGRAPHY',
+  'CIVICS',
+  'INFORMATION'
 );
 
 -- 解答状態enum型
@@ -37,7 +44,7 @@ CREATE TABLE users (
 );
 
 -- 科目カードテーブル
-CREATE TABLE user_subject (
+CREATE TABLE cards (
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   subject subject_enum NOT NULL,
@@ -123,6 +130,17 @@ CREATE TABLE test_answer (
   UNIQUE (user_id, subject, year, question_number)
 );
 
+CREATE TABLE news (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  content TEXT NOT NULL,
+  excerpt TEXT NOT NULL,
+  date DATE NOT NULL,
+  category VARCHAR(100) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- 更新タイムスタンプを自動的に更新するための関数
 CREATE OR REPLACE FUNCTION update_modified_column()
 RETURNS TRIGGER AS $$
@@ -148,8 +166,8 @@ CREATE TRIGGER update_users_modtime
 BEFORE UPDATE ON users 
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
-CREATE TRIGGER update_user_modtime 
-BEFORE UPDATE ON user_subject 
+CREATE TRIGGER update_cards_modtime 
+BEFORE UPDATE ON cards 
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 CREATE TRIGGER update_tests_modtime 
@@ -166,5 +184,9 @@ FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 CREATE TRIGGER update_user_follows_modtime 
 BEFORE UPDATE ON user_follows 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+CREATE TRIGGER update_news_modtime 
+BEFORE UPDATE ON news 
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
