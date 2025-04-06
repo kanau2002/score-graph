@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
+import { SquarePlus } from "lucide-react";
 import { Subject } from "@/core/profile/type";
 import { displaySubjectName } from "./TestResultCard";
 
@@ -49,12 +49,12 @@ const CardCreateSubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
       <div className="relative" ref={dropdownRef}>
         {/* Plusボタン */}
         <button onClick={() => setIsOpen(!isOpen)}>
-          <Plus />
+          <SquarePlus />
         </button>
 
         {/* ドロップダウンメニュー */}
         {isOpen && (
-          <div className="absolute z-10 right-0 w-48 bg-white border border-gray-200 rounded-md shadow-lg mt-1 p-1 max-h-60 overflow-auto">
+          <div className="absolute z-10 right-4 bottom-10 w-36 bg-white border border-gray-200 rounded-md shadow-lg mt-1 p-1 max-h-60 overflow-auto">
             <div className="py-1 px-2 text-xs text-gray-500 border-b border-gray-100">
               追加する科目を選択
             </div>

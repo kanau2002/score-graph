@@ -23,7 +23,9 @@ export default async function ProfilePage() {
         />
       ))}
       {unAnsweredSubjects.length > 0 && (
-        <CardCreateSubjectSelecter unAnsweredSubjects={unAnsweredSubjects} />
+        <div className="text-center my-8">
+          <CardCreateSubjectSelecter unAnsweredSubjects={unAnsweredSubjects} />
+        </div>
       )}
     </div>
   );

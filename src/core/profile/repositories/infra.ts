@@ -120,18 +120,21 @@ export class ProfileRepository {
       c.final_score_target,
       c.final_score_lowest,
       c.memo,
-      json_agg(
-        json_build_object(
-          'id', t.id,
-          'date', to_char(t.date, 'YYYY/MM/DD'),
-          'year', t.year,
-          'percentage', t.percentage,
-          'memo', t.memo
-        ) ORDER BY t.date DESC
-      ) AS "testResults"
+      CASE 
+        WHEN COUNT(t.id) = 0 THEN '[]'::json
+        ELSE json_agg(
+          json_build_object(
+            'id', t.id,
+            'date', to_char(t.date, 'YYYY/MM/DD'),
+            'year', t.year,
+            'percentage', t.percentage,
+            'memo', t.memo
+          ) ORDER BY t.date DESC
+        )
+      END AS "testResults"
     FROM 
       cards c
-    JOIN 
+    LEFT JOIN 
       tests t ON c.subject = t.subject AND c.user_id = t.user_id
     WHERE 
       c.user_id = 1
@@ -152,6 +155,7 @@ export class ProfileRepository {
           Number(testResult.year)
         ),
       }));
+      console.log("cardDatasRaw", cardDatasRaw);
 
       return cardDatasRaw;
     } catch (error) {
