@@ -123,6 +123,17 @@ CREATE TABLE test_answer (
   UNIQUE (user_id, subject, year, question_number)
 );
 
+CREATE TABLE news (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  content TEXT NOT NULL,
+  excerpt TEXT NOT NULL,
+  date DATE NOT NULL,
+  category VARCHAR(100) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- 更新タイムスタンプを自動的に更新するための関数
 CREATE OR REPLACE FUNCTION update_modified_column()
 RETURNS TRIGGER AS $$
@@ -166,5 +177,9 @@ FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 CREATE TRIGGER update_user_follows_modtime 
 BEFORE UPDATE ON user_follows 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+CREATE TRIGGER update_news_modtime 
+BEFORE UPDATE ON news 
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
