@@ -10,9 +10,8 @@ interface Props {
   unAnsweredSubjects: Subject[];
 }
 
-const CardCreateSubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
+const SubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -34,7 +33,6 @@ const CardCreateSubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
   }, []);
 
   const handleSelect = (subject: Subject) => {
-    setSelectedSubject(subject);
     setIsOpen(false);
     // 選択された科目に基づいてページ遷移
     router.push(`/profile/cardCreate?subject=${subject}`);
@@ -63,11 +61,9 @@ const CardCreateSubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
                 <li key={subject}>
                   <button
                     type="button"
-                    className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-100 focus:bg-gray-100 focus:outline-none rounded ${
-                      selectedSubject === subject
-                        ? "bg-gray-100 font-medium"
-                        : ""
-                    }`}
+                    className={
+                      "w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded"
+                    }
                     onClick={() => handleSelect(subject)}
                   >
                     {displaySubjectName(subject)}
@@ -82,4 +78,4 @@ const CardCreateSubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
   );
 };
 
-export default CardCreateSubjectSelecter;
+export default SubjectSelecter;

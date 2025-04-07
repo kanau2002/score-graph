@@ -4,7 +4,7 @@
 import { useState, useRef, useEffect } from "react";
 import {
   SquareUserRound,
-  MessageCircleMore,
+  MessageSquareText,
   ListFilter,
   ArrowRightToLine,
   CircleUserRound,
@@ -29,6 +29,7 @@ import {
   TestResult,
 } from "@/core/profile/type";
 import YearSelecter from "../YearSelecter";
+import SettingModal from "../SettingModal";
 
 interface Props {
   profileInfo: ProfileData;
@@ -67,7 +68,7 @@ export const displaySubjectName = (subject: Subject): string => {
 };
 
 export default function TestResultCard({ profileInfo, cardData }: Props) {
-  const [showTable, setShowTable] = useState(false);
+  const [showTable, setShowTable] = useState(true);
   const [tableHeight, setTableHeight] = useState<number>(0);
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [showProfileInfo, setShowProfileInfo] = useState(false);
@@ -101,10 +102,6 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
     }
   }, [showProfileInfo, profileInfo]);
 
-  // プロフィール情報の短縮表示用
-  const shortProfileInfo =
-    profileInfo.targetUniversities[1].substring(0, 10) + "...";
-
   return (
     <div className="w-full rounded-lg shadow bg-white">
       {/* ヘッダー部分 */}
@@ -124,6 +121,9 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
         <div className="text-xs flex">
           <p className="font-bold">{profileInfo.userName}</p>
           <p>　{displaySubjectName(cardData.subject)}</p>
+        </div>
+        <div className="ml-auto mr-2">
+          <SettingModal subject={cardData.subject} />
         </div>
       </div>
 
@@ -216,7 +216,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
           onClick={() => setShowFullDescription(!showFullDescription)}
           aria-expanded={showFullDescription}
         >
-          <MessageCircleMore
+          <MessageSquareText
             className={`w-6 h-6 transform transition-transform duration-300 ${
               showFullDescription ? "text-blue-500" : ""
             }`}
@@ -260,14 +260,14 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
       </div>
 
       {/* プロフィール情報の短縮表示（閉じているとき） */}
-      {!showProfileInfo &&
+      {/* {!showProfileInfo &&
         showFullDescription === false &&
         showTable === false && (
           <div className="px-4 mt-2">
             <p className="text-sm mb-2">
               〜志望校〜
               <br />・{profileInfo.targetUniversities[0]}
-              <br />・{shortProfileInfo}
+              <br />・{profileInfo.targetUniversities[1].substring(0, 10) + "..."}
               <button
                 className="text-gray-500 font-medium ml-1"
                 onClick={() => setShowProfileInfo(true)}
@@ -276,7 +276,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
               </button>
             </p>
           </div>
-        )}
+        )} */}
 
       {/* 説明文（アニメーション付きトグル表示） */}
       <div
@@ -288,12 +288,22 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
         }}
       >
         <div ref={descriptionRef} className="px-4 pb-2">
-          <p className="text-sm">
-            ＜{displaySubjectName(cardData.subject)}＞<br />
-            {cardData.memo}
-          </p>
+          <p className="text-sm">{cardData.memo}</p>
         </div>
       </div>
+      {!showFullDescription && (
+        <div className="px-4 mt-2 text-sm">
+          <p className="truncate">
+            {cardData.memo.substring(0, 20) + "..."}
+            <button
+              className="text-gray-500 font-medium ml-1"
+              onClick={() => setShowFullDescription(true)}
+            >
+              続きを読む
+            </button>
+          </p>
+        </div>
+      )}
 
       {/* テスト結果テーブル（アニメーション付きトグル表示） */}
       <div

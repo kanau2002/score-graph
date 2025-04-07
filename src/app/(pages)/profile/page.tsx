@@ -3,7 +3,8 @@ import { profileService } from "@/core/profile/profileService";
 import ProfileRead from "./_components/ProfileRead";
 import { cardService } from "@/core/card/cardService";
 import TestResultCard from "./_components/TestResultCard";
-import CardCreateSubjectSelecter from "./_components/CardCreateSubjectSelecter";
+import SubjectSelecter from "./_components/SubjectSelecter";
+
 
 export default async function ProfilePage() {
   const [profileInfo, cardDatas, unAnsweredSubjects] = await Promise.all([
@@ -24,7 +25,7 @@ export default async function ProfilePage() {
       ))}
       {unAnsweredSubjects.length > 0 && (
         <div className="text-center my-8">
-          <CardCreateSubjectSelecter unAnsweredSubjects={unAnsweredSubjects} />
+          <SubjectSelecter unAnsweredSubjects={unAnsweredSubjects} />
         </div>
       )}
     </div>

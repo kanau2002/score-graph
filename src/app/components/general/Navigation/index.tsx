@@ -3,13 +3,11 @@
 import { ROUTES } from "@/constants";
 import Link from "next/link";
 import React from "react";
-import { X } from "lucide-react";
+import { Newspaper, X } from "lucide-react";
 import {
   HomeIcon,
   UsersRound,
-  Pencil,
   CircleUserRound,
-  MessageCircle,
   Tally1,
   Heart,
   Settings,
@@ -28,28 +26,22 @@ export default function Navigation({ setIsOpen }: Props) {
       activeIcon: HomeIcon,
     },
     {
+      label: "ニュース",
+      href: ROUTES.NEWS,
+      icon: Newspaper,
+      activeIcon: Newspaper,
+    },
+    {
       label: "フレンド",
       href: ROUTES.FRIEND,
       icon: UsersRound,
       activeIcon: UsersRound,
     },
     {
-      label: "入力",
-      href: ROUTES.INPUT,
-      icon: Pencil,
-      activeIcon: Pencil,
-    },
-    {
       label: "プロフィール",
       href: ROUTES.PROFILE,
       icon: CircleUserRound,
       activeIcon: CircleUserRound,
-    },
-    {
-      label: "ニュース",
-      href: ROUTES.NEWS,
-      icon: MessageCircle,
-      activeIcon: MessageCircle,
     },
     {
       label: "",

@@ -155,7 +155,6 @@ export class ProfileRepository {
           Number(testResult.year)
         ),
       }));
-      console.log("cardDatasRaw", cardDatasRaw);
 
       return cardDatasRaw;
     } catch (error) {
