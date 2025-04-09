@@ -1,6 +1,6 @@
 // src/core/cards/cardService.ts
 import { Subject } from "@/core/profile/type";
-import { CardCreateData, CardCreateResponse } from "./cardType";
+import { CardCreateData, CardCreateResponse, CardDeleteResponse } from "./cardType";
 import { CardRepository } from "./cardRepository";
 
 class CardService {
@@ -88,6 +88,36 @@ class CardService {
     }
 
     return true;
+  }
+  /**
+   * 科目カードとそれに関連するデータを削除する
+   * @param subject 削除する科目
+   */
+  async deleteCard(subject: Subject): Promise<CardDeleteResponse> {
+    try {
+      // 実際のアプリでは認証情報からユーザーIDを取得する
+      const userId = 1; // デフォルトのユーザーID
+
+      // 入力検証
+      if (!subject) {
+        return {
+          success: false,
+          error: "科目が指定されていません。",
+        };
+      }
+
+      // リポジトリを呼び出してデータを削除
+      return await this.repository.deleteCard(userId, subject);
+    } catch (error) {
+      console.error("科目カード削除処理でエラーが発生しました:", error);
+      return {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : "カード削除中にエラーが発生しました",
+      };
+    }
   }
 }
 
