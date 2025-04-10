@@ -726,7 +726,7 @@ export class ProfileRepository {
     }
   }
 
-  // テスト目標の設定（修正後）
+  // テスト目標の設定
   async saveTestTargets(data: {
     userId: number;
     subject: Subject;

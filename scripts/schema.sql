@@ -87,7 +87,7 @@ CREATE TABLE tests (
   UNIQUE (user_id, subject, year)
 );
 
--- テストのテストの目標管理テーブル
+-- テストの目標管理テーブル
 CREATE TABLE tests_target (
   id SERIAL PRIMARY KEY,
   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,

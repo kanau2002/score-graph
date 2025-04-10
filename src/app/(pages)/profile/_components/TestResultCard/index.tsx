@@ -291,7 +291,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
           <p className="text-sm">{cardData.memo}</p>
         </div>
       </div>
-      {!showFullDescription && (
+      {!showFullDescription && cardData.memo && (
         <div className="px-4 mt-2 text-sm">
           <p className="truncate">
             {cardData.memo.substring(0, 20) + "..."}

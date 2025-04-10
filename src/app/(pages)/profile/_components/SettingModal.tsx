@@ -8,9 +8,9 @@ import { toast } from "react-hot-toast"; // トースト通知（必要に応じ
 const settingModalItems = [
   {
     id: 1,
-    name: "目標点編集  ",
+    name: "目標設定  ",
     icon: Crosshair,
-    href: "targetEdit",
+    href: "targetUpsert",
     isRed: false,
   },
   {
