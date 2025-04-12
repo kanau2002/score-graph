@@ -3,7 +3,7 @@
 
 import React, { useState } from "react";
 import { Subject } from "@/core/profile/type";
-import { TargetData } from "@/core/target/targetType";
+import { TargetData } from "@/type/targetType";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast"; // トースト通知用（必要に応じてインストール）
 import { displaySubjectName } from "../../../_components/TestResultCard";

@@ -1,5 +1,5 @@
 // src/app/(pages)/news/_components/NewsPage.tsx
-import { newsService } from "@/core/news/newsService";
+import { newsService } from "@/core/Service/newsService";
 import CategoryFilter from "./CategoryFilter";
 import NewsList from "./NewsList";
 import Pagination from "./Pagination";

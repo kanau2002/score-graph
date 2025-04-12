@@ -4,7 +4,7 @@ import {
   CardCreateResponse,
   CardDeleteResponse,
   CardUpdateResponse,
-} from "./cardType";
+} from "../../type/cardType";
 
 export class CardRepository {
   // 科目カードを作成するメソッド
@@ -116,8 +116,6 @@ export class CardRepository {
       };
     }
   }
-
-
 
   // 利用可能な科目の一覧を取得するメソッド
   async fetchUnAnsweredSubjects(userId: number): Promise<Subject[]> {

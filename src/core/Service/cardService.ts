@@ -4,8 +4,8 @@ import {
   CardData,
   CardDeleteResponse,
   CardUpdateResponse,
-} from "./cardType";
-import { CardRepository } from "./cardRepository";
+} from "../../type/cardType";
+import { CardRepository } from "../Repository/cardRepository";
 
 // TODO
 const userId = 1; // デフォルトのユーザーID

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { targetService } from "@/core/target/targetService";
+import { targetService } from "@/core/Service/targetService";
 import { Subject } from "@/core/profile/type";
 
 export async function POST(request: Request) {

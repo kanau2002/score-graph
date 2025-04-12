@@ -1,7 +1,11 @@
 //src/core/target/targetRepository.ts
 import { pool } from "@/lib/db";
 import { Subject } from "@/core/profile/type";
-import { TargetSaveData, TargetUpsertResponse, TargetData } from "./targetType";
+import {
+  TargetData,
+  TargetSaveData,
+  TargetUpsertResponse,
+} from "../../type/targetType";
 
 export class TargetRepository {
   // ターゲットデータを保存（新規または更新）するメソッド

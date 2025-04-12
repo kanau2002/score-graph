@@ -1,5 +1,4 @@
-// src/core/cards/cardType.ts
-import { Subject } from "../profile/type";
+import { Subject } from "../core/profile/type";
 
 export interface CardData {
   subject: Subject;

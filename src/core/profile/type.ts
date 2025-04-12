@@ -1,9 +1,8 @@
-//src/core/profile/type.ts
 import { TooltipProps } from "recharts";
 
 export enum Subject {
   READING = "READING",
-  LISTENING = 'LISTENING',
+  LISTENING = "LISTENING",
   MATH1A = "MATH1A",
   MATH2B = "MATH2B",
   CHEMISTRY = "CHEMISTRY",
@@ -179,36 +178,6 @@ export interface ClientTestSection {
     studentTotal?: number;
     friendTotal?: number;
   };
-}
-
-export interface FollowUser {
-  id: number;
-  userName: string;
-}
-
-export interface FollowStatus {
-  isFollowing: boolean;
-  isFollowedBy: boolean;
-  isMutual: boolean;
-}
-
-// API 用の型定義
-export interface FollowRequest {
-  userId: number;
-  friendId: number;
-}
-
-export interface FollowResponse {
-  success: boolean;
-  isFollowing: boolean;
-  isFollowedBy: boolean;
-  isMutual: boolean;
-}
-
-export interface FollowsListResponse {
-  following: FollowUser[];
-  followers: FollowUser[];
-  mutualFollows: FollowUser[];
 }
 
 export type TestSubmissionData = {

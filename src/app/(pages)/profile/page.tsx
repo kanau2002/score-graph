@@ -1,25 +1,24 @@
-//src/app/(pages)/profile/page.tsx
 import { profileService } from "@/core/profile/profileService";
 import ProfileRead from "./_components/ProfileRead";
-import { cardService } from "@/core/card/cardService";
 import TestResultCard from "./_components/TestResultCard";
 import SubjectSelecter from "./_components/SubjectSelecter";
-
+import { cardService } from "@/core/Service/cardService";
+import { userService } from "@/core/Service/userService";
 
 export default async function ProfilePage() {
-  const [profileInfo, cardAllDatas, unAnsweredSubjects] = await Promise.all([
-    profileService.fetchProfileData(),
+  const [userInfo, cardAllDatas, unAnsweredSubjects] = await Promise.all([
+    userService.fetchUserData(),
     profileService.fetchCardAllDatas(),
     cardService.fetchUnAnsweredSubjects(),
   ]);
 
   return (
     <div className="max-w-md mx-auto rounded-lg mb-32">
-      <ProfileRead profileInfo={profileInfo} />
+      <ProfileRead profileInfo={userInfo} />
       {cardAllDatas.map((cardAllData, index) => (
         <TestResultCard
           key={index}
-          profileInfo={profileInfo}
+          profileInfo={userInfo}
           cardAllData={cardAllData}
         />
       ))}

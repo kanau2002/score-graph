@@ -4,8 +4,8 @@ import {
   TargetUpsertResponse,
   TargetData,
   TargetUpsertData,
-} from "./targetType";
-import { TargetRepository } from "./targetRepository";
+} from "../../type/targetType";
+import { TargetRepository } from "../Repository/targetRepository";
 
 class TargetService {
   private repository: TargetRepository;

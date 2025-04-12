@@ -1,7 +1,10 @@
 // src/core/news/repositories/infra.ts
 import { pool } from "@/lib/db";
-import { NewsItem, NewsPaginationResult, NewsQueryParams } from "./type";
-
+import {
+  NewsItem,
+  NewsPaginationResult,
+  NewsQueryParams,
+} from "../../type/newsType";
 
 export class NewsRepository {
   // ニュース一覧を取得するメソッド（ページネーションとカテゴリフィルタリング対応）
@@ -18,6 +21,8 @@ export class NewsRepository {
 
       // WHERE句の条件を動的に構築
       let whereClause = "";
+      // TODO
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const queryParams: any[] = [];
 
       if (category && category !== "all") {

@@ -1,5 +1,5 @@
 //src/app/(pages)/profile/(target)/targetUpsert/page.tsx
-import { targetService } from "@/core/target/targetService";
+import { targetService } from "@/core/Service/targetService";
 import TargetUpsert from "./_components/TargetUpsert";
 import { redirect } from "next/navigation";
 import { Subject } from "@/core/profile/type";

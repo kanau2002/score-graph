@@ -1,19 +1,16 @@
+import { FollowUser } from "@/type/followType";
 import { testDatas } from "./repositories/data";
 import { ProfileRepository } from "./repositories/infra";
 import {
-  ProfileData,
   CardAllData,
   AnsweredData,
   TestData,
-  FollowUser,
   TestSubmissionData,
   TestSubmissionResult,
   Subject,
   MonthlyTarget,
   ChartData,
   TestResult,
-  ProfileUpdateData,
-  ProfileUpdateResponse,
 } from "./type";
 
 class ProfileService {
@@ -21,38 +18,6 @@ class ProfileService {
 
   constructor() {
     this.repository = new ProfileRepository();
-  }
-
-  // プロフィール情報の取得
-  async fetchProfileData(): Promise<ProfileData> {
-    return this.repository.fetchProfileData();
-  }
-
-  // プロフィール情報の更新
-  async updateProfileData(
-    data: ProfileUpdateData
-  ): Promise<ProfileUpdateResponse> {
-    try {
-      // 実際のアプリでは認証情報からユーザーIDを取得する
-      const userId = 1; // デフォルトのユーザーID
-
-      // repositoryを呼び出してデータを更新
-      const result = await this.repository.updateProfileData({
-        ...data,
-        userId,
-      });
-
-      return result;
-    } catch (error) {
-      console.error("プロフィール更新処理でエラーが発生しました:", error);
-      return {
-        success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "プロフィール更新中にエラーが発生しました",
-      };
-    }
   }
 
   // テスト構造情報の取得
@@ -182,59 +147,6 @@ class ProfileService {
             ? error.message
             : "テスト回答の保存中にエラーが発生しました",
       };
-    }
-  }
-
-  /**
-   * テストの目標を設定する
-   */
-  async saveTestTargets(data: {
-    subject: Subject;
-    targetPercentage: number;
-    targetMonth: string;
-    targetMemo?: string;
-    targetSectionPercentages: Record<number, number>;
-  }): Promise<{ success: boolean; error?: string }> {
-    try {
-      // 実際のアプリでは認証情報からユーザーIDを取得する
-      const userId = 1; // デフォルトのユーザーID
-
-      // repositoryを呼び出してデータを保存
-      const result = await this.repository.saveTestTargets({
-        ...data,
-        userId,
-      });
-
-      return result;
-    } catch (error) {
-      console.error("テスト目標の設定処理でエラーが発生しました:", error);
-      return {
-        success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "テスト目標の設定中にエラーが発生しました",
-      };
-    }
-  }
-
-  /**
-   * テストの目標を取得する
-   */
-  async fetchTestTarget(
-    subject: string,
-    targetMonth: string
-  ): Promise<{
-    targetPercentage: number;
-    targetMonth: string;
-    targetMemo?: string;
-    targetSectionPercentages: Record<number, number>;
-  } | null> {
-    try {
-      return await this.repository.fetchTestTarget(subject, targetMonth);
-    } catch (error) {
-      console.error("テスト目標の取得処理でエラーが発生しました:", error);
-      throw error;
     }
   }
 

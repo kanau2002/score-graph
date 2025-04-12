@@ -1,5 +1,5 @@
 //src/core/target/targetType.ts
-import { Subject } from "../profile/type";
+import { Subject } from "../core/profile/type";
 
 export interface TargetSaveData {
   userId: number;

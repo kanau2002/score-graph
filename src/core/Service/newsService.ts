@@ -1,9 +1,5 @@
-// src/core/news/newsService.ts
-
-import { NewsRepository } from "./newsRepository";
-import { NewsItem, NewsPaginationResult } from "./type";
-
-
+import { NewsRepository } from "../Repository/newsRepository";
+import { NewsItem, NewsPaginationResult } from "../../type/newsType";
 
 class NewsService {
   private repository: NewsRepository;
