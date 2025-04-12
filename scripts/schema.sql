@@ -151,7 +151,7 @@ END;
 $$ language 'plpgsql';
 
 -- フォロー関係を管理するテーブル
-CREATE TABLE user_follows (
+CREATE TABLE friend_follow (
   id SERIAL PRIMARY KEY,
   follower_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   following_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -182,8 +182,8 @@ CREATE TRIGGER update_test_answer_modtime
 BEFORE UPDATE ON test_answer 
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
-CREATE TRIGGER update_user_follows_modtime 
-BEFORE UPDATE ON user_follows 
+CREATE TRIGGER update_friend_follow_modtime 
+BEFORE UPDATE ON friend_follow 
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 CREATE TRIGGER update_news_modtime 

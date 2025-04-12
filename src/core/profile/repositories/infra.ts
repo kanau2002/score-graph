@@ -349,8 +349,8 @@ export class ProfileRepository {
         AND u.id != 1
         AND EXISTS (
           -- 相互フォロー関係のチェック：現在のユーザーがフォローしており、かつ相手にもフォローされている
-          SELECT 1 FROM user_follows f1
-          JOIN user_follows f2 ON f1.following_id = f2.follower_id AND f1.follower_id = f2.following_id
+          SELECT 1 FROM friend_follow f1
+          JOIN friend_follow f2 ON f1.following_id = f2.follower_id AND f1.follower_id = f2.following_id
           WHERE f1.follower_id = 1 AND f1.following_id = u.id
         )
       ORDER BY
@@ -444,7 +444,7 @@ export class ProfileRepository {
   // ユーザーをフォローする
   async followUser(userId: number, targetUserId: number): Promise<void> {
     const query = `
-      INSERT INTO user_follows (follower_id, following_id) 
+      INSERT INTO friend_follow (follower_id, following_id) 
       VALUES ($1, $2)
       ON CONFLICT (follower_id, following_id) DO NOTHING
     `;
@@ -460,7 +460,7 @@ export class ProfileRepository {
   // ユーザーのフォローを解除する
   async unfollowUser(userId: number, targetUserId: number): Promise<void> {
     const query = `
-      DELETE FROM user_follows
+      DELETE FROM friend_follow
       WHERE follower_id = $1 AND following_id = $2
     `;
 
@@ -477,8 +477,8 @@ export class ProfileRepository {
     const query = `
       SELECT u.id, u.user_name as "userName"
       FROM users u
-      JOIN user_follows f1 ON f1.following_id = u.id
-      JOIN user_follows f2 ON f2.follower_id = u.id
+      JOIN friend_follow f1 ON f1.following_id = u.id
+      JOIN friend_follow f2 ON f2.follower_id = u.id
       WHERE f1.follower_id = $1 AND f2.following_id = $1
       ORDER BY u.user_name
     `;
@@ -497,7 +497,7 @@ export class ProfileRepository {
     const query = `
       SELECT u.id, u.user_name as "userName"
       FROM users u
-      JOIN user_follows f ON f.following_id = u.id
+      JOIN friend_follow f ON f.following_id = u.id
       WHERE f.follower_id = $1
       ORDER BY u.user_name
     `;
@@ -545,8 +545,8 @@ export class ProfileRepository {
   ): Promise<{ isFollowing: boolean; isFollower: boolean }> {
     const query = `
       SELECT 
-        EXISTS (SELECT 1 FROM user_follows WHERE follower_id = $1 AND following_id = $2) as is_following,
-        EXISTS (SELECT 1 FROM user_follows WHERE follower_id = $2 AND following_id = $1) as is_follower
+        EXISTS (SELECT 1 FROM friend_follow WHERE follower_id = $1 AND following_id = $2) as is_following,
+        EXISTS (SELECT 1 FROM friend_follow WHERE follower_id = $2 AND following_id = $1) as is_follower
     `;
 
     try {
