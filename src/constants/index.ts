@@ -3,7 +3,6 @@
 export const ROUTES = {
   MAIN: '/',
   HOME: '/home',
-  INPUT: '/input',
   FRIEND: '/friend',
   NEWS: '/news',
   PROFILE: '/profile',

@@ -6,14 +6,14 @@ import { useRouter } from "next/navigation";
 import { Subject } from "@/core/profile/type";
 import { displaySubjectName } from "../../_components/TestResultCard";
 
-interface CardCreateProps {
-  subject?: Subject;
-}
+type Props = {
+  subject: Subject;
+};
 
-export default function CardCreate({ subject }: CardCreateProps) {
+export default function CardCreate({ subject }: Props) {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    subject: subject || Subject.READING,
+    subject: subject,
     finalScoreTarget: 75,
     finalScoreLowest: 60,
     memo: "",
@@ -75,12 +75,6 @@ export default function CardCreate({ subject }: CardCreateProps) {
     }
   };
 
-  // 科目一覧
-  const subjectOptions = Object.values(Subject).map((subj) => ({
-    value: subj,
-    label: displaySubjectName(subj),
-  }));
-
   return (
     <div className="max-w-md mx-auto">
       <h1 className="text-xl font-bold mb-4">科目カード作成</h1>
@@ -97,21 +91,9 @@ export default function CardCreate({ subject }: CardCreateProps) {
           <label htmlFor="subject" className="block text-sm font-medium mb-1">
             科目 *
           </label>
-          <select
-            id="subject"
-            name="subject"
-            value={formData.subject}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md"
-            required
-            disabled={!!subject} // URL パラメータで科目が指定されている場合は無効化
-          >
-            {subjectOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          <div className="p-2">
+            <p>{displaySubjectName(subject)}</p>
+          </div>
         </div>
 
         <div className="mb-4">

@@ -8,15 +8,13 @@ export const metadata: Metadata = {
   description: "新しい科目カードを作成してテスト結果や目標を管理します。",
 };
 
-type SearchParams = {
-  subject: Subject;
+type Props = {
+  searchParams: {
+    subject: Subject;
+  };
 };
 
-export default async function CardCreatePage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
+export default async function CardCreatePage({ searchParams }: Props) {
   const subject = searchParams.subject;
 
   return (

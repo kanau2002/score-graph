@@ -2,7 +2,7 @@ import { testDatas } from "./repositories/data";
 import { ProfileRepository } from "./repositories/infra";
 import {
   ProfileData,
-  CardData,
+  CardAllData,
   AnsweredData,
   TestData,
   FollowUser,
@@ -239,43 +239,43 @@ class ProfileService {
   }
 
   // 科目カード情報の取得（更新版）
-  async fetchCardDatas(): Promise<CardData[]> {
+  async fetchCardAllDatas(): Promise<CardAllData[]> {
     // 基本データの取得
-    const cardDatasRaw = await this.repository.fetchCardDatasRaw();
+    const cardAllDatasRaw = await this.repository.fetchCardAllDatasRaw();
 
     // 各科目ごとに月次目標データを取得
-    const cardDatas: CardData[] = await Promise.all(
-      cardDatasRaw.map(async (cardDataRaw) => {
+    const cardAllDatas: CardAllData[] = await Promise.all(
+      cardAllDatasRaw.map(async (data) => {
         // 未回答年度の取得
         const unAnsweredYears = this.getUnAnsweredYears(
-          cardDataRaw.subject,
-          cardDataRaw.answeredYears
+          data.subject,
+          data.answeredYears
         );
 
         // 月次目標データの取得
         const monthlyTargets = await this.repository.fetchMonthlyTargets(
-          cardDataRaw.subject
+          data.subject
         );
 
         // テスト結果と月次目標を統合したチャートデータの生成
         const chartData = this.integrateChartData(
-          cardDataRaw.testResults,
+          data.testResults,
           monthlyTargets
         );
 
         return {
-          subject: cardDataRaw.subject,
-          finalScoreTarget: cardDataRaw.finalScoreTarget,
-          finalScoreLowest: cardDataRaw.finalScoreLowest,
-          memo: cardDataRaw.memo,
-          testResults: cardDataRaw.testResults,
+          subject: data.subject,
+          finalScoreTarget: data.finalScoreTarget,
+          finalScoreLowest: data.finalScoreLowest,
+          memo: data.memo,
+          testResults: data.testResults,
           unAnsweredYears: unAnsweredYears,
           chartData: chartData,
         };
       })
     );
 
-    return cardDatas;
+    return cardAllDatas;
   }
 
   // 未回答年度を計算するヘルパーメソッド

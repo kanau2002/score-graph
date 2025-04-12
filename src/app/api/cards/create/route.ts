@@ -1,10 +1,10 @@
 import { cardService } from "@/core/card/cardService";
-import { CardCreateData } from "@/core/card/cardType";
+import { CardData } from "@/core/card/cardType";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const data: CardCreateData = await req.json();
+    const data: CardData = await req.json();
 
     // データのバリデーション
     if (!data.subject) {

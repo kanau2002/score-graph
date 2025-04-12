@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
+import { SquarePlus } from "lucide-react";
 import { Subject } from "@/core/profile/type";
 import { displaySubjectName } from "./TestResultCard";
 
@@ -10,9 +10,8 @@ interface Props {
   unAnsweredSubjects: Subject[];
 }
 
-const CardCreateSubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
+const SubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -34,7 +33,6 @@ const CardCreateSubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
   }, []);
 
   const handleSelect = (subject: Subject) => {
-    setSelectedSubject(subject);
     setIsOpen(false);
     // 選択された科目に基づいてページ遷移
     router.push(`/profile/cardCreate?subject=${subject}`);
@@ -49,12 +47,12 @@ const CardCreateSubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
       <div className="relative" ref={dropdownRef}>
         {/* Plusボタン */}
         <button onClick={() => setIsOpen(!isOpen)}>
-          <Plus />
+          <SquarePlus />
         </button>
 
         {/* ドロップダウンメニュー */}
         {isOpen && (
-          <div className="absolute z-10 right-0 w-48 bg-white border border-gray-200 rounded-md shadow-lg mt-1 p-1 max-h-60 overflow-auto">
+          <div className="absolute z-10 right-4 bottom-10 w-36 bg-white border border-gray-200 rounded-md shadow-lg mt-1 p-1 max-h-60 overflow-auto">
             <div className="py-1 px-2 text-xs text-gray-500 border-b border-gray-100">
               追加する科目を選択
             </div>
@@ -63,11 +61,9 @@ const CardCreateSubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
                 <li key={subject}>
                   <button
                     type="button"
-                    className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-100 focus:bg-gray-100 focus:outline-none rounded ${
-                      selectedSubject === subject
-                        ? "bg-gray-100 font-medium"
-                        : ""
-                    }`}
+                    className={
+                      "w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded"
+                    }
                     onClick={() => handleSelect(subject)}
                   >
                     {displaySubjectName(subject)}
@@ -82,4 +78,4 @@ const CardCreateSubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
   );
 };
 
-export default CardCreateSubjectSelecter;
+export default SubjectSelecter;

@@ -1,4 +1,3 @@
-// src/app/(pages)/profile/_components/YearSelecter/index.tsx
 import React, { useState, useRef, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -11,7 +10,6 @@ interface Props {
 
 const YearSelecter: React.FC<Props> = ({ subject, unAnsweredYears }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -33,7 +31,6 @@ const YearSelecter: React.FC<Props> = ({ subject, unAnsweredYears }) => {
   }, []);
 
   const handleSelect = (year: number) => {
-    setSelectedYear(year);
     setIsOpen(false);
     // 選択された年に基づいてページ遷移
     router.push(`/profile/testCreate?subject=${subject}&year=${year}`);
@@ -49,14 +46,17 @@ const YearSelecter: React.FC<Props> = ({ subject, unAnsweredYears }) => {
       {/* ドロップダウンメニュー */}
       {isOpen && (
         <div className="absolute z-10 right-0 w-24 bg-white border border-gray-200 rounded-md shadow-lg mt-1 p-1 max-h-60 overflow-auto">
+          <div className="py-1 px-2 text-xs text-gray-500 border-b border-gray-100">
+            入力する<br></br>回答の年度
+          </div>
           <ul className="py-1">
             {unAnsweredYears.map((year) => (
               <li key={year}>
                 <button
                   type="button"
-                  className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-100 focus:bg-gray-100 focus:outline-none ${
-                    selectedYear === year ? "bg-gray-100 font-medium" : ""
-                  }`}
+                  className={
+                    "w-full px-3 py-2 text-sm text-left hover:bg-gray-100 rounded"
+                  }
                   onClick={() => handleSelect(year)}
                 >
                   {year}

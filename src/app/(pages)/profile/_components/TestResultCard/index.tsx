@@ -4,7 +4,7 @@
 import { useState, useRef, useEffect } from "react";
 import {
   SquareUserRound,
-  MessageCircleMore,
+  MessageSquareText,
   ListFilter,
   ArrowRightToLine,
   CircleUserRound,
@@ -23,16 +23,17 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import {
-  CardData,
+  CardAllData,
   ProfileData,
   Subject,
   TestResult,
 } from "@/core/profile/type";
 import YearSelecter from "../YearSelecter";
+import SettingModal from "../SettingModal";
 
 interface Props {
   profileInfo: ProfileData;
-  cardData: CardData;
+  cardAllData: CardAllData;
 }
 
 export const displaySubjectName = (subject: Subject): string => {
@@ -66,8 +67,8 @@ export const displaySubjectName = (subject: Subject): string => {
   }
 };
 
-export default function TestResultCard({ profileInfo, cardData }: Props) {
-  const [showTable, setShowTable] = useState(false);
+export default function TestResultCard({ profileInfo, cardAllData }: Props) {
+  const [showTable, setShowTable] = useState(true);
   const [tableHeight, setTableHeight] = useState<number>(0);
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [showProfileInfo, setShowProfileInfo] = useState(false);
@@ -83,7 +84,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
       const height = tableRef.current.scrollHeight;
       setTableHeight(showTable ? height : 0);
     }
-  }, [showTable, cardData.subject]);
+  }, [showTable, cardAllData.subject]);
 
   // 説明文の高さを測定
   useEffect(() => {
@@ -91,7 +92,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
       const height = descriptionRef.current.scrollHeight;
       setDescriptionHeight(showFullDescription ? height : 0);
     }
-  }, [showFullDescription, cardData.memo]);
+  }, [showFullDescription, cardAllData.memo]);
 
   // プロフィール情報の高さを測定
   useEffect(() => {
@@ -100,10 +101,6 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
       setProfileInfoHeight(showProfileInfo ? height : 0);
     }
   }, [showProfileInfo, profileInfo]);
-
-  // プロフィール情報の短縮表示用
-  const shortProfileInfo =
-    profileInfo.targetUniversities[1].substring(0, 10) + "...";
 
   return (
     <div className="w-full rounded-lg shadow bg-white">
@@ -123,7 +120,10 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
         </div>
         <div className="text-xs flex">
           <p className="font-bold">{profileInfo.userName}</p>
-          <p>　{displaySubjectName(cardData.subject)}</p>
+          <p>　{displaySubjectName(cardAllData.subject)}</p>
+        </div>
+        <div className="ml-auto mr-2">
+          <SettingModal subject={cardAllData.subject} />
         </div>
       </div>
 
@@ -131,7 +131,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
       <div className="w-full">
         <ResponsiveContainer width="100%" aspect={2}>
           <ComposedChart
-            data={cardData.chartData}
+            data={cardAllData.chartData}
             margin={{ top: 5, right: 20, bottom: 5, left: -10 }}
           >
             {/* 目標の得点率（線グラフ） */}
@@ -169,11 +169,11 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
 
             {/* 目標スコアのリファレンスライン */}
             <ReferenceLine
-              y={cardData.finalScoreTarget}
+              y={cardAllData.finalScoreTarget}
               stroke="orange"
               strokeDasharray="3 3"
               label={{
-                value: `${cardData.finalScoreTarget}点`,
+                value: `${cardAllData.finalScoreTarget}点`,
                 position: "insideRight",
                 fill: "orange",
                 fontSize: 12,
@@ -183,11 +183,11 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
 
             {/* 最低ラインのリファレンスライン */}
             <ReferenceLine
-              y={cardData.finalScoreLowest}
+              y={cardAllData.finalScoreLowest}
               stroke="red"
               strokeDasharray="3 3"
               label={{
-                value: `${cardData.finalScoreLowest}点`,
+                value: `${cardAllData.finalScoreLowest}点`,
                 position: "insideRight",
                 fill: "red",
                 fontSize: 12,
@@ -216,7 +216,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
           onClick={() => setShowFullDescription(!showFullDescription)}
           aria-expanded={showFullDescription}
         >
-          <MessageCircleMore
+          <MessageSquareText
             className={`w-6 h-6 transform transition-transform duration-300 ${
               showFullDescription ? "text-blue-500" : ""
             }`}
@@ -234,8 +234,8 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
           />
         </button>
         <YearSelecter
-          subject={cardData.subject}
-          unAnsweredYears={cardData.unAnsweredYears}
+          subject={cardAllData.subject}
+          unAnsweredYears={cardAllData.unAnsweredYears}
         />
       </div>
 
@@ -260,14 +260,14 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
       </div>
 
       {/* プロフィール情報の短縮表示（閉じているとき） */}
-      {!showProfileInfo &&
+      {/* {!showProfileInfo &&
         showFullDescription === false &&
         showTable === false && (
           <div className="px-4 mt-2">
             <p className="text-sm mb-2">
               〜志望校〜
               <br />・{profileInfo.targetUniversities[0]}
-              <br />・{shortProfileInfo}
+              <br />・{profileInfo.targetUniversities[1].substring(0, 10) + "..."}
               <button
                 className="text-gray-500 font-medium ml-1"
                 onClick={() => setShowProfileInfo(true)}
@@ -276,7 +276,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
               </button>
             </p>
           </div>
-        )}
+        )} */}
 
       {/* 説明文（アニメーション付きトグル表示） */}
       <div
@@ -288,12 +288,22 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
         }}
       >
         <div ref={descriptionRef} className="px-4 pb-2">
-          <p className="text-sm">
-            ＜{displaySubjectName(cardData.subject)}＞<br />
-            {cardData.memo}
-          </p>
+          <p className="text-sm">{cardAllData.memo}</p>
         </div>
       </div>
+      {!showFullDescription && cardAllData.memo && (
+        <div className="px-4 mt-2 text-sm">
+          <p className="truncate">
+            {cardAllData.memo.substring(0, 20) + "..."}
+            <button
+              className="text-gray-500 font-medium ml-1"
+              onClick={() => setShowFullDescription(true)}
+            >
+              続きを読む
+            </button>
+          </p>
+        </div>
+      )}
 
       {/* テスト結果テーブル（アニメーション付きトグル表示） */}
       <div
@@ -315,7 +325,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
               </tr>
             </thead>
             <tbody>
-              {cardData.testResults.map((result: TestResult, index: number) => (
+              {cardAllData.testResults.map((result: TestResult, index: number) => (
                 <tr key={index} className="border-b border-gray-200">
                   <td className="p-2 text-center">{result.date}</td>
                   <td className="p-2 text-center font-bold">
@@ -327,7 +337,7 @@ export default function TestResultCard({ profileInfo, cardData }: Props) {
                   </td>
                   <td className="p-2 text-gray-400">
                     <Link
-                      href={`/profile/testRead?subject=${cardData.subject}&year=${result.year}`}
+                      href={`/profile/testRead?subject=${cardAllData.subject}&year=${result.year}`}
                     >
                       <ArrowRightToLine size={16} className="ml-2" />
                     </Link>

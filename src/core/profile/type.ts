@@ -144,20 +144,20 @@ export interface ProfileData {
   thumbnailUrl: string;
 }
 
-export interface CardDataRaw {
+export interface CardAllDataRaw {
   subject: Subject;
   finalScoreTarget: number;
   finalScoreLowest: number;
-  memo: string;
+  memo?: string;
   testResults: TestResult[];
   answeredYears: number[];
 }
 // CardData型に統合済みチャートデータを追加
-export interface CardData {
+export interface CardAllData {
   subject: Subject;
   finalScoreTarget: number;
   finalScoreLowest: number;
-  memo: string;
+  memo?: string;
   testResults: TestResult[];
   unAnsweredYears: number[];
   chartData: ChartData[]; // 統合済みのチャートデータ

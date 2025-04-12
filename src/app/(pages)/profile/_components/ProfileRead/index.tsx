@@ -27,7 +27,7 @@ export default function ProfileRead({ profileInfo }: Props) {
             )}
           </div>
           <p className="font-bold">{profileInfo.userName}</p>
-          <p className="mr-4 text-gray-500">（userID：{userId}）</p>
+          
         </div>
         <div className="flex justify-end">
           <Link href={ROUTES.PROFILE_UPDATE}>
@@ -42,6 +42,7 @@ export default function ProfileRead({ profileInfo }: Props) {
         <br />・{profileInfo.targetUniversities[2]}
       </p>
       <p className="mt-1 text-sm whitespace-pre-wrap">{profileInfo.memo}</p>
+      <p className="mr-4 text-gray-500 text-sm text-right">userID：{userId}</p>
     </div>
   );
 }

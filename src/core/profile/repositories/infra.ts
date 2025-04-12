@@ -4,7 +4,7 @@ import {
   AnsweredData,
   Subject,
   Answer,
-  CardDataRaw,
+  CardAllDataRaw,
   TestSubmissionData,
   TestSubmissionResult,
   FollowUser,
@@ -112,7 +112,7 @@ export class ProfileRepository {
   }
 
   // testsテーブルからデータを取得するメソッド
-  async fetchCardDatasRaw(): Promise<CardDataRaw[]> {
+  async fetchCardAllDatasRaw(): Promise<CardAllDataRaw[]> {
     const query = `
     SELECT 
       c.id,
@@ -120,18 +120,21 @@ export class ProfileRepository {
       c.final_score_target,
       c.final_score_lowest,
       c.memo,
-      json_agg(
-        json_build_object(
-          'id', t.id,
-          'date', to_char(t.date, 'YYYY/MM/DD'),
-          'year', t.year,
-          'percentage', t.percentage,
-          'memo', t.memo
-        ) ORDER BY t.date DESC
-      ) AS "testResults"
+      CASE 
+        WHEN COUNT(t.id) = 0 THEN '[]'::json
+        ELSE json_agg(
+          json_build_object(
+            'id', t.id,
+            'date', to_char(t.date, 'YYYY/MM/DD'),
+            'year', t.year,
+            'percentage', t.percentage,
+            'memo', t.memo
+          ) ORDER BY t.date DESC
+        )
+      END AS "testResults"
     FROM 
       cards c
-    JOIN 
+    LEFT JOIN 
       tests t ON c.subject = t.subject AND c.user_id = t.user_id
     WHERE 
       c.user_id = 1
@@ -142,7 +145,7 @@ export class ProfileRepository {
     try {
       const result = await pool.query(query);
 
-      const cardDatasRaw: CardDataRaw[] = result.rows.map((row) => ({
+      const cardAllDatasRaw: CardAllDataRaw[] = result.rows.map((row) => ({
         subject: row.subject as Subject,
         finalScoreTarget: row.final_score_target,
         finalScoreLowest: row.final_score_lowest,
@@ -153,7 +156,7 @@ export class ProfileRepository {
         ),
       }));
 
-      return cardDatasRaw;
+      return cardAllDatasRaw;
     } catch (error) {
       console.error("科目カードデータ取得エラー:", error);
       throw error;
@@ -723,7 +726,7 @@ export class ProfileRepository {
     }
   }
 
-  // テスト目標の設定（修正後）
+  // テスト目標の設定
   async saveTestTargets(data: {
     userId: number;
     subject: Subject;

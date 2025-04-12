@@ -1,6 +1,10 @@
 import { pool } from "@/lib/db";
 import { Subject } from "@/core/profile/type";
-import { CardCreateResponse } from "./cardType";
+import {
+  CardCreateResponse,
+  CardDeleteResponse,
+  CardUpdateResponse,
+} from "./cardType";
 
 export class CardRepository {
   // 科目カードを作成するメソッド
@@ -55,6 +59,66 @@ export class CardRepository {
     }
   }
 
+  // 科目カードを更新するメソッド
+  async updateCard(data: {
+    userId: number;
+    subject: Subject;
+    finalScoreTarget: number;
+    finalScoreLowest: number;
+    memo?: string;
+  }): Promise<CardUpdateResponse> {
+    try {
+      // トランザクション開始
+      await pool.query("BEGIN");
+
+      const query = `
+        UPDATE cards 
+        SET
+          final_score_target = $3,
+          final_score_lowest = $4,
+          memo = $5,
+          updated_at = CURRENT_TIMESTAMP
+        WHERE user_id = $1 AND subject = $2
+        RETURNING id
+      `;
+
+      const result = await pool.query(query, [
+        data.userId,
+        data.subject,
+        data.finalScoreTarget,
+        data.finalScoreLowest,
+        data.memo || null,
+      ]);
+
+      // 更新対象が存在しない場合
+      if (result.rowCount === 0) {
+        await pool.query("ROLLBACK");
+        return {
+          success: false,
+          error: "指定された科目のカードが見つかりませんでした。",
+        };
+      }
+
+      // トランザクションコミット
+      await pool.query("COMMIT");
+
+      return {
+        success: true,
+        cardId: result.rows[0]?.id,
+      };
+    } catch (error) {
+      // エラー発生時はロールバック
+      await pool.query("ROLLBACK");
+      console.error("科目カード更新エラー:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+  }
+
+
+
   // 利用可能な科目の一覧を取得するメソッド
   async fetchUnAnsweredSubjects(userId: number): Promise<Subject[]> {
     try {
@@ -87,6 +151,71 @@ export class CardRepository {
     } catch (error) {
       console.error("利用可能な科目取得エラー:", error);
       return [];
+    }
+  }
+
+  // 科目カードとそれに関連するデータを削除するメソッド
+  async deleteCard(
+    userId: number,
+    subject: Subject
+  ): Promise<CardDeleteResponse> {
+    try {
+      // トランザクション開始
+      await pool.query("BEGIN");
+
+      // test_answerテーブルのレコードを削除
+      const deleteAnswersQuery = `
+        DELETE FROM test_answer
+        WHERE user_id = $1 AND subject = $2
+      `;
+      await pool.query(deleteAnswersQuery, [userId, subject]);
+
+      // testsテーブルのレコードを削除
+      const deleteTestsQuery = `
+        DELETE FROM tests
+        WHERE user_id = $1 AND subject = $2
+      `;
+      await pool.query(deleteTestsQuery, [userId, subject]);
+
+      // tests_targetテーブルのレコードを削除
+      const deleteTargetsQuery = `
+        DELETE FROM tests_target
+        WHERE user_id = $1 AND subject = $2
+      `;
+      await pool.query(deleteTargetsQuery, [userId, subject]);
+
+      // cardsテーブルのレコードを削除
+      const deleteCardQuery = `
+        DELETE FROM cards
+        WHERE user_id = $1 AND subject = $2
+        RETURNING id
+      `;
+      const cardResult = await pool.query(deleteCardQuery, [userId, subject]);
+
+      // 削除されたカードが存在するか確認
+      if (cardResult.rowCount === 0) {
+        await pool.query("ROLLBACK");
+        return {
+          success: false,
+          error: "指定された科目のカードが見つかりませんでした。",
+        };
+      }
+
+      // トランザクションコミット
+      await pool.query("COMMIT");
+
+      return {
+        success: true,
+        deletedCardId: cardResult.rows[0]?.id,
+      };
+    } catch (error) {
+      // エラー発生時はロールバック
+      await pool.query("ROLLBACK");
+      console.error("科目カード削除エラー:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+      };
     }
   }
 }
