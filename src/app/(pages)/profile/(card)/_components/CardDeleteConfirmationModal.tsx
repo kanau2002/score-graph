@@ -1,9 +1,9 @@
 "use client";
 import { Subject } from "@/core/profile/type";
-import { displaySubjectName } from "../../../_components/TestResultCard";
+import { displaySubjectName } from "../../_components/TestResultCard";
 
 // 削除確認モーダルコンポーネント
-export const DeleteConfirmationModal = ({
+export const CardDeleteConfirmationModal = ({
   isOpen,
   onClose,
   onConfirm,
@@ -22,27 +22,27 @@ export const DeleteConfirmationModal = ({
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* バックドロップ */}
       <div
-        className="fixed inset-0 bg-black bg-opacity-50"
+        className="fixed inset-0 backdrop-blur-xs"
         onClick={onClose}
       ></div>
 
       {/* モーダルコンテンツ */}
-      <div className="bg-white rounded-lg p-6 w-80 max-w-md z-10 relative">
-        <h3 className="text-lg font-medium mb-3 text-red-600">削除の確認</h3>
+      <div className="bg-white rounded-lg p-6 w-80 max-w-md z-10 relative shadow">
+        <h3 className="text-lg mb-3 text-red-600 text-center">本当に削除しますか？</h3>
 
         <p className="mb-4 text-gray-700">
           <span className="font-semibold">{displaySubjectName(subject)}</span>{" "}
-          のカードとすべての関連データを削除します。
+          のカードと全ての関連データを削除します。
         </p>
 
         <p className="mb-6 text-sm text-gray-500">
-          この操作は元に戻せません。テスト結果、目標設定、回答データなどすべての関連データが削除されます。
+          この操作は元に戻せません。今まで入力したテスト結果、目標設定、科目データが全て削除されます。
         </p>
 
         <div className="flex justify-end space-x-3">
           <button
             type="button"
-            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none"
+            className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none"
             onClick={onClose}
             disabled={isDeleting}
           >
@@ -51,7 +51,7 @@ export const DeleteConfirmationModal = ({
 
           <button
             type="button"
-            className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none disabled:opacity-50"
+            className="px-4 py-2 text-sm text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none disabled:opacity-50"
             onClick={onConfirm}
             disabled={isDeleting}
           >

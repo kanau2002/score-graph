@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { Ellipsis, Crosshair, SquareAsterisk, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Subject } from "@/core/profile/type";
-import { DeleteConfirmationModal } from "../(card)/cardCreate/_components/DeleteConfirmationModal";
 import { toast } from "react-hot-toast"; // トースト通知（必要に応じてインストール）
+import { CardDeleteConfirmationModal } from "../(card)/_components/CardDeleteConfirmationModal";
 
 const settingModalItems = [
   {
@@ -140,7 +140,7 @@ const SettingModal: React.FC<Props> = ({ subject }) => {
       )}
 
       {/* 削除確認モーダル */}
-      <DeleteConfirmationModal
+      <CardDeleteConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={handleCloseDeleteModal}
         onConfirm={handleConfirmDelete}
