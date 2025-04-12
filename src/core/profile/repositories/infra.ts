@@ -4,7 +4,7 @@ import {
   AnsweredData,
   Subject,
   Answer,
-  CardDataRaw,
+  CardAllDataRaw,
   TestSubmissionData,
   TestSubmissionResult,
   FollowUser,
@@ -112,7 +112,7 @@ export class ProfileRepository {
   }
 
   // testsテーブルからデータを取得するメソッド
-  async fetchCardDatasRaw(): Promise<CardDataRaw[]> {
+  async fetchCardAllDatasRaw(): Promise<CardAllDataRaw[]> {
     const query = `
     SELECT 
       c.id,
@@ -145,7 +145,7 @@ export class ProfileRepository {
     try {
       const result = await pool.query(query);
 
-      const cardDatasRaw: CardDataRaw[] = result.rows.map((row) => ({
+      const cardAllDatasRaw: CardAllDataRaw[] = result.rows.map((row) => ({
         subject: row.subject as Subject,
         finalScoreTarget: row.final_score_target,
         finalScoreLowest: row.final_score_lowest,
@@ -156,7 +156,7 @@ export class ProfileRepository {
         ),
       }));
 
-      return cardDatasRaw;
+      return cardAllDatasRaw;
     } catch (error) {
       console.error("科目カードデータ取得エラー:", error);
       throw error;

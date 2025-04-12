@@ -17,7 +17,7 @@ const settingModalItems = [
     id: 2,
     name: "カード編集",
     icon: SquareAsterisk,
-    href: "cardEdit",
+    href: "cardUpdate",
     isRed: false,
   },
   {
@@ -124,7 +124,7 @@ const SettingModal: React.FC<Props> = ({ subject }) => {
                 <li key={item.id}>
                   <button
                     type="button"
-                    className={`w-full px-3 py-2 text-sm hover:bg-gray-100 flex items-center gap-2 rounded ${
+                    className={`w-full px-3 py-2 text-sm hover:bg-gray-100 flex items-center gap-1 rounded ${
                       item.isRed ? "text-red-600" : ""
                     }`}
                     onClick={() => handleSelect(item.href, item.isDeleteAction)}

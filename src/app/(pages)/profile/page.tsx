@@ -7,20 +7,20 @@ import SubjectSelecter from "./_components/SubjectSelecter";
 
 
 export default async function ProfilePage() {
-  const [profileInfo, cardDatas, unAnsweredSubjects] = await Promise.all([
+  const [profileInfo, cardAllDatas, unAnsweredSubjects] = await Promise.all([
     profileService.fetchProfileData(),
-    profileService.fetchCardDatas(),
+    profileService.fetchCardAllDatas(),
     cardService.fetchUnAnsweredSubjects(),
   ]);
 
   return (
     <div className="max-w-md mx-auto rounded-lg mb-32">
       <ProfileRead profileInfo={profileInfo} />
-      {cardDatas.map((cardData, index) => (
+      {cardAllDatas.map((cardAllData, index) => (
         <TestResultCard
           key={index}
           profileInfo={profileInfo}
-          cardData={cardData}
+          cardAllData={cardAllData}
         />
       ))}
       {unAnsweredSubjects.length > 0 && (

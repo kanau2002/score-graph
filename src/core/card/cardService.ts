@@ -1,7 +1,14 @@
-// src/core/cards/cardService.ts
 import { Subject } from "@/core/profile/type";
-import { CardCreateData, CardCreateResponse, CardDeleteResponse } from "./cardType";
+import {
+  CardCreateResponse,
+  CardData,
+  CardDeleteResponse,
+  CardUpdateResponse,
+} from "./cardType";
 import { CardRepository } from "./cardRepository";
+
+// TODO
+const userId = 1; // デフォルトのユーザーID
 
 class CardService {
   private repository: CardRepository;
@@ -14,7 +21,7 @@ class CardService {
    * 科目カードを作成する
    * @param data 科目カードのデータ
    */
-  async createCard(data: CardCreateData): Promise<CardCreateResponse> {
+  async createCard(data: CardData): Promise<CardCreateResponse> {
     try {
       // バリデーション
       if (!this.validateCardData(data)) {
@@ -23,9 +30,6 @@ class CardService {
           error: "入力データが無効です。必須項目を入力してください。",
         };
       }
-
-      // 実際のアプリでは認証情報からユーザーIDを取得する
-      const userId = 1; // デフォルトのユーザーID
 
       // リポジトリを呼び出してデータを保存
       return await this.repository.createCard({
@@ -45,13 +49,43 @@ class CardService {
   }
 
   /**
+   * 科目カードを更新する
+   * @param data 更新する科目カードのデータ
+   */
+  async updateCard(data: CardData): Promise<CardUpdateResponse> {
+    try {
+      // バリデーション
+      if (!this.validateCardData(data)) {
+        return {
+          success: false,
+          error: "入力データが無効です。必須項目を入力してください。",
+        };
+      }
+
+      // 実際のアプリでは認証情報からユーザーIDを取得する
+
+      // リポジトリを呼び出してデータを更新
+      return await this.repository.updateCard({
+        userId,
+        ...data,
+      });
+    } catch (error) {
+      console.error("科目カード更新処理でエラーが発生しました:", error);
+      return {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : "カード更新中にエラーが発生しました",
+      };
+    }
+  }
+
+  /**
    * 利用可能な（まだカードが作成されていない）科目の一覧を取得する
    */
   async fetchUnAnsweredSubjects(): Promise<Subject[]> {
     try {
-      // 実際のアプリでは認証情報からユーザーIDを取得する
-      const userId = 1; // デフォルトのユーザーID
-
       return await this.repository.fetchUnAnsweredSubjects(userId);
     } catch (error) {
       console.error("利用可能な科目取得処理でエラーが発生しました:", error);
@@ -63,7 +97,7 @@ class CardService {
    * 入力データを検証する
    * @param data 科目カードのデータ
    */
-  private validateCardData(data: CardCreateData): boolean {
+  private validateCardData(data: CardData): boolean {
     // 必須項目のチェック
     if (
       !data.subject ||
@@ -89,15 +123,13 @@ class CardService {
 
     return true;
   }
+
   /**
    * 科目カードとそれに関連するデータを削除する
    * @param subject 削除する科目
    */
   async deleteCard(subject: Subject): Promise<CardDeleteResponse> {
     try {
-      // 実際のアプリでは認証情報からユーザーIDを取得する
-      const userId = 1; // デフォルトのユーザーID
-
       // 入力検証
       if (!subject) {
         return {
