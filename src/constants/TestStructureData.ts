@@ -3,9 +3,11 @@
 // 1001: ×
 // 1002: 解答する必要が無い問題
 
-import { Subject } from "../type";
+import { Subject } from "@/core/profile/type";
 
-export const testDatas = [
+
+
+export const testStructureDatas = [
   {
     subject: Subject.READING,
     year: 2015,

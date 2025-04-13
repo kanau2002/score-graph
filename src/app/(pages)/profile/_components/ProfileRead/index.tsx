@@ -1,13 +1,13 @@
 import { ROUTES } from "@/constants";
-import { ProfileData } from "@/core/profile/type";
+import { UserData } from "@/type/userType";
 import { CircleUserRound, UserRoundPen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 type Props = {
-  profileInfo: ProfileData;
+  userData: UserData;
 };
-export default function ProfileRead({ profileInfo }: Props) {
+export default function ProfileRead({ userData }: Props) {
   const userId = 100;
 
   return (
@@ -15,7 +15,7 @@ export default function ProfileRead({ profileInfo }: Props) {
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <div className="w-10 h-10 m-2 relative">
-            {profileInfo.thumbnailUrl ? (
+            {userData.thumbnailUrl ? (
               <Image
                 src="/profile/kanau.JPG"
                 alt="プロフィール画像"
@@ -26,7 +26,7 @@ export default function ProfileRead({ profileInfo }: Props) {
               <CircleUserRound className="w-full h-full" />
             )}
           </div>
-          <p className="font-bold">{profileInfo.userName}</p>
+          <p className="font-bold">{userData.userName}</p>
           
         </div>
         <div className="flex justify-end">
@@ -37,11 +37,11 @@ export default function ProfileRead({ profileInfo }: Props) {
       </div>
       <p className="text-sm mb-2">
         〜志望校〜
-        <br />・{profileInfo.targetUniversities[0]}
-        <br />・{profileInfo.targetUniversities[1]}
-        <br />・{profileInfo.targetUniversities[2]}
+        <br />・{userData.targetUniversities[0]}
+        <br />・{userData.targetUniversities[1]}
+        <br />・{userData.targetUniversities[2]}
       </p>
-      <p className="mt-1 text-sm whitespace-pre-wrap">{profileInfo.memo}</p>
+      <p className="mt-1 text-sm whitespace-pre-wrap">{userData.memo}</p>
       <p className="mr-4 text-gray-500 text-sm text-right">userID：{userId}</p>
     </div>
   );

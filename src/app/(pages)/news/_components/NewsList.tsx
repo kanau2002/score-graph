@@ -1,4 +1,3 @@
-// src/app/(pages)/news/_components/NewsList.tsx
 import Link from "next/link";
 import { NewsItem } from "@/type/newsType";
 

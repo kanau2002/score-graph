@@ -24,15 +24,15 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   CardAllData,
-  ProfileData,
   Subject,
   TestResult,
 } from "@/core/profile/type";
 import YearSelecter from "../YearSelecter";
 import SettingModal from "../SettingModal";
+import { UserData } from "@/type/userType";
 
 interface Props {
-  profileInfo: ProfileData;
+  userData: UserData;
   cardAllData: CardAllData;
 }
 
@@ -67,7 +67,7 @@ export const displaySubjectName = (subject: Subject): string => {
   }
 };
 
-export default function TestResultCard({ profileInfo, cardAllData }: Props) {
+export default function TestResultCard({ userData, cardAllData }: Props) {
   const [showTable, setShowTable] = useState(true);
   const [tableHeight, setTableHeight] = useState<number>(0);
   const [showFullDescription, setShowFullDescription] = useState(false);
@@ -100,14 +100,14 @@ export default function TestResultCard({ profileInfo, cardAllData }: Props) {
       const height = profileInfoRef.current.scrollHeight;
       setProfileInfoHeight(showProfileInfo ? height : 0);
     }
-  }, [showProfileInfo, profileInfo]);
+  }, [showProfileInfo, userData]);
 
   return (
     <div className="w-full rounded-lg shadow bg-white">
       {/* ヘッダー部分 */}
       <div className="flex items-center p-2 ">
         <div className="w-8 h-8 m-2 relative">
-          {profileInfo.thumbnailUrl ? (
+          {userData.thumbnailUrl ? (
             <Image
               src="/profile/kanau.JPG"
               alt="プロフィール画像"
@@ -119,7 +119,7 @@ export default function TestResultCard({ profileInfo, cardAllData }: Props) {
           )}
         </div>
         <div className="text-xs flex">
-          <p className="font-bold">{profileInfo.userName}</p>
+          <p className="font-bold">{userData.userName}</p>
           <p>　{displaySubjectName(cardAllData.subject)}</p>
         </div>
         <div className="ml-auto mr-2">
@@ -251,11 +251,11 @@ export default function TestResultCard({ profileInfo, cardAllData }: Props) {
         <div ref={profileInfoRef} className="px-4 pb-4">
           <p className="text-sm">
             〜志望校〜
-            <br />・{profileInfo.targetUniversities[0]}
-            <br />・{profileInfo.targetUniversities[1]}
-            <br />・{profileInfo.targetUniversities[2]}
+            <br />・{userData.targetUniversities[0]}
+            <br />・{userData.targetUniversities[1]}
+            <br />・{userData.targetUniversities[2]}
           </p>
-          <p className="mt-1 text-sm">{profileInfo.memo}</p>
+          <p className="mt-1 text-sm">{userData.memo}</p>
         </div>
       </div>
 
@@ -266,8 +266,8 @@ export default function TestResultCard({ profileInfo, cardAllData }: Props) {
           <div className="px-4 mt-2">
             <p className="text-sm mb-2">
               〜志望校〜
-              <br />・{profileInfo.targetUniversities[0]}
-              <br />・{profileInfo.targetUniversities[1].substring(0, 10) + "..."}
+              <br />・{userData.targetUniversities[0]}
+              <br />・{userData.targetUniversities[1].substring(0, 10) + "..."}
               <button
                 className="text-gray-500 font-medium ml-1"
                 onClick={() => setShowProfileInfo(true)}

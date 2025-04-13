@@ -1,5 +1,3 @@
-// src/app/(pages)/news/_components/Pagination.tsx
-
 "use client";
 
 import Link from "next/link";

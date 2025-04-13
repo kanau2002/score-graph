@@ -22,13 +22,13 @@ import { useRouter } from "next/navigation";
 interface Props {
   studentData: AnsweredData;
   friendsData: AnsweredData[];
-  testData: TestData;
+  testStructureData: TestData;
 }
 
 export default function TestRead({
   studentData,
   friendsData,
-  testData,
+  testStructureData,
 }: Props) {
   const router = useRouter();
   // 選択中のフレンド（初期状態ではnull）
@@ -41,7 +41,7 @@ export default function TestRead({
     if (!studentData.answers) return [];
 
     // ベーステストデータに学生の回答を追加
-    return testData.testStructure.map((section) => {
+    return testStructureData.testStructure.map((section) => {
       // 各セクションの質問を更新
       const updatedQuestions = section.questions.map((question) => {
         return {
@@ -59,7 +59,7 @@ export default function TestRead({
         },
       };
     });
-  }, [studentData, testData.testStructure]);
+  }, [studentData, testStructureData.testStructure]);
 
   // テストデータを保持するstate（初期値を設定）
   const [testSections, setTestSections] =
@@ -131,7 +131,7 @@ export default function TestRead({
     ) {
       try {
         const response = await fetch(
-          `/api/tests/delete?subject=${testData.subject}&year=${testData.year}`,
+          `/api/tests/delete?subject=${testStructureData.subject}&year=${testStructureData.year}`,
           {
             method: "DELETE",
           }
@@ -161,7 +161,7 @@ export default function TestRead({
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <h1 className="flex-1 font-bold text-lg">
-          {displaySubjectName(testData.subject)}-{testData.year}年度
+          {displaySubjectName(testStructureData.subject)}-{testStructureData.year}年度
         </h1>
         <div className="flex items-baseline">
           <p className="text-sm text-gray-500">
@@ -198,7 +198,7 @@ export default function TestRead({
                   {studentData.score}
                 </span>
                 <span className="text-sm text-gray-500 ml-1">
-                  /{testData.maxScore}
+                  /{testStructureData.maxScore}
                 </span>
                 <span className="ml-2 bg-blue-100 text-blue-800 text-xs font-medium py-0.5 px-2 rounded">
                   {studentData.percentage}%
@@ -242,7 +242,7 @@ export default function TestRead({
                     {selectedFriend.score}
                   </span>
                   <span className="text-sm text-gray-500 ml-1">
-                    /{testData.maxScore}
+                    /{testStructureData.maxScore}
                   </span>
                   <span className="ml-2 bg-green-100 text-green-800 text-xs font-medium py-0.5 px-2 rounded">
                     {selectedFriend.percentage}%
@@ -371,14 +371,14 @@ export default function TestRead({
               colSpan={3}
               className="border border-gray-300 px-3 py-2 text-center"
             >
-              合計 ({testData.maxScore})
+              合計 ({testStructureData.maxScore})
             </td>
             <td className="border border-gray-300 px-3 py-2 text-center">
-              {studentData.score}/{testData.maxScore}
+              {studentData.score}/{testStructureData.maxScore}
             </td>
             <td className="border border-gray-300 px-3 py-2 text-center">
               {selectedFriend
-                ? `${selectedFriend.score}/${testData.maxScore}`
+                ? `${selectedFriend.score}/${testStructureData.maxScore}`
                 : "-"}
             </td>
           </tr>

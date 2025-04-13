@@ -10,10 +10,10 @@ import { useRouter } from "next/navigation";
 import DatePicker from "../DatePicker";
 
 interface Props {
-  testData: TestData;
+  testStructureData: TestData;
 }
 
-export default function TestCreateClient({ testData }: Props) {
+export default function TestCreateClient({ testStructureData }: Props) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -23,7 +23,7 @@ export default function TestCreateClient({ testData }: Props) {
   // 初期化時に一度だけテストデータを構築
   const initialTestSections = React.useMemo(() => {
     // ベーステストデータに学生の回答を追加
-    return testData.testStructure.map((section) => {
+    return testStructureData.testStructure.map((section) => {
       // 各セクションの質問を更新
       const updatedQuestions = section.questions.map((question) => {
         return {
@@ -40,7 +40,7 @@ export default function TestCreateClient({ testData }: Props) {
         },
       };
     });
-  }, [testData.testStructure]);
+  }, [testStructureData.testStructure]);
 
   // テストデータを保持するstate（初期値を設定）
   const [testSections, setTestSections] =
@@ -224,13 +224,13 @@ export default function TestCreateClient({ testData }: Props) {
 
     // 全体の正解率
     const percentage =
-      testData.maxScore > 0
-        ? Math.round((totalScore * 100) / testData.maxScore)
+    testStructureData.maxScore > 0
+        ? Math.round((totalScore * 100) / testStructureData.maxScore)
         : 0;
 
     return {
-      subject: testData.subject,
-      year: testData.year,
+      subject: testStructureData.subject,
+      year: testStructureData.year,
       score: totalScore,
       percentage,
       date: formatDateToString(selectedDate), // 選択された日付を使用
@@ -329,7 +329,7 @@ export default function TestCreateClient({ testData }: Props) {
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <h1 className="flex-1 font-bold text-lg">
-          {displaySubjectName(testData.subject)}-{testData.year}年度
+          {displaySubjectName(testStructureData.subject)}-{testStructureData.year}年度
         </h1>
       </div>
       <div className="p-4">
@@ -448,10 +448,10 @@ export default function TestCreateClient({ testData }: Props) {
               colSpan={3}
               className="border border-gray-300 px-3 py-2 text-center"
             >
-              合計 ({testData.maxScore})
+              合計 ({testStructureData.maxScore})
             </td>
             <td className="border border-gray-300 px-3 py-2 text-center">
-              {totalScore}/{testData.maxScore}
+              {totalScore}/{testStructureData.maxScore}
             </td>
           </tr>
         </tbody>

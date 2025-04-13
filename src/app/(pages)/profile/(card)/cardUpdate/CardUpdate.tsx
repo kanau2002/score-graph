@@ -3,8 +3,8 @@
 import { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Subject } from "@/core/profile/type";
-import { CardData } from "@/core/card/cardType";
 import { displaySubjectName } from "../../_components/TestResultCard";
+import { CardData } from "@/type/cardType";
 
 type Props = {
   subject: Subject;

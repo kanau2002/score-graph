@@ -10,7 +10,7 @@ export default async function testCreatePage({ searchParams }: Props) {
   const subject = searchParams.subject;
   const year = Number(searchParams.year);
   // サーバーコンポーネントでデータを取得
-  const testData = await profileService.fetchTestStructure(subject, year);
+  const testStructureData = await profileService.fetchTestStructureData(subject, year);
 
-  return <TestCreateClient testData={testData} />;
+  return <TestCreateClient testStructureData={testStructureData} />;
 }

@@ -2,17 +2,17 @@
 
 import { useState, FormEvent, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
-import { ProfileData, ProfileUpdateData } from "@/core/profile/type";
 import { CircleUserRound } from "lucide-react";
 import Image from "next/image";
+import { UserData, UserUpdateData } from "@/type/userType";
 
 interface ProfileEditFormProps {
-  initialData: ProfileData;
+  initialData: UserData;
 }
 
 export default function ProfileUpdate({ initialData }: ProfileEditFormProps) {
   const router = useRouter();
-  const [formData, setFormData] = useState<ProfileUpdateData>({
+  const [formData, setFormData] = useState<UserUpdateData>({
     userName: initialData.userName,
     targetUniversities: [...initialData.targetUniversities],
     memo: initialData.memo,

@@ -1,4 +1,3 @@
-// src/app/(pages)/news/[id]/page.tsx
 import { Metadata } from "next";
 import Link from "next/link";
 import { newsService } from "@/core/Service/newsService";

@@ -1,5 +1,5 @@
-import { FollowUser } from "@/type/followType";
-import { testDatas } from "./repositories/data";
+
+import { testStructureDatas } from "@/constants/TestStructureData";
 import { ProfileRepository } from "./repositories/infra";
 import {
   CardAllData,
@@ -21,16 +21,16 @@ class ProfileService {
   }
 
   // テスト構造情報の取得
-  async fetchTestStructure(subject: string, year: number): Promise<TestData> {
-    const testData = testDatas.find(
-      (testData) => testData.subject === subject && testData.year === year
+  async fetchTestStructureData(subject: string, year: number): Promise<TestData> {
+    const testStructureData = testStructureDatas.find(
+      (testStructureData) => testStructureData.subject === subject && testStructureData.year === year
     );
-    if (!testData) {
+    if (!testStructureData) {
       throw new Error(
         `Test data not found for subject: ${subject}, year: ${year}`
       );
     }
-    return testData;
+    return testStructureData;
   }
 
   // 生徒のテスト結果データの取得
@@ -75,50 +75,6 @@ class ProfileService {
             : "テスト結果の削除中にエラーが発生しました",
       };
     }
-  }
-
-  // ユーザーIDによる検索
-  async searchUserById(userId: number): Promise<FollowUser | null> {
-    // 現在のユーザーID（この実装では固定で1）
-    const currentUserId = 1;
-    return this.repository.searchUserById(userId, currentUserId);
-  }
-
-  // ユーザーをフォローする
-  async followUser(targetUserId: number): Promise<void> {
-    // 現在のユーザーID（この実装では固定で1）
-    const currentUserId = 1;
-    return this.repository.followUser(currentUserId, targetUserId);
-  }
-
-  // ユーザーのフォローを解除する
-  async unfollowUser(targetUserId: number): Promise<void> {
-    // 現在のユーザーID（この実装では固定で1）
-    const currentUserId = 1;
-    return this.repository.unfollowUser(currentUserId, targetUserId);
-  }
-
-  // 相互フォローしているユーザー一覧を取得
-  async fetchMutualFollows(): Promise<FollowUser[]> {
-    // 現在のユーザーID（この実装では固定で1）
-    const currentUserId = 1;
-    return this.repository.fetchMutualFollows(currentUserId);
-  }
-
-  // 自分がフォローしているユーザー一覧を取得
-  async fetchFollowing(): Promise<FollowUser[]> {
-    // 現在のユーザーID（この実装では固定で1）
-    const currentUserId = 1;
-    return this.repository.fetchFollowing(currentUserId);
-  }
-
-  // フォロー状態をチェックする
-  async checkFollowStatus(
-    targetUserId: number
-  ): Promise<{ isFollowing: boolean; isFollower: boolean }> {
-    // 現在のユーザーID（この実装では固定で1）
-    const currentUserId = 1;
-    return this.repository.checkFollowStatus(currentUserId, targetUserId);
   }
 
   /**
@@ -195,9 +151,9 @@ class ProfileService {
     subject: Subject,
     answeredYears: number[]
   ): number[] {
-    const allYears: number[] = testDatas
-      .filter((testData) => testData.subject === subject)
-      .map((testData) => testData.year);
+    const allYears: number[] = testStructureDatas
+      .filter((testStructureData) => testStructureData.subject === subject)
+      .map((testStructureData) => testStructureData.year);
 
     return allYears.filter((year) => !answeredYears.includes(year));
   }

@@ -1,4 +1,3 @@
-//src/app/(pages)/profile/english/2018/page.tsx
 import React from "react";
 import { profileService } from "@/core/profile/profileService";
 import TestRead from "../../_components/TestRead";
@@ -11,17 +10,17 @@ export default async function TestReadPage({ searchParams }: Props) {
   const subject = searchParams.subject;
   const year = Number(searchParams.year);
   // サーバーコンポーネントでデータを取得
-  const [studentData, friendsData, testData] = await Promise.all([
+  const [studentData, friendsData, testStructureData] = await Promise.all([
     profileService.fetchStudentData(subject, year),
     profileService.fetchFriendsData(subject, year),
-    profileService.fetchTestStructure(subject, year),
+    profileService.fetchTestStructureData(subject, year),
   ]);
 
   return (
     <TestRead
       studentData={studentData}
       friendsData={friendsData}
-      testData={testData}
+      testStructureData={testStructureData}
     />
   );
 }

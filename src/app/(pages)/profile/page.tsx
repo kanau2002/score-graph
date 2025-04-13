@@ -6,7 +6,7 @@ import { cardService } from "@/core/Service/cardService";
 import { userService } from "@/core/Service/userService";
 
 export default async function ProfilePage() {
-  const [userInfo, cardAllDatas, unAnsweredSubjects] = await Promise.all([
+  const [userData, cardAllDatas, unAnsweredSubjects] = await Promise.all([
     userService.fetchUserData(),
     profileService.fetchCardAllDatas(),
     cardService.fetchUnAnsweredSubjects(),
@@ -14,11 +14,11 @@ export default async function ProfilePage() {
 
   return (
     <div className="max-w-md mx-auto rounded-lg mb-32">
-      <ProfileRead profileInfo={userInfo} />
+      <ProfileRead userData={userData} />
       {cardAllDatas.map((cardAllData, index) => (
         <TestResultCard
           key={index}
-          profileInfo={userInfo}
+          userData={userData}
           cardAllData={cardAllData}
         />
       ))}
