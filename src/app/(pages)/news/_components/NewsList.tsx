@@ -1,6 +1,5 @@
-// src/app/(pages)/news/_components/NewsList.tsx
 import Link from "next/link";
-import { NewsItem } from "@/core/news/type";
+import { NewsItem } from "@/type/newsType";
 
 type NewsListProps = {
   news: NewsItem[];

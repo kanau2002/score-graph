@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { profileService } from "@/core/profile/profileService";
+import { profileService } from "@/core/Service/mypageService";
 
 export async function POST(request: NextRequest) {
   try {

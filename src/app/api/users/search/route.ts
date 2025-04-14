@@ -1,6 +1,6 @@
 // src/app/api/users/search/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { profileService } from "@/core/profile/profileService";
+import { profileService } from "@/core/Service/mypageService";
 
 export async function GET(request: NextRequest) {
   // URLからクエリパラメータを取得

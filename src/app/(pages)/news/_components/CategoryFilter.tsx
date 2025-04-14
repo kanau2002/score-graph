@@ -1,4 +1,3 @@
-// src/app/(pages)/news/_components/CategoryFilter.tsx
 "use client";
 
 import Link from "next/link";

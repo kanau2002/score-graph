@@ -1,7 +1,6 @@
-// src/app/(pages)/news/[id]/page.tsx
 import { Metadata } from "next";
 import Link from "next/link";
-import { newsService } from "@/core/news/newsService";
+import { newsService } from "@/core/Service/newsService";
 import { notFound } from "next/navigation";
 import RichContent from "../_components/RichContent";
 

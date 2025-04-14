@@ -546,7 +546,7 @@ VALUES
 (1, 'CHEMISTRY', 80, '2026-01', 'この日はいい点が取れそうだ。');
 
 -- ユーザー1が他のユーザーをフォロー
-INSERT INTO user_follows (follower_id, following_id) VALUES
+INSERT INTO friend_follow (follower_id, following_id) VALUES
 (1, 2),
 (1, 3),
 (2, 1),

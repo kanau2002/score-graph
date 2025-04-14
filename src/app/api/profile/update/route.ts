@@ -1,8 +1,8 @@
 // src/app/api/profile/update/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
-import { profileService } from "@/core/profile/profileService";
-import { ProfileUpdateData } from "@/core/profile/type";
+import { profileService } from "@/core/Service/mypageService";
+import { ProfileUpdateData } from "@/type/testType";
 
 export async function POST(req: NextRequest) {
   try {

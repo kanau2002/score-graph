@@ -1,4 +1,3 @@
-// src/app/(pages)/news/_components/RichContent.tsx
 "use client";
 
 import React from "react";

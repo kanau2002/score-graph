@@ -38,7 +38,7 @@ export default function RootPage() {
             <Button onClick={handleLogout}>ログアウト</Button>
 
             <div className="focus:shadow-outline mt-8 inline-block rounded bg-[#D6722E] px-4 py-2 font-bold text-white focus:outline-none">
-              <Link href={ROUTES.PROFILE}>プロフィール</Link>
+              <Link href={ROUTES.MYPAGE}>マイページ</Link>
             </div>
             <div className="focus:shadow-outline mt-8 inline-block rounded bg-[#D6722E] px-4 py-2 font-bold text-white focus:outline-none">
               <Link href={ROUTES.CONTACT}>お問い合わせ</Link>
