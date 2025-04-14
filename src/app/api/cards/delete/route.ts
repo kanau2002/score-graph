@@ -1,6 +1,6 @@
 // src/app/api/cards/delete/route.ts
 import { NextResponse } from "next/server";
-import { Subject } from "@/core/profile/type";
+import { Subject } from "@/type/testType";
 import { cardService } from "@/core/card/cardService";
 
 export async function DELETE(request: Request) {

@@ -1,5 +1,5 @@
 //src/core/target/targetType.ts
-import { Subject } from "../core/profile/type";
+import { Subject } from "./testType";
 
 export interface TargetSaveData {
   userId: number;
@@ -15,6 +15,11 @@ export interface TargetUpsertResponse {
   error?: string;
 }
 
+// 月次目標の型定義
+export interface MonthlyTarget {
+  targetMonth: string;
+  targetPercentage: number;
+}
 export interface TargetData {
   id: number;
   userId: number;

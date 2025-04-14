@@ -1,6 +1,5 @@
-//src/core/target/targetRepository.ts
 import { pool } from "@/lib/db";
-import { Subject } from "@/core/profile/type";
+import { Subject } from "@/type/testType";
 import {
   TargetData,
   TargetSaveData,
@@ -144,4 +143,38 @@ export class TargetRepository {
       return [];
     }
   }
+
+  // tests_targetテーブルから月次目標を取得するメソッド
+  async fetchMonthlyTargets(subject: Subject): Promise<
+    Array<{
+      targetMonth: string;
+      targetPercentage: number;
+    }>
+  > {
+    const query = `
+    SELECT 
+      target_month,
+      target_percentage
+    FROM 
+      tests_target
+    WHERE 
+      user_id = 1 AND subject = $1
+    ORDER BY
+      target_month
+  `;
+
+    try {
+      const result = await pool.query(query, [subject]);
+
+      return result.rows.map((row) => ({
+        targetMonth: row.target_month,
+        targetPercentage: row.target_percentage,
+      }));
+    } catch (error) {
+      console.error("月次目標データ取得エラー:", error);
+      throw error;
+    }
+  }
 }
+
+export const targetRepository = new TargetRepository();

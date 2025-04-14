@@ -1,18 +1,18 @@
-export interface UserData {
+export interface ProfileData {
   userName: string;
   targetUniversities: string[];
   memo: string;
   thumbnailUrl: string;
 }
 
-export interface UserUpdateData {
+export interface ProfileUpdateData {
   userName: string;
   targetUniversities: string[];
   memo: string;
   thumbnailUrl?: string;
 }
 
-export interface UserUpdateResponse {
+export interface ProfileUpdateResponse {
   success: boolean;
   error?: string;
 }

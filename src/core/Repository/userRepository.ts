@@ -1,10 +1,12 @@
 import { pool } from "@/lib/db";
-import { UserData, UserUpdateResponse } from "@/type/userType";
+import { ProfileData, ProfileUpdateResponse } from "@/type/userType";
 
 export class UserRepository {
   // プロフィールデータの取得
-  async fetchUserData(): Promise<UserData> {
-    const query = `
+  async fetchProfileData(userId: number): Promise<ProfileData> {
+    try {
+      const result = await pool.query(
+        `
       SELECT 
         u.id, 
         u.user_name, 
@@ -16,11 +18,10 @@ export class UserRepository {
       FROM 
         users u
       WHERE 
-        u.id = 1
-    `;
-
-    try {
-      const result = await pool.query(query);
+        u.id = $1
+    `,
+        [userId]
+      );
 
       if (result.rows.length === 0) {
         throw new Error("プロフィールデータが見つかりません");
@@ -35,14 +36,14 @@ export class UserRepository {
       if (result.rows[0].targetuniversity_3)
         targetUniversities.push(result.rows[0].targetuniversity_3);
 
-      const userData: UserData = {
+      const profileData: ProfileData = {
         userName: result.rows[0].user_name,
         targetUniversities: targetUniversities,
         memo: result.rows[0].memo,
         thumbnailUrl: result.rows[0].thumbnailUrl,
       };
 
-      return userData;
+      return profileData;
     } catch (error) {
       console.error("プロフィールデータ取得エラー:", error);
       throw error;
@@ -50,13 +51,13 @@ export class UserRepository {
   }
 
   // プロフィール情報の更新
-  async updateUserData(data: {
+  async updateProfileData(data: {
     userId: number;
     userName: string;
     targetUniversities: string[];
     memo: string;
     thumbnailUrl?: string;
-  }): Promise<UserUpdateResponse> {
+  }): Promise<ProfileUpdateResponse> {
     try {
       // トランザクション開始
       await pool.query("BEGIN");

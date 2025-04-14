@@ -1,4 +1,4 @@
-import { Subject } from "@/core/profile/type";
+import { Subject } from "@/type/testType";
 import {
   TargetSaveData,
   TargetUpsertResponse,

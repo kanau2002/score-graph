@@ -1,6 +1,7 @@
 import { pool } from "@/lib/db";
-import { Subject } from "@/core/profile/type";
+import { Subject, TestResult } from "@/type/testType";
 import {
+  CardAllDataRaw,
   CardCreateResponse,
   CardDeleteResponse,
   CardUpdateResponse,
@@ -214,6 +215,58 @@ export class CardRepository {
         success: false,
         error: error instanceof Error ? error.message : String(error),
       };
+    }
+  }
+
+  // testsテーブルからデータを取得するメソッド
+  async fetchCardAllDatasRaw(): Promise<CardAllDataRaw[]> {
+    const query = `
+    SELECT 
+      c.id,
+      c.subject,
+      c.final_score_target,
+      c.final_score_lowest,
+      c.memo,
+      CASE 
+        WHEN COUNT(t.id) = 0 THEN '[]'::json
+        ELSE json_agg(
+          json_build_object(
+            'id', t.id,
+            'date', to_char(t.date, 'YYYY/MM/DD'),
+            'year', t.year,
+            'percentage', t.percentage,
+            'memo', t.memo
+          ) ORDER BY t.date DESC
+        )
+      END AS "testResults"
+    FROM 
+      cards c
+    LEFT JOIN 
+      tests t ON c.subject = t.subject AND c.user_id = t.user_id
+    WHERE 
+      c.user_id = 1
+    GROUP BY 
+      c.id, c.subject, c.final_score_target, c.final_score_lowest, c.memo
+  `;
+
+    try {
+      const result = await pool.query(query);
+
+      const cardAllDatasRaw: CardAllDataRaw[] = result.rows.map((row) => ({
+        subject: row.subject as Subject,
+        finalScoreTarget: row.final_score_target,
+        finalScoreLowest: row.final_score_lowest,
+        memo: row.memo,
+        testResults: row.testResults,
+        answeredYears: row.testResults.map((testResult: TestResult) =>
+          Number(testResult.year)
+        ),
+      }));
+
+      return cardAllDatasRaw;
+    } catch (error) {
+      console.error("科目カードデータ取得エラー:", error);
+      throw error;
     }
   }
 }
