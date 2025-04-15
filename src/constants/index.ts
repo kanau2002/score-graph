@@ -3,10 +3,11 @@
 export const ROUTES = {
   MAIN: '/',
   HOME: '/home',
-  INPUT: '/input',
   FRIEND: '/friend',
   NEWS: '/news',
-  PROFILE: '/profile',
+  MYPAGE: '/mypage',
+  PROFILE_UPDATE: '/mypage/profileUpdate',
+  CARD_CREATE: 'mypage/cardCreate',
   HEART: '/heart',
   SETTING: '/setting',
   LOGOUT: '/logout',

@@ -1,48 +1,48 @@
-'use client'
-import { useRouter } from 'next/navigation'
-import { LuSlidersHorizontal } from 'react-icons/lu'
-import { Select, SelectItem } from '@nextui-org/react'
+"use client";
 
-type Props = {
-  category_name: string
-  categoriesName: string[]
-}
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+type CategoryFilterProps = {
+  categories: string[];
+  activeCategory: string;
+};
 
 export default function CategoryFilter({
-  category_name,
-  categoriesName,
-}: Props) {
-  const router = useRouter()
-
-  const handleCategoryChange = (newCategory: string) => {
-    const categoryPath = newCategory === 'ALL' ? '' : newCategory
-    router.push(`/news/${categoryPath}?pageId=1`)
-  }
+  categories,
+  activeCategory,
+}: CategoryFilterProps) {
+  const pathname = usePathname();
 
   return (
-    <>
-      <Select
-        startContent={<LuSlidersHorizontal style={{ color: '#F39700' }} />}
-        placeholder={
-          category_name === 'ALL'
-            ? 'カテゴリーを選択してください'
-            : category_name
-        }
-        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-          handleCategoryChange(e.target.value)
-        }
-        className="md:max-w-xs"
-        classNames={{
-          trigger: 'bg-white',
-        }}
-        radius="sm"
-      >
-        {categoriesName.map((cat) => (
-          <SelectItem key={cat} value={cat}>
-            {cat}
-          </SelectItem>
+    <div className="mb-6">
+      <h2 className="text-lg font-semibold mb-2">カテゴリー</h2>
+      <div className="flex flex-wrap gap-2">
+        <Link
+          href={`${pathname}?category=all`}
+          className={`px-4 py-2 rounded-full text-sm font-medium ${
+            activeCategory === "all"
+              ? "bg-blue-600 text-white"
+              : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+          }`}
+        >
+          すべて
+        </Link>
+
+        {categories.map((category) => (
+          <Link
+            key={category}
+            href={`${pathname}?category=${category}`}
+            className={`px-4 py-2 rounded-full text-sm font-medium ${
+              activeCategory === category
+                ? "bg-blue-600 text-white"
+                : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+            }`}
+          >
+            {category}
+          </Link>
         ))}
-      </Select>
-    </>
-  )
+      </div>
+    </div>
+  );
 }
