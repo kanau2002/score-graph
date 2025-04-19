@@ -273,7 +273,7 @@ export default function TestCreate({ testStructureData }: Props) {
       alert("回答が送信されました");
 
       // プロフィールページに戻る
-      router.push("/profile");
+      router.push(ROUTES.MYPAGE);
     } catch (error) {
       console.error("送信エラー:", error);
       setSubmitError(

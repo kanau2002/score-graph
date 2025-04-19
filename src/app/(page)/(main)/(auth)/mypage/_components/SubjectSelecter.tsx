@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { SquarePlus } from "lucide-react";
 import { Subject } from "@/type/testType";
 import { displaySubjectName } from "@/lib/display";
+import { ROUTES } from "@/constants";
 
 interface Props {
   unAnsweredSubjects: Subject[];
@@ -35,7 +36,7 @@ const SubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
   const handleSelect = (subject: Subject) => {
     setIsOpen(false);
     // 選択された科目に基づいてページ遷移
-    router.push(`/profile/cardCreate?subject=${subject}`);
+    router.push(`${ROUTES.CARD_CREATE}?subject=${subject}`);
   };
 
   if (unAnsweredSubjects.length === 0) {

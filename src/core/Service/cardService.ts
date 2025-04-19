@@ -160,8 +160,9 @@ class CardService {
 
   // 科目カード情報の取得（更新版）
   async fetchCardAllDatas(): Promise<CardAllData[]> {
+    const userId = await getCurrentUserId();
     // 基本データの取得
-    const cardAllDatasRaw = await this.repository.fetchCardAllDatasRaw();
+    const cardAllDatasRaw = await this.repository.fetchCardAllDatasRaw(userId);
 
     // 各科目ごとに月次目標データを取得
     const cardAllDatas: CardAllData[] = await Promise.all(
@@ -174,7 +175,8 @@ class CardService {
 
         // 月次目標データの取得
         const monthlyTargets = await targetRepository.fetchMonthlyTargets(
-          data.subject
+          data.subject,
+          userId
         );
 
         // テスト結果と月次目標を統合したチャートデータの生成

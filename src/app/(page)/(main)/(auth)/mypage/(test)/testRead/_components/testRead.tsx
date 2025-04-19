@@ -3,10 +3,6 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, Circle, UsersRound, X, Minus } from "lucide-react";
 import React from "react";
-import {
-  FriendRadarChart,
-  StudentRadarChart,
-} from "@/app/(main)/mypage/_components/SectionRaderChart";
 import Link from "next/link";
 import {
   Answer,
@@ -17,6 +13,8 @@ import {
 import { useRouter } from "next/navigation";
 import { displaySubjectName } from "@/lib/display";
 import FriendSelector from "./FriendSelecter";
+import { ROUTES } from "@/constants";
+import { FriendRadarChart, StudentRadarChart } from "../../../_components/SectionRaderChart";
 
 interface Props {
   studentData: AnsweredData;
@@ -139,8 +137,7 @@ export default function TestRead({
 
         if (data.success) {
           alert("テスト結果を削除しました");
-          // プロフィールページにリダイレクト
-          router.push("/profile");
+          router.push(ROUTES.MYPAGE);
         } else {
           alert(`削除エラー: ${data.error || "不明なエラーが発生しました"}`);
         }
@@ -155,7 +152,7 @@ export default function TestRead({
     <div className="container mx-auto max-w-md bg-gray-50 shadow rounded-lg">
       {/* ヘッダー部分 */}
       <div className="flex items-center p-4">
-        <Link href="/profile" className="mr-3">
+        <Link href={ROUTES.MYPAGE} className="mr-3">
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <h1 className="flex-1 font-bold text-lg">

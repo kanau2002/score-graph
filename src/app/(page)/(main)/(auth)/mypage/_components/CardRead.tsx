@@ -27,6 +27,7 @@ import { CardAllData } from "@/type/cardType";
 import { ProfileData } from "@/type/userType";
 import SettingModal from "./SettingModal";
 import YearSelecter from "./YearSelecter";
+import { ROUTES } from "@/constants";
 
 interface Props {
   profileData: ProfileData;
@@ -304,7 +305,7 @@ export default function CardRead({ profileData, cardAllData }: Props) {
                     </td>
                     <td className="p-2 text-gray-400">
                       <Link
-                        href={`/profile/testRead?subject=${cardAllData.subject}&year=${result.year}`}
+                        href={`${ROUTES.TEST_READ}?subject=${cardAllData.subject}&year=${result.year}`}
                       >
                         <ArrowRightToLine size={16} className="ml-2" />
                       </Link>

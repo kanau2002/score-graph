@@ -1,4 +1,3 @@
-//src/app/(pages)/profile/_components/FriendSelecter/index.tsx
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import { AnsweredData } from "@/type/testType";

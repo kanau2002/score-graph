@@ -77,8 +77,8 @@ export class FollowRepository {
   // ユーザー検索機能
   // ユーザーID検索機能
   async searchUserById(
-    userId: number,
-    currentUserId: number
+    targetUid: number,
+    userId: number
   ): Promise<FollowUser | null> {
     const query = `
       SELECT id, user_name as "userName"
@@ -88,7 +88,7 @@ export class FollowRepository {
     `;
 
     try {
-      const result = await pool.query(query, [userId, currentUserId]);
+      const result = await pool.query(query, [targetUid, userId]);
 
       if (result.rows.length === 0) {
         return null;

@@ -4,20 +4,21 @@ import { useRouter } from "next/navigation";
 import { Subject } from "@/type/testType";
 import { toast } from "react-hot-toast"; // トースト通知（必要に応じてインストール）
 import { CardDeleteConfirmationModal } from "../(card)/_components/CardDeleteConfirmationModal";
+import { ROUTES } from "@/constants";
 
 const settingModalItems = [
   {
     id: 1,
-    name: "目標設定  ",
+    name: "目標設定",
     icon: Crosshair,
-    href: "targetUpsert",
+    href: ROUTES.TARGET_UPSERT,
     isRed: false,
   },
   {
     id: 2,
     name: "カード編集",
     icon: SquareAsterisk,
-    href: "cardUpdate",
+    href: ROUTES.CARD_UPDATE,
     isRed: false,
   },
   {
@@ -62,11 +63,9 @@ const SettingModal: React.FC<Props> = ({ subject }) => {
     setIsOpen(false);
 
     if (isDeleteAction) {
-      // 削除アクションの場合は削除確認モーダルを表示
       setIsDeleteModalOpen(true);
     } else if (href) {
-      // 通常のアクションの場合はページ遷移
-      router.push(`/profile/${href}?subject=${subject}`);
+      router.push(`${href}?subject=${subject}`);
     }
   };
 
@@ -91,8 +90,7 @@ const SettingModal: React.FC<Props> = ({ subject }) => {
       if (result.success) {
         toast.success("カードが正常に削除されました");
         setIsDeleteModalOpen(false);
-        // 削除成功後にプロフィールページにリダイレクト
-        router.push("/profile");
+        router.push(ROUTES.MYPAGE);
         // 必要に応じてページを更新
         router.refresh();
       } else {

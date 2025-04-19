@@ -54,7 +54,7 @@ export default function RegisterForm() {
 
       if (result.success) {
         // 登録成功時、マイページにリダイレクト
-        router.push("/mypage");
+        router.push(ROUTES.MYPAGE);
       } else {
         setError(result.error || "登録に失敗しました");
       }

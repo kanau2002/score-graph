@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Subject } from "@/type/testType";
+import { ROUTES } from "@/constants";
 
 type Props = {
   subject: Subject;
@@ -33,7 +34,7 @@ export default function YearSelecter({ subject, unAnsweredYears }: Props) {
   const handleSelect = (year: number) => {
     setIsOpen(false);
     // 選択された年に基づいてページ遷移
-    router.push(`/profile/testCreate?subject=${subject}&year=${year}`);
+    router.push(`${ROUTES.TEST_CREATE}?subject=${subject}&year=${year}`);
   };
 
   return (

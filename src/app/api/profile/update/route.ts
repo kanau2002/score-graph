@@ -1,5 +1,3 @@
-// src/app/api/profile/update/route.ts
-
 import { NextRequest, NextResponse } from "next/server";
 import { userService } from "@/core/Service/userService";
 import { ProfileUpdateData } from "@/type/userType";

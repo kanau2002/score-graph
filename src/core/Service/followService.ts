@@ -1,5 +1,6 @@
 import { FollowUser } from "@/type/followType";
 import { FollowRepository } from "../Repository/followRepository";
+import { getCurrentUserId } from "@/lib/auth";
 
 class FollowService {
   private repository: FollowRepository;
@@ -9,47 +10,41 @@ class FollowService {
   }
 
   // ユーザーIDによる検索
-  async searchUserById(userId: number): Promise<FollowUser | null> {
-    // 現在のユーザーID（この実装では固定で1）
-    const currentUserId = 1;
-    return this.repository.searchUserById(userId, currentUserId);
+  async searchUserById(targetUid: number): Promise<FollowUser | null> {
+    const userId = await getCurrentUserId();
+    return this.repository.searchUserById(targetUid, userId);
   }
 
   // ユーザーをフォローする
   async followUser(targetUserId: number): Promise<void> {
-    // 現在のユーザーID（この実装では固定で1）
-    const currentUserId = 1;
-    return this.repository.followUser(currentUserId, targetUserId);
+    const userId = await getCurrentUserId();
+    return this.repository.followUser(userId, targetUserId);
   }
 
   // ユーザーのフォローを解除する
   async unfollowUser(targetUserId: number): Promise<void> {
-    // 現在のユーザーID（この実装では固定で1）
-    const currentUserId = 1;
-    return this.repository.unfollowUser(currentUserId, targetUserId);
+    const userId = await getCurrentUserId();
+    return this.repository.unfollowUser(userId, targetUserId);
   }
 
   // 相互フォローしているユーザー一覧を取得
   async fetchMutualFollows(): Promise<FollowUser[]> {
-    // 現在のユーザーID（この実装では固定で1）
-    const currentUserId = 1;
-    return this.repository.fetchMutualFollows(currentUserId);
+    const userId = await getCurrentUserId();
+    return this.repository.fetchMutualFollows(userId);
   }
 
   // 自分がフォローしているユーザー一覧を取得
   async fetchFollowing(): Promise<FollowUser[]> {
-    // 現在のユーザーID（この実装では固定で1）
-    const currentUserId = 1;
-    return this.repository.fetchFollowing(currentUserId);
+    const userId = await getCurrentUserId();
+    return this.repository.fetchFollowing(userId);
   }
 
   // フォロー状態をチェックする
   async checkFollowStatus(
     targetUserId: number
   ): Promise<{ isFollowing: boolean; isFollower: boolean }> {
-    // 現在のユーザーID（この実装では固定で1）
-    const currentUserId = 1;
-    return this.repository.checkFollowStatus(currentUserId, targetUserId);
+    const userId = await getCurrentUserId();
+    return this.repository.checkFollowStatus(userId, targetUserId);
   }
 }
 

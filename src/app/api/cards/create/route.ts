@@ -1,5 +1,5 @@
-import { cardService } from "@/core/card/cardService";
-import { CardData } from "@/core/card/cardType";
+import { cardService } from "@/core/Service/cardService";
+import { CardData } from "@/type/cardType";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
