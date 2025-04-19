@@ -3,8 +3,8 @@
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Subject } from "@/type/testType";
-import { displaySubjectName } from "../../_components/TestResultCard";
 import { ROUTES } from "@/constants";
+import { displaySubjectName } from "@/lib/display";
 
 type Props = {
   subject: Subject;

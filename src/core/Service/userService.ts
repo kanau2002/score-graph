@@ -4,9 +4,8 @@ import {
   ProfileUpdateResponse,
 } from "@/type/userType";
 import { UserRepository } from "../Repository/userRepository";
+import { getCurrentUserId } from "@/lib/auth";
 
-// 実際のアプリでは認証情報からユーザーIDを取得する
-const userId = 1; // デフォルトのユーザーID
 class UserService {
   private repository: UserRepository;
 
@@ -16,6 +15,7 @@ class UserService {
 
   // プロフィール情報の取得
   async fetchProfileData(): Promise<ProfileData> {
+    const userId = await getCurrentUserId();
     return this.repository.fetchProfileData(userId);
   }
 
@@ -23,6 +23,7 @@ class UserService {
   async updateProfileData(
     data: ProfileUpdateData
   ): Promise<ProfileUpdateResponse> {
+    const userId = await getCurrentUserId();
     try {
       // repositoryを呼び出してデータを更新
       const result = await this.repository.updateProfileData({

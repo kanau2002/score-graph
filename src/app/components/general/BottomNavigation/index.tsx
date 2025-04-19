@@ -35,8 +35,8 @@ export default function BottomNavigation() {
       activeIcon: UsersRound,
     },
     {
-      label: "プロフィール",
-      href: ROUTES.PROFILE,
+      label: "マイページ",
+      href: ROUTES.MYPAGE,
       icon: CircleUserRound,
       activeIcon: CircleUserRound,
     },

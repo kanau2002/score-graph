@@ -10,9 +10,7 @@ import { CardRepository } from "../Repository/cardRepository";
 import { targetRepository } from "../Repository/targetRepository";
 import { testStructureDatas } from "@/constants/TestStructureData";
 import { MonthlyTarget } from "@/type/targetType";
-
-// TODO
-const userId = 1; // デフォルトのユーザーID
+import { getCurrentUserId } from "@/lib/auth";
 
 class CardService {
   private repository: CardRepository;
@@ -26,6 +24,7 @@ class CardService {
    * @param data 科目カードのデータ
    */
   async createCard(data: CardData): Promise<CardCreateResponse> {
+    const userId = await getCurrentUserId();
     try {
       // バリデーション
       if (!this.validateCardData(data)) {
@@ -57,6 +56,7 @@ class CardService {
    * @param data 更新する科目カードのデータ
    */
   async updateCard(data: CardData): Promise<CardUpdateResponse> {
+    const userId = await getCurrentUserId();
     try {
       // バリデーション
       if (!this.validateCardData(data)) {
@@ -89,6 +89,7 @@ class CardService {
    * 利用可能な（まだカードが作成されていない）科目の一覧を取得する
    */
   async fetchUnAnsweredSubjects(): Promise<Subject[]> {
+    const userId = await getCurrentUserId();
     try {
       return await this.repository.fetchUnAnsweredSubjects(userId);
     } catch (error) {
@@ -133,6 +134,7 @@ class CardService {
    * @param subject 削除する科目
    */
   async deleteCard(subject: Subject): Promise<CardDeleteResponse> {
+    const userId = await getCurrentUserId();
     try {
       // 入力検証
       if (!subject) {

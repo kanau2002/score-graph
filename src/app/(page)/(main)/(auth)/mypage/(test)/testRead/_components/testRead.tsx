@@ -6,7 +6,7 @@ import React from "react";
 import {
   FriendRadarChart,
   StudentRadarChart,
-} from "@/app/(pages)/mypage/_components/SectionRaderChart";
+} from "@/app/(main)/mypage/_components/SectionRaderChart";
 import Link from "next/link";
 import {
   Answer,

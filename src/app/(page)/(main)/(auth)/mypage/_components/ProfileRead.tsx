@@ -8,8 +8,6 @@ type Props = {
   profileData: ProfileData;
 };
 export default function ProfileRead({ profileData }: Props) {
-  const userId = 100;
-
   return (
     <div className="p-4 rounded-lg shadow-sm bg-white pb-6">
       <div className="flex items-center justify-between">
@@ -27,7 +25,6 @@ export default function ProfileRead({ profileData }: Props) {
             )}
           </div>
           <p className="font-bold">{profileData.userName}</p>
-          
         </div>
         <div className="flex justify-end">
           <Link href={ROUTES.PROFILE_UPDATE}>
@@ -42,7 +39,9 @@ export default function ProfileRead({ profileData }: Props) {
         <br />・{profileData.targetUniversities[2]}
       </p>
       <p className="mt-1 text-sm whitespace-pre-wrap">{profileData.memo}</p>
-      <p className="mr-4 text-gray-500 text-sm text-right">userID：{userId}</p>
+      <p className="mr-4 text-gray-500 text-sm text-right">
+        userID：{profileData.userId}
+      </p>
     </div>
   );
 }

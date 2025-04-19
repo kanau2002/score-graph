@@ -1,5 +1,5 @@
+import { testService } from "@/core/Service/testService";
 import { NextRequest, NextResponse } from "next/server";
-import { profileService } from "@/core/Service/mypageService";
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     }
 
     // profileServiceを使ってデータを保存
-    const result = await profileService.saveTestAnswers(requestBody);
+    const result = await testService.saveTestAnswers(requestBody);
 
     if (!result.success) {
       return NextResponse.json(

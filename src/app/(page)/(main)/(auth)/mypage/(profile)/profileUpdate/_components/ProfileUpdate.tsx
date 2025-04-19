@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { CircleUserRound } from "lucide-react";
 import Image from "next/image";
 import { ProfileData, ProfileUpdateData } from "@/type/userType";
+import { ROUTES } from "@/constants";
 
 interface ProfileEditFormProps {
   initialData: ProfileData;
@@ -57,7 +58,7 @@ export default function ProfileUpdate({ initialData }: ProfileEditFormProps) {
 
       if (data.success) {
         // 更新成功時、プロフィールページにリダイレクト
-        router.push("/profile");
+        router.push(ROUTES.MYPAGE);
         router.refresh(); // キャッシュを更新
       } else {
         setError(data.error || "更新に失敗しました");

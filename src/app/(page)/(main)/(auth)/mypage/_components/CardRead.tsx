@@ -1,4 +1,3 @@
-//src/app/(pages)/profile/_components/TestResultCard/index.tsx
 "use client";
 
 import { useState, useRef, useEffect } from "react";
@@ -34,7 +33,7 @@ interface Props {
   cardAllData: CardAllData;
 }
 
-export default function TestResultCard({ profileData, cardAllData }: Props) {
+export default function CardRead({ profileData, cardAllData }: Props) {
   const [showTable, setShowTable] = useState(true);
   const [tableHeight, setTableHeight] = useState<number>(0);
   const [showFullDescription, setShowFullDescription] = useState(false);

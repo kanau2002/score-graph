@@ -10,6 +10,7 @@ export const ROUTES = {
   CARD_CREATE: 'mypage/cardCreate',
   HEART: '/heart',
   SETTING: '/setting',
+  LOGIN: '/login',
   LOGOUT: '/logout',
   CONTACT: '/contact',
 } as const

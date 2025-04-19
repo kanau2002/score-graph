@@ -1,6 +1,6 @@
 "use client";
+import { displaySubjectName } from "@/lib/display";
 import { Subject } from "@/type/testType";
-import { displaySubjectName } from "../../_components/TestResultCard";
 
 // 削除確認モーダルコンポーネント
 export const CardDeleteConfirmationModal = ({

@@ -1,4 +1,3 @@
-//app/components/general/Navigation/index.tsx
 "use client";
 import { ROUTES } from "@/constants";
 import Link from "next/link";
@@ -38,8 +37,8 @@ export default function Navigation({ setIsOpen }: Props) {
       activeIcon: UsersRound,
     },
     {
-      label: "プロフィール",
-      href: ROUTES.PROFILE,
+      label: "マイページ",
+      href: ROUTES.MYPAGE,
       icon: CircleUserRound,
       activeIcon: CircleUserRound,
     },
