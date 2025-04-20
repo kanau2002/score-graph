@@ -19,6 +19,11 @@ class CardService {
     this.repository = new CardRepository();
   }
 
+  async fetchCardData(subject: Subject): Promise<CardData> {
+    const userId = await getCurrentUserId();
+    return await this.repository.fetchCardData(userId, subject);
+  }
+
   /**
    * 科目カードを作成する
    * @param data 科目カードのデータ

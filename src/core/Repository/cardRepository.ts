@@ -8,13 +8,58 @@ import {
 } from "../../type/cardType";
 
 export class CardRepository {
+  async fetchCardData(userId: number, subject: Subject) {
+    try {
+      const query = `
+        SELECT 
+          id,
+          subject,
+          final_score_target,
+          final_score_lowest,
+          memo
+        FROM cards
+        WHERE user_id = $1 AND subject = $2
+      `;
+
+      const result = await pool.query(query, [userId, subject]);
+
+      // 結果がない場合はデフォルト値を返す
+      if (result.rows.length === 0) {
+        return {
+          subject,
+          finalScoreTarget: 80, // デフォルト値
+          finalScoreLowest: 88, // デフォルト値
+          memo: "",
+        };
+      }
+
+      // 結果がある場合はその値を返す
+      const card = result.rows[0];
+      return {
+        subject: card.subject,
+        finalScoreTarget: card.final_score_target,
+        finalScoreLowest: card.final_score_lowest,
+        memo: card.memo || "",
+      };
+    } catch (error) {
+      console.error("科目カードデータ取得エラー:", error);
+      // エラー時もデフォルト値を返す
+      return {
+        subject,
+        finalScoreTarget: 80,
+        finalScoreLowest: 60,
+        memo: "",
+      };
+    }
+  }
+
   // 科目カードを作成するメソッド
   async createCard(data: {
     userId: number;
     subject: Subject;
     finalScoreTarget: number;
     finalScoreLowest: number;
-    memo?: string;
+    memo: string;
   }): Promise<CardCreateResponse> {
     try {
       // トランザクション開始
@@ -66,7 +111,7 @@ export class CardRepository {
     subject: Subject;
     finalScoreTarget: number;
     finalScoreLowest: number;
-    memo?: string;
+    memo: string;
   }): Promise<CardUpdateResponse> {
     try {
       // トランザクション開始
