@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft, Circle, X, Minus } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import React from "react";
 import Link from "next/link";
-import { Answer, ClientTestSection, Subject, TestData } from "@/type/testType";
+import { Answer, ClientTestSection, TestData } from "@/type/testType";
 import { useRouter } from "next/navigation";
 import DatePicker from "./DatePicker";
 import { displaySubjectName } from "@/lib/display";
 import { ROUTES } from "@/constants";
+import { isCorrect, threeChoiceOrNot } from "@/lib/test";
+import AnswerIcon from "../../_components/AnswerIcon";
 
 interface Props {
   testStructureData: TestData;
@@ -21,11 +23,7 @@ export default function TestCreate({ testStructureData }: Props) {
   // 日付を保持するstate
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-  const isThreeChoice =
-    testStructureData.subject === Subject.MATH1A ||
-    testStructureData.subject === Subject.MATH2B
-      ? true
-      : false;
+  const isThreeChoice: boolean = threeChoiceOrNot(testStructureData.subject);
 
   const choice = isThreeChoice
     ? [Answer.CORRECT, Answer.INCORRECT, Answer.SKIPPED]
@@ -48,6 +46,8 @@ export default function TestCreate({ testStructureData }: Props) {
       const updatedQuestions = section.questions.map((question) => {
         return {
           ...question,
+          studentAnswer: Answer.SKIPPED, // 初期値として SKIPPED を設定
+          friendAnswer: null, // null を設定（比較対象がいないため）
         };
       });
 
@@ -303,22 +303,6 @@ export default function TestCreate({ testStructureData }: Props) {
     }
   };
 
-  const renderAnswer = (answer: number | Answer | undefined) => {
-    if (answer === Answer.CORRECT) return <Circle size={16} />;
-    if (answer === Answer.INCORRECT) return <X size={16} />;
-    if (answer === Answer.SKIPPED) return <Minus size={16} />;
-    return answer;
-  };
-
-  // 正解不正解の判定関数
-  const getAnswerStatus = (correct: number | null, answer: Answer) => {
-    if (!isThreeChoice && correct === null) return Answer.SKIPPED;
-    if (answer === Answer.SKIPPED) return Answer.SKIPPED;
-    if (answer === Answer.CORRECT || String(correct) === answer)
-      return Answer.CORRECT;
-    return Answer.INCORRECT;
-  };
-
   // 回答ボタンの背景色を決定する関数
   const getButtonStyle = (
     option: Answer,
@@ -332,14 +316,15 @@ export default function TestCreate({ testStructureData }: Props) {
     if (selectedAnswer !== option) return "bg-white";
 
     // 選択されたオプションの場合、正誤に応じた色を返す
-    const status = getAnswerStatus(correctAnswer, option);
-
-    if (status === Answer.CORRECT) return "bg-blue-500 text-white font-bold";
-    if (status === Answer.INCORRECT) return "bg-red-500 text-white font-bold";
-    if (status === Answer.SKIPPED) return "bg-gray-300";
-
-    // 正解がない場合（correctAnswer === null）は青色
-    return "bg-blue-500 text-white font-bold";
+    const status = isCorrect(correctAnswer, option, isThreeChoice);
+    switch (status) {
+      case Answer.CORRECT:
+        return "bg-blue-500 text-white font-bold";
+      case Answer.INCORRECT:
+        return "bg-red-500 text-white font-bold";
+      case Answer.SKIPPED:
+        return "bg-gray-300";
+    }
   };
 
   return (
@@ -435,7 +420,7 @@ export default function TestCreate({ testStructureData }: Props) {
                             }
                             type="button"
                           >
-                            {renderAnswer(option)}
+                            {AnswerIcon(option)}
                           </button>
                         ))}
                       </div>

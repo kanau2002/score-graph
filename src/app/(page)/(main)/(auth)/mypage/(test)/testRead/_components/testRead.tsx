@@ -1,7 +1,6 @@
 "use client";
-
 import { useState, useEffect } from "react";
-import { ArrowLeft, Circle, UsersRound, X, Minus } from "lucide-react";
+import { ArrowLeft, UsersRound } from "lucide-react";
 import React from "react";
 import Link from "next/link";
 import {
@@ -14,7 +13,12 @@ import { useRouter } from "next/navigation";
 import { displaySubjectName } from "@/lib/display";
 import FriendSelector from "./FriendSelecter";
 import { ROUTES } from "@/constants";
-import { FriendRadarChart, StudentRadarChart } from "../../../_components/SectionRaderChart";
+import {
+  FriendRadarChart,
+  StudentRadarChart,
+} from "../../../_components/SectionRaderChart";
+import { isCorrect, threeChoiceOrNot } from "@/lib/test";
+import AnswerIcon from "../../_components/AnswerIcon";
 
 interface Props {
   studentData: AnsweredData;
@@ -33,6 +37,8 @@ export default function TestRead({
     null
   );
 
+  const isThreeChoice = threeChoiceOrNot(testStructureData.subject);
+
   // 初期化時に一度だけテストデータを構築
   const initialTestSections = React.useMemo(() => {
     if (!studentData.answers) return [];
@@ -43,7 +49,9 @@ export default function TestRead({
       const updatedQuestions = section.questions.map((question) => {
         return {
           ...question,
-          studentAnswer: studentData.answers?.[question.questionNumber] || 0,
+          studentAnswer:
+            studentData.answers?.[question.questionNumber] || Answer.SKIPPED,
+          friendAnswer: null, // friendAnswer を初期値として null に設定
         };
       });
 
@@ -91,14 +99,17 @@ export default function TestRead({
     setTestSections(updatedSections);
   }, [selectedFriend, initialTestSections]);
 
-  // 正解不正解の判定関数
-  const isCorrect = (correct: number | null, answer: Answer | undefined) => {
-    if (answer === Answer.CORRECT) return "bg-blue-100";
-    if (answer === Answer.INCORRECT) return "bg-red-100";
-    if (answer === Answer.SKIPPED) return false;
-    if (String(correct) === answer) return "bg-blue-100";
-    if (String(correct) !== answer) return "bg-red-100";
-    return false;
+  const bgStyle = (correct: number | null, answer: Answer | null) => {
+    if (answer === null) return;
+    const status = isCorrect(correct, answer, isThreeChoice);
+    switch (status) {
+      case Answer.CORRECT:
+        return "bg-blue-100";
+      case Answer.INCORRECT:
+        return "bg-red-100";
+      case Answer.SKIPPED:
+        break;
+    }
   };
 
   const handleFriendSelect = (friendId: string) => {
@@ -110,13 +121,6 @@ export default function TestRead({
     if (friend) {
       setSelectedFriend(friend);
     }
-  };
-
-  const renderAnswer = (answer: number | Answer | undefined) => {
-    if (answer === Answer.CORRECT) return <Circle size={16} />;
-    if (answer === Answer.INCORRECT) return <X size={16} />;
-    if (answer === Answer.SKIPPED) return <Minus size={16} />;
-    return answer;
   };
 
   const handleDeleteTestResult = async () => {
@@ -322,23 +326,23 @@ export default function TestRead({
                   </td>
                   <td className="border border-gray-300 px-3 py-2">
                     <div
-                      className={`flex items-center justify-center rounded-full mx-auto w-8 h-8 ${isCorrect(
+                      className={`flex items-center justify-center rounded-full mx-auto w-8 h-8 ${bgStyle(
                         question.correctAnswer,
                         question.studentAnswer
                       )}`}
                     >
-                      {renderAnswer(question.studentAnswer)}
+                      {AnswerIcon(question.studentAnswer)}
                     </div>
                   </td>
                   <td className="border border-gray-300 px-3 py-2">
                     {selectedFriend ? (
                       <div
-                        className={`flex items-center justify-center rounded-full mx-auto w-8 h-8 ${isCorrect(
+                        className={`flex items-center justify-center rounded-full mx-auto w-8 h-8 ${bgStyle(
                           question.correctAnswer,
                           question.friendAnswer
                         )}`}
                       >
-                        {renderAnswer(question.friendAnswer)}
+                        {AnswerIcon(question.friendAnswer)}
                       </div>
                     ) : (
                       <div className="text-center">-</div>

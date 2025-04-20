@@ -138,8 +138,8 @@ export interface ClientTestSection {
     questionNumber: number;
     score: number | null;
     correctAnswer: number | null;
-    studentAnswer?: Answer;
-    friendAnswer?: Answer;
+    studentAnswer: Answer;
+    friendAnswer: Answer | null;
   }[];
   sectionTotal: {
     score: number;
