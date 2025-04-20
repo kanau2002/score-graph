@@ -4,7 +4,7 @@ export interface CardData {
   subject: Subject;
   finalScoreTarget: number;
   finalScoreLowest: number;
-  memo?: string;
+  memo: string;
 }
 
 export interface CardCreateResponse {
@@ -29,7 +29,7 @@ export interface CardAllDataRaw {
   subject: Subject;
   finalScoreTarget: number;
   finalScoreLowest: number;
-  memo?: string;
+  memo: string;
   testResults: TestResult[];
   answeredYears: number[];
 }
@@ -38,7 +38,7 @@ export interface CardAllData {
   subject: Subject;
   finalScoreTarget: number;
   finalScoreLowest: number;
-  memo?: string;
+  memo: string;
   testResults: TestResult[];
   unAnsweredYears: number[];
   chartData: ChartData[]; // 統合済みのチャートデータ

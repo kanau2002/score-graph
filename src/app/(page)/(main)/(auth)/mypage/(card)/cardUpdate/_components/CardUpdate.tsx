@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, FormEvent, ChangeEvent } from "react";
+import { useState, FormEvent, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Subject } from "@/type/testType";
 import { CardData } from "@/type/cardType";
@@ -8,9 +8,10 @@ import { displaySubjectName } from "@/lib/display";
 
 type Props = {
   subject: Subject;
+  initialCardData: CardData;
 };
 
-export default function CardUpdate({ subject }: Props) {
+export default function CardUpdate({ subject, initialCardData }: Props) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,39 +22,10 @@ export default function CardUpdate({ subject }: Props) {
     finalScoreLowest: number;
     memo: string;
   }>({
-    finalScoreTarget: 80,
-    finalScoreLowest: 60,
-    memo: "",
+    finalScoreTarget: initialCardData.finalScoreTarget,
+    finalScoreLowest: initialCardData.finalScoreLowest,
+    memo: initialCardData.memo || "",
   });
-
-  // カードデータの取得
-  useEffect(() => {
-    const fetchCardData = async () => {
-      try {
-        const response = await fetch(`/api/cards?subject=${subject}`);
-
-        if (!response.ok) {
-          return; // エラーがあっても初期値を使用
-        }
-
-        const data = await response.json();
-
-        if (data.card) {
-          const card: CardData = data.card;
-          setFormData({
-            finalScoreTarget: card.finalScoreTarget,
-            finalScoreLowest: card.finalScoreLowest,
-            memo: card.memo || "",
-          });
-        }
-      } catch (err) {
-        console.error("カードデータ取得エラー:", err);
-        // エラーがあっても初期値を使用
-      }
-    };
-
-    fetchCardData();
-  }, [subject]);
 
   // フォーム入力の処理
   const handleChange = (

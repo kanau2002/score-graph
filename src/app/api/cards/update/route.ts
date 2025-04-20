@@ -1,8 +1,6 @@
-//src/app/api/cards/update/route.ts
 import { NextRequest, NextResponse } from "next/server";
-
 import { Subject } from "@/type/testType";
-import { cardService } from "@/core/card/cardService";
+import { cardService } from "@/core/Service/cardService";
 
 export async function PUT(request: NextRequest) {
   try {

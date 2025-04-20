@@ -101,7 +101,7 @@ export interface AnsweredData {
   percentage: number;
   targetPercentage?: number;
   date: string;
-  memo?: string;
+  memo: string;
   sectionTotals: {
     [sectionIndex: number]: number;
   };
@@ -155,7 +155,7 @@ export type TestSubmissionData = {
   score: number;
   percentage: number;
   date: string;
-  memo?: string;
+  memo: string;
   sectionTotals: {
     [sectionIndex: number]: number;
   };
