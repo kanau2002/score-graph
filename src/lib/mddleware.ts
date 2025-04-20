@@ -1,7 +1,7 @@
 // src/middleware.ts
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken } from "./lib/auth";
-import { ROUTES } from "./constants";
+import { verifyToken } from "./auth";
+import { ROUTES } from "../constants";
 
 // 認証が必要なパス
 const PROTECTED_PATHS = [
