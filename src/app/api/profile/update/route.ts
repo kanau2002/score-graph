@@ -1,8 +1,6 @@
-// src/app/api/profile/update/route.ts
-
 import { NextRequest, NextResponse } from "next/server";
-import { profileService } from "@/core/Service/mypageService";
-import { ProfileUpdateData } from "@/type/testType";
+import { userService } from "@/core/Service/userService";
+import { ProfileUpdateData } from "@/type/userType";
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,7 +15,7 @@ export async function POST(req: NextRequest) {
     }
 
     // プロフィール更新処理を実行
-    const result = await profileService.updateProfileData(data);
+    const result = await userService.updateProfileData(data);
 
     if (result.success) {
       return NextResponse.json({ success: true });

@@ -1,6 +1,7 @@
 // src/app/api/follow/route.ts
+import { followService } from "@/core/Service/followService";
 import { NextRequest, NextResponse } from "next/server";
-import { profileService } from "@/core/Service/mypageService";
+
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,11 +11,11 @@ export async function GET(request: NextRequest) {
 
     if (type === "following") {
       // フォロー中ユーザー一覧を取得
-      const following = await profileService.fetchFollowing();
+      const following = await followService.fetchFollowing();
       return NextResponse.json(following);
     } else {
       // デフォルトは相互フォローユーザーを返す
-      const mutualFollows = await profileService.fetchMutualFollows();
+      const mutualFollows = await followService.fetchMutualFollows();
       return NextResponse.json(mutualFollows);
     }
   } catch (error) {
@@ -38,7 +39,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await profileService.followUser(userId);
+    await followService.followUser(userId);
     return NextResponse.json({ message: "フォローしました" });
   } catch (error) {
     console.error("フォローエラー:", error);
@@ -61,7 +62,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    await profileService.unfollowUser(userId);
+    await followService.unfollowUser(userId);
     return NextResponse.json({ message: "フォロー解除しました" });
   } catch (error) {
     console.error("フォロー解除エラー:", error);

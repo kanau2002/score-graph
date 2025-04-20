@@ -1,7 +1,5 @@
-// src/app/api/tests/delete/route.ts
-
+import { testService } from "@/core/Service/testService";
 import { NextRequest, NextResponse } from "next/server";
-import { profileService } from "@/core/Service/mypageService";
 
 export async function DELETE(req: NextRequest) {
   try {
@@ -16,10 +14,7 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    const result = await profileService.deleteTestResult(
-      subject,
-      parseInt(year)
-    );
+    const result = await testService.deleteTestResult(subject, parseInt(year));
 
     if (result.success) {
       return NextResponse.json({ success: true });

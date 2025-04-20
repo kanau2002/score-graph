@@ -6,6 +6,7 @@ import {
   TargetUpsertData,
 } from "../../type/targetType";
 import { TargetRepository } from "../Repository/targetRepository";
+import { getCurrentUserId } from "@/lib/auth";
 
 class TargetService {
   private repository: TargetRepository;
@@ -21,6 +22,7 @@ class TargetService {
   async upsertTarget(
     data: Omit<TargetSaveData, "userId">
   ): Promise<TargetUpsertResponse> {
+    const userId = await getCurrentUserId();
     try {
       // バリデーション
       if (!this.validateTargetData(data)) {
@@ -29,9 +31,6 @@ class TargetService {
           error: "入力データが無効です。必須項目を入力してください。",
         };
       }
-
-      // 実際のアプリでは認証情報からユーザーIDを取得する
-      const userId = 1; // デフォルトのユーザーID
 
       // リポジトリを呼び出してデータを保存
       return await this.repository.upsertTarget({
@@ -59,10 +58,8 @@ class TargetService {
     subject: Subject,
     targetMonth: string
   ): Promise<TargetData | null> {
+    const userId = await getCurrentUserId();
     try {
-      // 実際のアプリでは認証情報からユーザーIDを取得する
-      const userId = 1; // デフォルトのユーザーID
-
       return await this.repository.fetchTargetData(
         userId,
         subject,
@@ -79,9 +76,8 @@ class TargetService {
    * @param subject 科目
    */
   async fetchTargetUpsertData(subject: string): Promise<TargetUpsertData> {
+    const userId = await getCurrentUserId();
     try {
-      // 実際のアプリでは認証情報からユーザーIDを取得する
-      const userId = 1; // デフォルトのユーザーID
 
       // 科目の型チェック
       if (!this.isValidSubject(subject)) {

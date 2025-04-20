@@ -1,6 +1,5 @@
-// src/app/api/users/search/route.ts
+import { followService } from "@/core/Service/followService";
 import { NextRequest, NextResponse } from "next/server";
-import { profileService } from "@/core/Service/mypageService";
 
 export async function GET(request: NextRequest) {
   // URLからクエリパラメータを取得
@@ -15,8 +14,8 @@ export async function GET(request: NextRequest) {
   }
 
   // ユーザーIDが数値かどうかチェック
-  const userIdNum = parseInt(userId, 10);
-  if (isNaN(userIdNum)) {
+  const targetUid = parseInt(userId, 10);
+  if (isNaN(targetUid)) {
     return NextResponse.json(
       { message: "ユーザーIDは数値で指定してください" },
       { status: 400 }
@@ -25,7 +24,7 @@ export async function GET(request: NextRequest) {
 
   try {
     // プロフィールサービスを使用してユーザーを検索
-    const user = await profileService.searchUserById(userIdNum);
+    const user = await followService.searchUserById(targetUid);
 
     if (!user) {
       return NextResponse.json(
