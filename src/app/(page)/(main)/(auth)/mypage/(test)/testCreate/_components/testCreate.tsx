@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ArrowLeft, Circle, X, Minus } from "lucide-react";
 import React from "react";
 import Link from "next/link";
-import { Answer, ClientTestSection, TestData } from "@/type/testType";
+import { Answer, ClientTestSection, Subject, TestData } from "@/type/testType";
 import { useRouter } from "next/navigation";
 import DatePicker from "./DatePicker";
 import { displaySubjectName } from "@/lib/display";
@@ -20,6 +20,25 @@ export default function TestCreate({ testStructureData }: Props) {
   const [submitError, setSubmitError] = useState<string | null>(null);
   // 日付を保持するstate
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
+  const isThreeChoice =
+    testStructureData.subject === Subject.MATH1A ||
+    testStructureData.subject === Subject.MATH2B
+      ? true
+      : false;
+
+  const choice = isThreeChoice
+    ? [Answer.CORRECT, Answer.INCORRECT, Answer.SKIPPED]
+    : [
+        Answer.ONE,
+        Answer.TWO,
+        Answer.THREE,
+        Answer.FOUR,
+        Answer.FIVE,
+        Answer.SIX,
+        Answer.SEVEN,
+        Answer.SKIPPED,
+      ];
 
   // 初期化時に一度だけテストデータを構築
   const initialTestSections = React.useMemo(() => {
@@ -293,10 +312,11 @@ export default function TestCreate({ testStructureData }: Props) {
 
   // 正解不正解の判定関数
   const getAnswerStatus = (correct: number | null, answer: Answer) => {
-    if (answer === Answer.SKIPPED) return "skipped";
-    if (correct === null) return "unknown";
-    if (String(correct) === answer) return "correct";
-    return "incorrect";
+    if (!isThreeChoice && correct === null) return Answer.SKIPPED;
+    if (answer === Answer.SKIPPED) return Answer.SKIPPED;
+    if (answer === Answer.CORRECT || String(correct) === answer)
+      return Answer.CORRECT;
+    return Answer.INCORRECT;
   };
 
   // 回答ボタンの背景色を決定する関数
@@ -314,9 +334,9 @@ export default function TestCreate({ testStructureData }: Props) {
     // 選択されたオプションの場合、正誤に応じた色を返す
     const status = getAnswerStatus(correctAnswer, option);
 
-    if (status === "correct") return "bg-blue-500 text-white font-bold";
-    if (status === "incorrect") return "bg-red-500 text-white font-bold";
-    if (status === "skipped") return "bg-gray-300";
+    if (status === Answer.CORRECT) return "bg-blue-500 text-white font-bold";
+    if (status === Answer.INCORRECT) return "bg-red-500 text-white font-bold";
+    if (status === Answer.SKIPPED) return "bg-gray-300";
 
     // 正解がない場合（correctAnswer === null）は青色
     return "bg-blue-500 text-white font-bold";
@@ -396,16 +416,7 @@ export default function TestCreate({ testStructureData }: Props) {
                       }}
                     >
                       <div className="flex justify-center gap-2 min-w-min mx-3">
-                        {[
-                          Answer.ONE,
-                          Answer.TWO,
-                          Answer.THREE,
-                          Answer.FOUR,
-                          Answer.FIVE,
-                          Answer.SIX,
-                          Answer.SEVEN,
-                          Answer.SKIPPED,
-                        ].map((option) => (
+                        {choice.map((option) => (
                           <button
                             key={option}
                             className={`w-8 h-8 flex items-center justify-center rounded-full shadow my-2 ${getButtonStyle(

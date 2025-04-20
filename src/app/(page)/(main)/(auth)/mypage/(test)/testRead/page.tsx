@@ -1,6 +1,6 @@
 import React from "react";
 import { testService } from "@/core/Service/testService";
-import TestRead from "./_components/testRead";
+import TestRead from "./_components/TestRead";
 
 type Props = {
   searchParams: { subject: string; year: string };
