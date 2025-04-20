@@ -1,8 +1,7 @@
-//app/layout.tsx
 import type React from "react";
 import type { Metadata } from "next";
 import "./globals.css";
-// import { ToastProvider } from '../hooks/useToast'
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
   title: "score-graph",
@@ -17,9 +16,9 @@ export default function RootLayout({
   return (
     <html lang="ja" className="h-full">
       <body className="h-full">
-        {/* <ToastProvider> */}
-        <div className="min-h-full">{children}</div>
-        {/* </ToastProvider> */}
+        <AuthProvider>
+          <div className="min-h-full">{children}</div>
+        </AuthProvider>
       </body>
     </html>
   );

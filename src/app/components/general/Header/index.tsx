@@ -1,17 +1,27 @@
 //app/components/general/Header/index.tsx
-'use client'
-import { useState } from 'react'
-import Image from 'next/image'
-import { FaRegHeart } from 'react-icons/fa'
-import { CgMenu, CgProfile } from 'react-icons/cg'
-import Navigation from '../Navigation'
+"use client";
+import { useState } from "react";
+import Image from "next/image";
+import { FaRegHeart } from "react-icons/fa";
+import { CgMenu, CgProfile } from "react-icons/cg";
+import Navigation from "../Navigation";
+import { useAuth } from "@/context/AuthContext";
+import { ROUTES } from "@/constants";
+import Link from "next/link";
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const { user, logout } = useAuth();
   /**
    * TODO: 後でServiceから取得するように修正する(その際HeaderをServerComponent化する必要が出てくるはず)
    */
-  const isNew = true
+  const isNew = true;
+
+  const handleLogout = async () => {
+    await logout();
+    // ログアウト後はログインページにリダイレクト
+    window.location.href = ROUTES.LOGIN;
+  };
 
   return (
     <div className="relative">
@@ -35,10 +45,14 @@ export default function Header() {
             <p>お知らせ</p>
           </button>
 
-          <button className="flex flex-col items-center">
+          <div className="flex flex-col items-center">
             <CgProfile className="text-2xl" />
-            <p>ユーザー</p>
-          </button>
+            {user ? (
+              <button onClick={handleLogout}>ログアウト</button>
+            ) : (
+              <Link href={ROUTES.LOGIN}>ログイン</Link>
+            )}
+          </div>
           <button
             onClick={() => setIsOpen(true)}
             className="flex flex-col items-center md:hidden"
@@ -57,10 +71,10 @@ export default function Header() {
       )}
       <div
         className={`fixed right-0 top-0 z-[12] transition-transform duration-300 ease-in-out
-      ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+      ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <Navigation setIsOpen={setIsOpen} />
       </div>
     </div>
-  )
+  );
 }

@@ -1,10 +1,18 @@
 import { pool } from "@/lib/db";
-import { Answer, AnsweredData, TestSubmissionData, TestSubmissionResult } from "@/type/testType";
-
+import {
+  Answer,
+  AnsweredData,
+  TestSubmissionData,
+  TestSubmissionResult,
+} from "@/type/testType";
 
 export class TestRepository {
   // 生徒のテスト結果データの取得
-  async fetchStudentData(subject: string, year: string): Promise<AnsweredData> {
+  async fetchStudentData(
+    subject: string,
+    year: string,
+    userId: number
+  ): Promise<AnsweredData> {
     const query = `
       SELECT 
         t.id,
@@ -54,12 +62,12 @@ export class TestRepository {
           t.subject = tt.subject AND 
           to_char(t.date, 'YYYY-MM') = tt.target_month
       WHERE 
-        t.subject = $1 AND t.year = $2 AND t.user_id = 1
+        t.subject = $1 AND t.year = $2 AND t.user_id = $3
       LIMIT 1
     `;
 
     try {
-      const result = await pool.query(query, [subject, year]);
+      const result = await pool.query(query, [subject, year, userId]);
 
       if (result.rows.length === 0) {
         throw new Error(
@@ -100,7 +108,8 @@ export class TestRepository {
   // 相互フォローしているフレンドのテスト結果データのみを取得
   async fetchFriendsData(
     subject: string,
-    year: string
+    year: string,
+    userId: number
   ): Promise<AnsweredData[]> {
     const query = `
       SELECT 
@@ -155,19 +164,19 @@ export class TestRepository {
       WHERE 
         t.subject = $1 
         AND t.year = $2 
-        AND u.id != 1
+        AND u.id != $3
         AND EXISTS (
           -- 相互フォロー関係のチェック：現在のユーザーがフォローしており、かつ相手にもフォローされている
           SELECT 1 FROM friend_follow f1
           JOIN friend_follow f2 ON f1.following_id = f2.follower_id AND f1.follower_id = f2.following_id
-          WHERE f1.follower_id = 1 AND f1.following_id = u.id
+          WHERE f1.follower_id = $3 AND f1.following_id = u.id
         )
       ORDER BY
         u.user_name
     `;
 
     try {
-      const result = await pool.query(query, [subject, year]);
+      const result = await pool.query(query, [subject, year, userId]);
 
       const friendsData: AnsweredData[] = result.rows.map((row) => {
         // NULL値を除去するためにオブジェクトをフィルタリング

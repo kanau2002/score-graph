@@ -37,6 +37,7 @@ export class UserRepository {
         targetUniversities.push(result.rows[0].targetuniversity_3);
 
       const profileData: ProfileData = {
+        userId: result.rows[0].id,
         userName: result.rows[0].user_name,
         targetUniversities: targetUniversities,
         memo: result.rows[0].memo,

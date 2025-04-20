@@ -145,7 +145,10 @@ export class TargetRepository {
   }
 
   // tests_targetテーブルから月次目標を取得するメソッド
-  async fetchMonthlyTargets(subject: Subject): Promise<
+  async fetchMonthlyTargets(
+    subject: Subject,
+    userId: number
+  ): Promise<
     Array<{
       targetMonth: string;
       targetPercentage: number;
@@ -158,13 +161,13 @@ export class TargetRepository {
     FROM 
       tests_target
     WHERE 
-      user_id = 1 AND subject = $1
+      user_id = $2 AND subject = $1
     ORDER BY
       target_month
   `;
 
     try {
-      const result = await pool.query(query, [subject]);
+      const result = await pool.query(query, [subject, userId]);
 
       return result.rows.map((row) => ({
         targetMonth: row.target_month,

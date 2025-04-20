@@ -1,4 +1,3 @@
-//src/core/profile/repositories/data.ts
 // 1000: ⚪︎
 // 1001: ×
 // 1002: 解答する必要が無い問題

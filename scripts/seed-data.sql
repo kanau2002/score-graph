@@ -9,18 +9,32 @@ ALTER SEQUENCE cards_id_seq RESTART WITH 1;
 ALTER SEQUENCE test_answer_id_seq RESTART WITH 1;
 
 -- プロフィールデータの挿入
-INSERT INTO users (user_name, memo, targetUniversity_1, targetUniversity_2, targetUniversity_3)
+INSERT INTO users (user_name, email, password, memo, targetUniversity_1, targetUniversity_2, targetUniversity_3)
 VALUES (
   '植田佳和侑', 
+  'ueda@example.com',
+  '$2b$10$ABC123DEF456GHI789JKL.mnopqrstuvwxyz123456789ABCDEFGHI',
   'サッカー部の活動時間が長く、勉強時間が1日2時間程度しか取れていないため、内職をして時間を確保したり、過去問をもとに本当に必要なものを優先したりと工夫して勉強しています。',
   '千葉大学-理学部-地球科学科',
   '明治大学-農学部-農学科',
   '東京農業大学-農学部-農学科'
 ),
-('大貫蒔門', '陸上部で頑張っています。', '千葉大学-教育学部-中学数学', '千葉大学-理学部-数学科', null),
-('磯辺慧美理', 'アイデア甲子園に出場します。', '国際医療福祉大-医学部', null, null),
-('藤岡優仁', 'サッカー部と生徒会を頑張っています。', '千葉大学-理学部-物理学科', null, null),
-('星野心紀', '新学期のクラス替えが楽しみです。', '千葉大学-園芸学部-園芸学科', null, null);
+('大貫蒔門',
+'onuki@example.com',
+'$2b$10$ABC123DEF456GHI789JKL.mnopqrstuvwxyz123456789ABCDEFGHI',
+'陸上部で頑張っています。', '千葉大学-教育学部-中学数学', '千葉大学-理学部-数学科', null),
+('磯辺慧美理',
+'isobe@example.com',
+'$2b$10$ABC123DEF456GHI789JKL.mnopqrstuvwxyz123456789ABCDEFGHI',
+'アイデア甲子園に出場します。', '国際医療福祉大-医学部', null, null),
+('藤岡優仁',
+'fujioka@example.com',
+'$2b$10$ABC123DEF456GHI789JKL.mnopqrstuvwxyz123456789ABCDEFGHI',
+'サッカー部と生徒会を頑張っています。', '千葉大学-理学部-物理学科', null, null),
+('星野心紀',
+'hoshino@example.com',
+'$2b$10$ABC123DEF456GHI789JKL.mnopqrstuvwxyz123456789ABCDEFGHI',
+'新学期のクラス替えが楽しみです。', '千葉大学-園芸学部-園芸学科', null, null);
 
 
 -- 科目カードデータの挿入

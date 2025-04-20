@@ -219,7 +219,7 @@ export class CardRepository {
   }
 
   // testsテーブルからデータを取得するメソッド
-  async fetchCardAllDatasRaw(): Promise<CardAllDataRaw[]> {
+  async fetchCardAllDatasRaw(userId: number): Promise<CardAllDataRaw[]> {
     const query = `
     SELECT 
       c.id,
@@ -244,13 +244,13 @@ export class CardRepository {
     LEFT JOIN 
       tests t ON c.subject = t.subject AND c.user_id = t.user_id
     WHERE 
-      c.user_id = 1
+      c.user_id = $1
     GROUP BY 
       c.id, c.subject, c.final_score_target, c.final_score_lowest, c.memo
   `;
 
     try {
-      const result = await pool.query(query);
+      const result = await pool.query(query, [userId]);
 
       const cardAllDatasRaw: CardAllDataRaw[] = result.rows.map((row) => ({
         subject: row.subject as Subject,

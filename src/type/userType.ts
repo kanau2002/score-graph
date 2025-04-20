@@ -1,4 +1,5 @@
 export interface ProfileData {
+  userId: number;
   userName: string;
   targetUniversities: string[];
   memo: string;
