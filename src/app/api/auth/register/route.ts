@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
     // トークンをクッキーに設定
     if (result.token) {
-      setAuthCookie(result.token);
+      await setAuthCookie(result.token);
     }
 
     return NextResponse.json({
