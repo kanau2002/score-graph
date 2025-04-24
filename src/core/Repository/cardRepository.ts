@@ -1,5 +1,5 @@
 import { pool } from "@/lib/db";
-import { Subject, TestResult } from "@/type/testType";
+import { Subject } from "@/type/testType";
 import {
   CardAllDataRaw,
   CardCreateResponse,
@@ -269,10 +269,10 @@ export class CardRepository {
   ): Promise<CardAllDataRaw[]> {
     const query = `
     SELECT 
-      c.id,
+      c.user_id AS "userId",
       c.subject,
-      c.final_score_target,
-      c.final_score_lowest,
+      c.final_score_target AS "finalScoreTarget",
+      c.final_score_lowest AS "finalScoreLowest",
       c.memo,
       CASE 
         WHEN COUNT(t.id) = 0 THEN '[]'::json
@@ -293,27 +293,14 @@ export class CardRepository {
     WHERE 
       c.user_id = $1
     GROUP BY 
-      c.id, c.subject, c.final_score_target, c.final_score_lowest, c.memo
+      c.user_id, c.subject, c.final_score_target, c.final_score_lowest, c.memo
   `;
 
     try {
       const result = await pool.query(query, [userId]);
-
-      const cardAllDatasRaw: CardAllDataRaw[] = result.rows.map((row) => ({
-        userId: row.id,
-        subject: row.subject as Subject,
-        finalScoreTarget: row.final_score_target,
-        finalScoreLowest: row.final_score_lowest,
-        memo: row.memo,
-        testResults: row.testResults,
-        answeredYears: row.testResults.map((testResult: TestResult) =>
-          Number(testResult.year)
-        ),
-      }));
-
-      return cardAllDatasRaw;
+      return result.rows;
     } catch (error) {
-      console.error("科目カードデータ取得エラー:", error);
+      console.error("fetchCardAllDatasAtMypageRawの取得エラー:", error);
       throw error;
     }
   }
@@ -321,12 +308,11 @@ export class CardRepository {
   async fetchCardAllDatasAtHomeRaw(limit: number): Promise<CardAllDataRaw[]> {
     const query = `
     SELECT 
-      c.id,
+      c.user_id AS "userId", 
       c.subject,
-      c.final_score_target,
-      c.final_score_lowest,
+      c.final_score_target AS "finalScoreTarget",
+      c.final_score_lowest AS "finalScoreLowest",
       c.memo,
-      c.user_id, 
       CASE 
         WHEN COUNT(t.id) = 0 THEN '[]'::json
         ELSE json_agg(
@@ -348,7 +334,7 @@ export class CardRepository {
     WHERE 
       u.is_graduated = TRUE
     GROUP BY 
-      c.id, c.subject, c.final_score_target, c.final_score_lowest, c.memo, c.user_id
+      c.user_id, c.subject, c.final_score_target, c.final_score_lowest, c.memo
     ORDER BY 
       RANDOM()
     LIMIT $1
@@ -356,23 +342,9 @@ export class CardRepository {
 
     try {
       const result = await pool.query(query, [limit]);
-
-      const cardAllDatasRaw: CardAllDataRaw[] = result.rows.map((row) => ({
-        userId: row.user_id,
-        subject: row.subject as Subject,
-        finalScoreTarget: row.final_score_target,
-        finalScoreLowest: row.final_score_lowest,
-        memo: row.memo,
-        testResults: row.testResults,
-        answeredYears: row.testResults.map((testResult: TestResult) =>
-          Number(testResult.year)
-        ),
-      }));
-      console.log("result", result);
-
-      return cardAllDatasRaw;
+      return result.rows;
     } catch (error) {
-      console.error("科目カードデータ取得エラー:", error);
+      console.error("fetchCardAllDatasAtHomeRawの取得エラー:", error);
       throw error;
     }
   }

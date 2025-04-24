@@ -33,7 +33,7 @@ export interface CardAllDataRaw {
   finalScoreLowest: number;
   memo: string;
   testResults: TestResult[];
-  answeredYears: number[];
+  // answeredYears: number[];
 }
 // CardData型に統合済みチャートデータを追加
 export interface CardAllData {
