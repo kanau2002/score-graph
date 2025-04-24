@@ -23,18 +23,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { TestResult } from "@/type/testType";
 import { displaySubjectName } from "@/lib/display";
-import { CardAllData } from "@/type/cardType";
-import { ProfileData } from "@/type/userType";
 import SettingModal from "./SettingModal";
 import YearSelecter from "./YearSelecter";
 import { ROUTES } from "@/constants";
+import { CardAllData } from "@/type/cardType";
 
 interface Props {
-  profileData: ProfileData;
   cardAllData: CardAllData;
 }
 
-export default function CardRead({ profileData, cardAllData }: Props) {
+export default function CardRead({ cardAllData }: Props) {
   const [showTable, setShowTable] = useState(true);
   const [tableHeight, setTableHeight] = useState<number>(0);
   const [showFullDescription, setShowFullDescription] = useState(false);
@@ -67,14 +65,14 @@ export default function CardRead({ profileData, cardAllData }: Props) {
       const height = profileInfoRef.current.scrollHeight;
       setProfileInfoHeight(showProfileInfo ? height : 0);
     }
-  }, [showProfileInfo, profileData]);
+  }, [showProfileInfo, cardAllData.profileData]);
 
   return (
     <div className="w-full rounded-lg shadow bg-white">
       {/* ヘッダー部分 */}
       <div className="flex items-center p-2 ">
         <div className="w-8 h-8 m-2 relative">
-          {profileData.thumbnailUrl ? (
+          {cardAllData.profileData.thumbnailUrl ? (
             <Image
               src="/profile/kanau.JPG"
               alt="プロフィール画像"
@@ -86,7 +84,7 @@ export default function CardRead({ profileData, cardAllData }: Props) {
           )}
         </div>
         <div className="text-xs flex">
-          <p className="font-bold">{profileData.userName}</p>
+          <p className="font-bold">{cardAllData.profileData.userName}</p>
           <p>　{displaySubjectName(cardAllData.subject)}</p>
         </div>
         <div className="ml-auto mr-2">
@@ -218,11 +216,11 @@ export default function CardRead({ profileData, cardAllData }: Props) {
         <div ref={profileInfoRef} className="px-4 pb-4">
           <p className="text-sm">
             〜志望校〜
-            <br />・{profileData.targetUniversities[0]}
-            <br />・{profileData.targetUniversities[1]}
-            <br />・{profileData.targetUniversities[2]}
+            <br />・{cardAllData.profileData.targetUniversities[0]}
+            <br />・{cardAllData.profileData.targetUniversities[1]}
+            <br />・{cardAllData.profileData.targetUniversities[2]}
           </p>
-          <p className="mt-1 text-sm">{profileData.memo}</p>
+          <p className="mt-1 text-sm">{cardAllData.profileData.memo}</p>
         </div>
       </div>
 

@@ -1,8 +1,16 @@
-export default function HomePage() {
+import { cardService } from "@/core/Service/cardService";
+import CardRead from "../(auth)/mypage/_components/CardRead";
+
+export default async function HomePage() {
+  const [cardAllDatas] = await Promise.all([
+    cardService.fetchCardAllDatasAtHome(),
+  ]);
+
   return (
-    <>
-      <p>HomePage</p>
-      <p className="text-center">先輩の記録が見れる機能が今後できるかも。</p>
-    </>
+    <div className="max-w-md mx-auto rounded-lg mb-32">
+      {cardAllDatas.map((cardAllData, index) => (
+        <CardRead key={index} cardAllData={cardAllData} />
+      ))}
+    </div>
   );
 }

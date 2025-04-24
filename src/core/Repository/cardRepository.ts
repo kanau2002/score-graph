@@ -264,7 +264,9 @@ export class CardRepository {
   }
 
   // testsテーブルからデータを取得するメソッド
-  async fetchCardAllDatasRaw(userId: number): Promise<CardAllDataRaw[]> {
+  async fetchCardAllDatasAtMypageRaw(
+    userId: number
+  ): Promise<CardAllDataRaw[]> {
     const query = `
     SELECT 
       c.id,
@@ -298,6 +300,7 @@ export class CardRepository {
       const result = await pool.query(query, [userId]);
 
       const cardAllDatasRaw: CardAllDataRaw[] = result.rows.map((row) => ({
+        userId: row.id,
         subject: row.subject as Subject,
         finalScoreTarget: row.final_score_target,
         finalScoreLowest: row.final_score_lowest,
@@ -307,6 +310,65 @@ export class CardRepository {
           Number(testResult.year)
         ),
       }));
+
+      return cardAllDatasRaw;
+    } catch (error) {
+      console.error("科目カードデータ取得エラー:", error);
+      throw error;
+    }
+  }
+  // testsテーブルからデータを取得するメソッド
+  async fetchCardAllDatasAtHomeRaw(limit: number): Promise<CardAllDataRaw[]> {
+    const query = `
+    SELECT 
+      c.id,
+      c.subject,
+      c.final_score_target,
+      c.final_score_lowest,
+      c.memo,
+      c.user_id, 
+      CASE 
+        WHEN COUNT(t.id) = 0 THEN '[]'::json
+        ELSE json_agg(
+          json_build_object(
+            'id', t.id,
+            'date', to_char(t.date, 'YYYY/MM/DD'),
+            'year', t.year,
+            'percentage', t.percentage,
+            'memo', t.memo
+          ) ORDER BY t.date DESC
+        )
+      END AS "testResults"
+    FROM 
+      cards c
+    JOIN
+      users u ON c.user_id = u.id
+    LEFT JOIN 
+      tests t ON c.subject = t.subject AND c.user_id = t.user_id
+    WHERE 
+      u.is_graduated = TRUE
+    GROUP BY 
+      c.id, c.subject, c.final_score_target, c.final_score_lowest, c.memo, c.user_id
+    ORDER BY 
+      RANDOM()
+    LIMIT $1
+  `;
+
+    try {
+      const result = await pool.query(query, [limit]);
+
+      const cardAllDatasRaw: CardAllDataRaw[] = result.rows.map((row) => ({
+        userId: row.user_id,
+        subject: row.subject as Subject,
+        finalScoreTarget: row.final_score_target,
+        finalScoreLowest: row.final_score_lowest,
+        memo: row.memo,
+        testResults: row.testResults,
+        answeredYears: row.testResults.map((testResult: TestResult) =>
+          Number(testResult.year)
+        ),
+      }));
+      console.log("result", result);
 
       return cardAllDatasRaw;
     } catch (error) {

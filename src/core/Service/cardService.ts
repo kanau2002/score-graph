@@ -7,10 +7,14 @@ import {
   CardUpdateResponse,
 } from "../../type/cardType";
 import { CardRepository } from "../Repository/cardRepository";
-import { targetRepository } from "../Repository/targetRepository";
+import {
+  TargetRepository,
+  targetRepository,
+} from "../Repository/targetRepository";
 import { testStructureDatas } from "@/constants/TestStructureData";
 import { MonthlyTarget } from "@/type/targetType";
 import { getCurrentUserId } from "@/lib/auth";
+import { UserRepository } from "../Repository/userRepository";
 
 class CardService {
   private repository: CardRepository;
@@ -164,10 +168,12 @@ class CardService {
   }
 
   // 科目カード情報の取得（更新版）
-  async fetchCardAllDatas(): Promise<CardAllData[]> {
+  async fetchCardAllDatasAtMypage(): Promise<CardAllData[]> {
     const userId = await getCurrentUserId();
     // 基本データの取得
-    const cardAllDatasRaw = await this.repository.fetchCardAllDatasRaw(userId);
+    const cardAllDatasRaw = await this.repository.fetchCardAllDatasAtMypageRaw(
+      userId
+    );
 
     // 各科目ごとに月次目標データを取得
     const cardAllDatas: CardAllData[] = await Promise.all(
@@ -179,9 +185,9 @@ class CardService {
         );
 
         // 月次目標データの取得
-        const monthlyTargets = await targetRepository.fetchMonthlyTargets(
+        const monthlyTargets = await new TargetRepository().fetchMonthlyTargets(
           data.subject,
-          userId
+          data.userId
         );
 
         // テスト結果と月次目標を統合したチャートデータの生成
@@ -198,6 +204,49 @@ class CardService {
           testResults: data.testResults,
           unAnsweredYears: unAnsweredYears,
           chartData: chartData,
+          profileData: await new UserRepository().fetchProfileData(data.userId),
+        };
+      })
+    );
+
+    return cardAllDatas;
+  }
+
+  // 科目カード情報の取得（更新版）
+  async fetchCardAllDatasAtHome(): Promise<CardAllData[]> {
+    // 基本データの取得
+    const cardAllDatasRaw = await this.repository.fetchCardAllDatasAtHomeRaw(3);
+
+    // 各科目ごとに月次目標データを取得
+    const cardAllDatas: CardAllData[] = await Promise.all(
+      cardAllDatasRaw.map(async (data) => {
+        // 未回答年度の取得
+        const unAnsweredYears = this.getUnAnsweredYears(
+          data.subject,
+          data.answeredYears
+        );
+
+        // 月次目標データの取得
+        const monthlyTargets = await targetRepository.fetchMonthlyTargets(
+          data.subject,
+          data.userId
+        );
+
+        // テスト結果と月次目標を統合したチャートデータの生成
+        const chartData = this.integrateChartData(
+          data.testResults,
+          monthlyTargets
+        );
+
+        return {
+          subject: data.subject,
+          finalScoreTarget: data.finalScoreTarget,
+          finalScoreLowest: data.finalScoreLowest,
+          memo: data.memo,
+          testResults: data.testResults,
+          unAnsweredYears: unAnsweredYears,
+          chartData: chartData,
+          profileData: await new UserRepository().fetchProfileData(data.userId),
         };
       })
     );
