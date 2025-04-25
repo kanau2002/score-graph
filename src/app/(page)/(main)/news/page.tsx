@@ -1,8 +1,8 @@
 import { newsService } from "@/core/Service/newsService";
 import { Metadata } from "next";
-import CategoryFilter from "./_components/CategoryFilter";
-import NewsList from "./_components/NewsList";
-import Pagination from "./_components/Pagination";
+import CategoryFilter from "../../../../components/(news)/CategoryFilter";
+import NewsList from "../../../../components/(news)/NewsList";
+import Pagination from "../../../../components/(news)/Pagination";
 
 export const metadata: Metadata = {
   title: "ニュース一覧 | サイト名",

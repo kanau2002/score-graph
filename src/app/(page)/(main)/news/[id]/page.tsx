@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { newsService } from "@/core/Service/newsService";
 import { notFound } from "next/navigation";
-import RichContent from "../_components/RichContent";
+import RichContent from "../../../../../components/(news)/RichContent";
 
 type NewsDetailPageProps = {
   params: {

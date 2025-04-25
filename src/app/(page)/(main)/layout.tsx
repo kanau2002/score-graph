@@ -1,6 +1,6 @@
-import Header from "@/app/components/general/Header";
-import BottomNavigation from "@/app/components/general/BottomNavigation";
-import Navigation from "@/app/components/general/Navigation";
+import Header from "@/components/general/Header";
+import BottomNavigation from "@/components/general/BottomNavigation";
+import Navigation from "@/components/general/Navigation";
 export default function MainLayout({
   children,
 }: Readonly<{
