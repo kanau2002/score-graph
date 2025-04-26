@@ -11,14 +11,11 @@ import {
 } from "@/type/testType";
 import { useRouter } from "next/navigation";
 import { displaySubjectName } from "@/lib/display";
-import FriendSelector from "../../../../../../../../components/(test)/FriendSelecter";
 import { ROUTES } from "@/constants";
-import {
-  FriendRadarChart,
-  StudentRadarChart,
-} from "../../../_components/SectionRaderChart";
 import { isCorrect, threeChoiceOrNot } from "@/lib/test";
-import AnswerIcon from "../../_components/AnswerIcon";
+import FriendSelector from "./FriendSelecter";
+import { FriendRadarChart, StudentRadarChart } from "./SectionRaderChart";
+import AnswerIcon from "./AnswerIcon";
 
 interface Props {
   studentData: AnsweredData;

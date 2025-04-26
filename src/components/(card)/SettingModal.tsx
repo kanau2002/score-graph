@@ -3,8 +3,8 @@ import { Ellipsis, Crosshair, SquareAsterisk, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Subject } from "@/type/testType";
 import { toast } from "react-hot-toast"; // トースト通知（必要に応じてインストール）
-import { CardDeleteConfirmationModal } from "../../../../../../components/(card)/CardDeleteConfirmationModal";
 import { ROUTES } from "@/constants";
+import { CardDeleteConfirmationModal } from "./CardDeleteConfirmationModal";
 
 const settingModalItems = [
   {

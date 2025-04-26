@@ -1,5 +1,5 @@
+import TestCreate from "@/components/(test)/TestCreate";
 import { testService } from "@/core/Service/testService";
-import TestCreate from "./_components/TestCreate";
 
 type Props = {
   searchParams: { subject: string; year: string };

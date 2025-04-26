@@ -10,7 +10,7 @@ import DatePicker from "./DatePicker";
 import { displaySubjectName } from "@/lib/display";
 import { ROUTES } from "@/constants";
 import { isCorrect, threeChoiceOrNot } from "@/lib/test";
-import AnswerIcon from "../../_components/AnswerIcon";
+import AnswerIcon from "./AnswerIcon";
 
 interface Props {
   testStructureData: TestData;

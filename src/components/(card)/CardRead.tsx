@@ -218,11 +218,9 @@ export default function CardRead({ cardAllData, isHome }: Props) {
       >
         <div ref={profileInfoRef} className="px-4 pb-4">
           <p className="text-sm">
-            〜志望校〜
-            {cardAllData.profileData.targetUniversities.map((univ) => (
-              <>
-                <br />・{univ}
-              </>
+            〜{isHome ? "合格大学" : "志望校"}〜
+            {cardAllData.profileData.targetUniversities.map((univ, index) => (
+              <div key={index}>・{univ}</div>
             ))}
           </p>
           <p className="mt-1 text-sm">{cardAllData.profileData.memo}</p>
@@ -233,7 +231,7 @@ export default function CardRead({ cardAllData, isHome }: Props) {
       {isHome === true && !showProfileInfo && (
         <div className="px-4 mt-2">
           <p className="text-sm mb-2">
-            〜志望校〜
+            〜{isHome ? "合格大学" : "志望校"}〜
             <br />・{cardAllData.profileData.targetUniversities[0]}
             <br />・
             {cardAllData.profileData.targetUniversities[1] &&
