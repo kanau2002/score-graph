@@ -1,3 +1,4 @@
+import { ProfileData } from "./userType";
 import { ChartData, Subject, TestResult } from "./testType";
 
 export interface CardData {
@@ -26,12 +27,13 @@ export interface CardDeleteResponse {
 }
 
 export interface CardAllDataRaw {
+  userId: number;
   subject: Subject;
   finalScoreTarget: number;
   finalScoreLowest: number;
   memo: string;
   testResults: TestResult[];
-  answeredYears: number[];
+  // answeredYears: number[];
 }
 // CardData型に統合済みチャートデータを追加
 export interface CardAllData {
@@ -42,4 +44,5 @@ export interface CardAllData {
   testResults: TestResult[];
   unAnsweredYears: number[];
   chartData: ChartData[]; // 統合済みのチャートデータ
+  profileData: ProfileData;
 }

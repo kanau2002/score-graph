@@ -179,5 +179,3 @@ export class TargetRepository {
     }
   }
 }
-
-export const targetRepository = new TargetRepository();
