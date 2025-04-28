@@ -2,6 +2,7 @@
 import { ROUTES } from "@/constants";
 import Link from "next/link";
 import React from "react";
+import Image from "next/image";
 import { LockKeyhole, LogIn, Newspaper, X } from "lucide-react";
 import { HomeIcon, UsersRound, CircleUserRound, LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
@@ -34,14 +35,20 @@ export default function Navigation({ setIsOpen }: Props) {
     <div className="h-screen w-64 bg-gray-400 p-4 text-white">
       {setIsOpen && (
         <div className="mb-6 flex justify-end">
-          <button
-            onClick={() => setIsOpen(false)}
-            className="text-white hover:text-gray-200"
-          >
+          <button onClick={() => setIsOpen(false)} className="text-white">
             <X className="size-6" />
           </button>
         </div>
       )}
+      <div className={`mx-2 mt-4 mb-6 hidden md:block`}>
+        <Image
+          src="/score-graph.png"
+          alt="ScoreGraphロゴ"
+          width={150}
+          height={50}
+          className="mr-4"
+        />
+      </div>
       <nav className="">
         <ul className="space-y-4">
           {navItems.map((item, index) => (

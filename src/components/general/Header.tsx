@@ -47,7 +47,7 @@ export default function Header() {
           </button>
           <button
             onClick={() => setIsOpen(true)}
-            className="flex flex-col items-center md:hidden"
+            className="flex flex-col items-center"
           >
             <CgMenu className="text-2xl" />
             メニュー
