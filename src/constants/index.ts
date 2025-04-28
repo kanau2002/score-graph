@@ -1,7 +1,7 @@
 // import { Time } from '@/libs/time'
 
 export const ROUTES = {
-  MAIN: '/',
+  TOP: '/',
   HOME: '/home',
   HOME_TESTREAD: 'home/testRead',
   FRIEND: '/friend',
@@ -13,9 +13,5 @@ export const ROUTES = {
   MYPAGE_TESTREAD: 'mypage/testRead',
   TEST_CREATE: 'mypage/testCreate',
   TARGET_UPSERT: 'mypage/targetUpsert',
-  HEART: '/heart',
-  SETTING: '/setting',
   LOGIN: '/login',
-  LOGOUT: '/logout',
-  CONTACT: '/contact',
 } as const

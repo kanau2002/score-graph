@@ -37,33 +37,31 @@ export default function TestCreate({ testStructureData }: Props) {
         Answer.SKIPPED,
       ];
 
-  // 初期化時に一度だけテストデータを構築
-  const initialTestSections = React.useMemo(() => {
-    // ベーステストデータに学生の回答を追加
-    return testStructureData.testStructure.map((section) => {
-      // 各セクションの質問を更新
-      const updatedQuestions = section.questions.map((question) => {
-        return {
-          ...question,
-          studentAnswer: Answer.SKIPPED, // 初期値として SKIPPED を設定
-          friendAnswer: null, // null を設定（比較対象がいないため）
-        };
-      });
-
+  // useMemoを使わずに直接テストデータを構築
+  // ベーステストデータに学生の回答を追加
+  const testSections = testStructureData.testStructure.map((section) => {
+    // 各セクションの質問を更新
+    const updatedQuestions = section.questions.map((question) => {
       return {
-        ...section,
-        questions: updatedQuestions,
-        sectionTotal: {
-          ...section.sectionTotal,
-          studentTotal: 0, // 初期化時は0点
-        },
+        ...question,
+        studentAnswer: Answer.SKIPPED, // 初期値として SKIPPED を設定
+        friendAnswer: null, // null を設定（比較対象がいないため）
       };
     });
-  }, [testStructureData.testStructure]);
+
+    return {
+      ...section,
+      questions: updatedQuestions,
+      sectionTotal: {
+        ...section.sectionTotal,
+        studentTotal: 0, // 初期化時は0点
+      },
+    };
+  });
 
   // テストデータを保持するstate（初期値を設定）
-  const [testSections, setTestSections] =
-    useState<ClientTestSection[]>(initialTestSections);
+  const [updatedTestSections, setUpdatedTestSections] =
+    useState<ClientTestSection[]>(testSections);
 
   // 総合得点を保持するstate
   const [totalScore, setTotalScore] = useState<number>(0);
@@ -120,7 +118,7 @@ export default function TestCreate({ testStructureData }: Props) {
   const calculateScores = (updatedAnswers: { [key: string]: Answer }) => {
     let newTotalScore = 0;
 
-    const updatedSections = testSections.map((section) => {
+    const updatedSections = updatedTestSections.map((section) => {
       let sectionScore = 0;
 
       // 各質問の回答を更新
@@ -190,7 +188,7 @@ export default function TestCreate({ testStructureData }: Props) {
       };
     });
 
-    setTestSections(updatedSections);
+    setUpdatedTestSections(updatedSections);
     setTotalScore(newTotalScore);
   };
 
@@ -218,7 +216,7 @@ export default function TestCreate({ testStructureData }: Props) {
     const sectionTotals: { [key: number]: number } = {};
     const sectionPercentages: { [key: number]: number } = {};
 
-    testSections.forEach((section) => {
+    updatedTestSections.forEach((section) => {
       sectionTotals[section.section] = section.sectionTotal.studentTotal || 0;
       sectionPercentages[section.section] =
         section.sectionTotal.score > 0
@@ -232,7 +230,7 @@ export default function TestCreate({ testStructureData }: Props) {
     // 質問番号ごとの回答データを変換
     const answers: { [key: number]: Answer } = {};
 
-    testSections.forEach((section) => {
+    updatedTestSections.forEach((section) => {
       section.questions.forEach((question, qIndex) => {
         const key = `${section.section - 1}-${qIndex}`;
         if (studentAnswers[key]) {
@@ -366,7 +364,7 @@ export default function TestCreate({ testStructureData }: Props) {
 
       {/* 解答表示部分 */}
       <div className="px-5 mt-4">
-        {testSections.map((section, sectionIndex) => (
+        {updatedTestSections.map((section, sectionIndex) => (
           <div key={`section-group-${sectionIndex}`} className="mb-6">
             <div className="p-3 ml-2">
               <h3 className="font-bold">大問{section.section}</h3>
@@ -417,7 +415,7 @@ export default function TestCreate({ testStructureData }: Props) {
                                     `${sectionIndex}-${questionIndex}`
                                   ],
                                   question.correctAnswer
-                                )} transition-all duration-200 shadow-sm transform hover:scale-110`}
+                                )} transition-all duration-200 shadow-sm transform hover:scale-105`}
                                 onClick={() =>
                                   handleAnswerChange(
                                     sectionIndex,
