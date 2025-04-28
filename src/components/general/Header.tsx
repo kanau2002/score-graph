@@ -1,26 +1,23 @@
-//app/components/general/Header/index.tsx
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { FaRegHeart } from "react-icons/fa";
 import { CgMenu, CgProfile } from "react-icons/cg";
 import Navigation from "./Navigation";
 import { useAuth } from "@/context/AuthContext";
 import { ROUTES } from "@/constants";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { UsersRound } from "lucide-react";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, logout } = useAuth();
-  /**
-   * TODO: 後でServiceから取得するように修正する(その際HeaderをServerComponent化する必要が出てくるはず)
-   */
-  const isNew = true;
+  const { user } = useAuth();
+  const router = useRouter();
 
-  const handleLogout = async () => {
-    await logout();
-    // ログアウト後はログインページにリダイレクト
-    window.location.href = ROUTES.LOGIN;
+  const handleLogin = async () => {
+    if (user) {
+      return alert("すでにログインしています");
+    }
+    return router.push(ROUTES.LOGIN);
   };
 
   return (
@@ -34,31 +31,26 @@ export default function Header() {
           className="mr-4"
         />
         <div className="flex items-center gap-4">
-          <button className="relative flex flex-col items-center">
-            <div className="relative">
-              <FaRegHeart className="text-2xl" />
-              {/* 赤い点（通知バッジ） */}
-              {isNew && (
-                <span className="absolute right-0 top-0 size-3 rounded-full border-2 bg-red-500"></span>
-              )}
-            </div>
-            <p>お知らせ</p>
+          <button
+            onClick={() => router.push(ROUTES.FRIEND)}
+            className={`relative flex flex-col items-center ${
+              user ? "" : "hidden"
+            }`}
+          >
+            <UsersRound className="text-2xl" />
+            フレンド
           </button>
 
-          <div className="flex flex-col items-center">
+          <button onClick={handleLogin} className="flex flex-col items-center">
             <CgProfile className="text-2xl" />
-            {user ? (
-              <button onClick={handleLogout}>ログアウト</button>
-            ) : (
-              <Link href={ROUTES.LOGIN}>ログイン</Link>
-            )}
-          </div>
+            ログイン
+          </button>
           <button
             onClick={() => setIsOpen(true)}
             className="flex flex-col items-center md:hidden"
           >
             <CgMenu className="text-2xl" />
-            <p>メニュー</p>
+            メニュー
           </button>
         </div>
       </header>

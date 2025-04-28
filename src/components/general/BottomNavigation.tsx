@@ -1,68 +1,67 @@
-// app/components/BottomNavigation.jsx
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import {
-  HomeIcon,
-  Newspaper,
-  UsersRound,
-  CircleUserRound,
-} from "lucide-react";
-
+import { usePathname, useRouter } from "next/navigation";
+import { HomeIcon, Newspaper, CircleUserRound } from "lucide-react";
 import { ROUTES } from "@/constants";
+import { useAuth } from "@/context/AuthContext";
 
 export default function BottomNavigation() {
   const pathname = usePathname();
-
-  const navItems = [
-    {
-      label: "ホーム",
-      href: ROUTES.HOME,
-      icon: HomeIcon,
-      activeIcon: HomeIcon,
-    },
-    {
-      label: "ニュース",
-      href: ROUTES.NEWS,
-      icon: Newspaper,
-      activeIcon: Newspaper,
-    },
-    {
-      label: "フレンド",
-      href: ROUTES.FRIEND,
-      icon: UsersRound,
-      activeIcon: UsersRound,
-    },
-    {
-      label: "マイページ",
-      href: ROUTES.MYPAGE,
-      icon: CircleUserRound,
-      activeIcon: CircleUserRound,
-    },
-  ];
+  const router = useRouter();
+  const { user, loading } = useAuth();
 
   return (
-    <div className="fixed bottom-0 left-0 z-11 w-full h-18 bg-white border-t border-gray-200">
-      <div className="grid h-full grid-cols-4 mx-auto max-w-xl">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
-          const Icon = isActive ? item.activeIcon : item.icon;
-
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex flex-col items-center justify-center"
-            >
-              <Icon
-                className={`w-8 h-8 ${isActive ? "font-bold" : "font-normal"}`}
-                stroke="black"
-                strokeWidth={isActive ? 2.5 : 1.5}
-              />
-            </Link>
-          );
-        })}
+    <div className="fixed bottom-0 left-0 z-11 w-full h-18 bg-white border-t border-gray-200 px-4 pb-4">
+      <div className="grid h-full grid-cols-3 mx-auto max-w-xl">
+        <button
+          onClick={() => {
+            router.push(ROUTES.HOME);
+          }}
+          className="flex flex-col items-center justify-center focus:outline-none"
+        >
+          <HomeIcon
+            className={`w-8 h-8 ${
+              pathname === ROUTES.HOME ? "font-bold" : "font-normal"
+            }`}
+            strokeWidth={pathname === ROUTES.HOME ? 2.5 : 1.5}
+          />
+        </button>
+        <button
+          onClick={() => {
+            router.push(ROUTES.NEWS);
+          }}
+          className="flex flex-col items-center justify-center focus:outline-none"
+        >
+          <Newspaper
+            className={`w-8 h-8 ${
+              pathname === ROUTES.NEWS ? "font-bold" : "font-normal"
+            }`}
+            strokeWidth={pathname === ROUTES.NEWS ? 2.5 : 1.5}
+          />
+        </button>
+        <button
+          onClick={() => {
+            // まだロード中の場合は何もしない
+            if (loading) {
+              return;
+            }
+            // ユーザーがログインしていない場合
+            if (!user) {
+              alert("ログイン後に見れます");
+              return;
+            }
+            // ログインしている場合のみ遷移
+            router.push(ROUTES.MYPAGE);
+          }}
+          className="flex flex-col items-center justify-center focus:outline-none"
+        >
+          <CircleUserRound
+            className={`w-8 h-8 ${
+              pathname === ROUTES.MYPAGE ? "font-bold" : "font-normal"
+            }`}
+            strokeWidth={pathname === ROUTES.MYPAGE ? 2.5 : 1.5}
+          />
+        </button>
       </div>
     </div>
   );
