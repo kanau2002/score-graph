@@ -6,7 +6,7 @@ import {
   TestSubmissionData,
   TestSubmissionResult,
 } from "@/type/testType";
-import { getCurrentUserId } from "@/lib/auth";
+import { getAuthCookie, getCurrentUserId } from "@/lib/auth";
 
 class TestService {
   private repository: TestRepository;
@@ -33,16 +33,63 @@ class TestService {
   }
 
   // 生徒のテスト結果データの取得
-  async fetchStudentData(subject: string, year: number): Promise<AnsweredData> {
+  async fetchTestResultStudentAtMy(
+    subject: string,
+    year: number
+  ): Promise<AnsweredData> {
     const userId = await getCurrentUserId();
-    return this.repository.fetchStudentData(subject, year.toString(), userId);
+    const result = await this.repository.fetchTestResult(
+      subject,
+      year.toString(),
+      userId
+    );
+    if (result === null) {
+      throw new Error("データが取得できませんでした。");
+    }
+    return result;
+  }
+
+  async fetchTestResultStudentAtHome(
+    subject: string,
+    year: number
+  ): Promise<AnsweredData[] | []> {
+    if ((await getAuthCookie()) === undefined) {
+      return [];
+    }
+    const userId = await getCurrentUserId();
+    const result = await this.repository.fetchTestResult(
+      subject,
+      year.toString(),
+      userId
+    );
+    if (result === null) {
+      return [];
+    }
+    return [result];
+  }
+
+  // 先輩のテスト結果データの取得
+  async fetchTestResultSenior(
+    subject: string,
+    year: number,
+    uid: number
+  ): Promise<AnsweredData> {
+    const result = await this.repository.fetchTestResult(
+      subject,
+      year.toString(),
+      uid
+    );
+    if (result === null) {
+      throw new Error("データが取得できませんでした。");
+    }
+    return result;
   }
 
   // 相互フォローしているフレンドのテスト結果データの取得
   async fetchFriendsData(
     subject: string,
     year: number
-  ): Promise<AnsweredData[]> {
+  ): Promise<AnsweredData[] | []> {
     const userId = await getCurrentUserId();
     return this.repository.fetchFriendsData(subject, year.toString(), userId);
   }

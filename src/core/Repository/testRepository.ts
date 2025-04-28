@@ -8,15 +8,15 @@ import {
 
 export class TestRepository {
   // 生徒のテスト結果データの取得
-  async fetchStudentData(
+  async fetchTestResult(
     subject: string,
     year: string,
     userId: number
-  ): Promise<AnsweredData> {
+  ): Promise<AnsweredData | null> {
     const query = `
       SELECT 
         t.id,
-        'あなた' as name,
+        u.user_name as name,
         t.score,
         t.percentage,
         tt.target_percentage,
@@ -56,6 +56,8 @@ export class TestRepository {
         ) AS answers
       FROM 
         tests t
+      JOIN
+        users u ON t.user_id = u.id
       LEFT JOIN
         tests_target tt ON 
           t.user_id = tt.user_id AND 
@@ -70,9 +72,7 @@ export class TestRepository {
       const result = await pool.query(query, [subject, year, userId]);
 
       if (result.rows.length === 0) {
-        throw new Error(
-          `生徒のテスト結果データが見つかりません: ${subject} ${year}`
-        );
+        return null;
       }
 
       const row = result.rows[0];

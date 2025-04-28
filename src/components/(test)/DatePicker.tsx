@@ -84,10 +84,10 @@ export default function DatePicker({
       {/* 表示用のiOS風UI */}
       <div
         onClick={handleOpenPicker}
-        className="w-full bg-white border border-2 rounded-lg px-4 py-3 cursor-pointer"
+        className="w-full bg-white border-gray-500 text-gray-600 border-2 rounded-lg px-4 py-3 cursor-pointer"
       >
         <div className="flex items-center justify-between">
-          <span className={`${formattedDate ? "text-black" : "text-gray-400"}`}>
+          <span className={`${formattedDate ? "" : "text-gray-500"}`}>
             {formattedDate || placeholder}
           </span>
           <CalendarDays className="" />

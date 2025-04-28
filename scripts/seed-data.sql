@@ -87,7 +87,6 @@ VALUES
 ( 7, 'MATH1A', '2023', 70, 70, '2023-01-15', '本番は緊張しました。それでも70%を切らなかったのはとても良かったです。', 21, 18, 15, null, 16, null, 70, 60, 75, null, 80, null );
 
 
--- 解答情報の挿入（英語2018年度あなた）
 INSERT INTO test_answer (user_id, subject, year, question_number, answer)
 VALUES 
   -- 解答情報の挿入（英語2015年度恒崎君）

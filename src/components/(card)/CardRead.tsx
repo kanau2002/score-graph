@@ -217,12 +217,12 @@ export default function CardRead({ cardAllData, isHome }: Props) {
         }}
       >
         <div ref={profileInfoRef} className="px-4 pb-4">
-          <p className="text-sm">
+          <div className="text-sm">
             〜{isHome ? "受験校" : "志望校"}〜
             {cardAllData.profileData.targetUniversities.map((univ, index) => (
               <div key={index}>・{univ}</div>
             ))}
-          </p>
+          </div>
           <p className="mt-1 text-sm">{cardAllData.profileData.memo}</p>
         </div>
       </div>
@@ -314,7 +314,11 @@ export default function CardRead({ cardAllData, isHome }: Props) {
                     </td>
                     <td className="p-2 text-gray-400">
                       <Link
-                        href={`${ROUTES.TEST_READ}?subject=${cardAllData.subject}&year=${result.year}`}
+                        href={
+                          isHome
+                            ? `${ROUTES.HOME_TESTREAD}?subject=${cardAllData.subject}&year=${result.year}&uid=${cardAllData.profileData.userId}`
+                            : `${ROUTES.MYPAGE_TESTREAD}?subject=${cardAllData.subject}&year=${result.year}`
+                        }
                       >
                         <ArrowRightToLine size={16} className="ml-2" />
                       </Link>

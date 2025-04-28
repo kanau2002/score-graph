@@ -1,6 +1,6 @@
 import { Answer, Subject } from "@/type/testType";
 
-export function threeChoiceOrNot(subject: Subject) {
+export function isMath(subject: Subject) {
   if (subject === Subject.MATH1A || subject === Subject.MATH2B) return true;
   return false;
 }

@@ -6,21 +6,22 @@ type Props = {
   searchParams: { subject: string; year: string };
 };
 
-export default async function TestReadPage({ searchParams }: Props) {
+export default async function TestReadMyPage({ searchParams }: Props) {
   const subject = searchParams.subject;
   const year = Number(searchParams.year);
   // サーバーコンポーネントでデータを取得
   const [studentData, friendsData, testStructureData] = await Promise.all([
-    testService.fetchStudentData(subject, year),
+    testService.fetchTestResultStudentAtMy(subject, year),
     testService.fetchFriendsData(subject, year),
     testService.fetchTestStructureData(subject, year),
   ]);
 
   return (
     <TestRead
-      studentData={studentData}
-      friendsData={friendsData}
+      leftData={studentData}
+      rightDatas={friendsData}
       testStructureData={testStructureData}
+      isHome={false}
     />
   );
 }
