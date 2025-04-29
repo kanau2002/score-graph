@@ -19,13 +19,13 @@ export const CardDeleteConfirmationModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center text-gray-700">
       {/* バックドロップ */}
       <div className="fixed inset-0 backdrop-blur-xs" onClick={onClose}></div>
 
       {/* モーダルコンテンツ */}
       <div className="bg-white rounded-lg p-6 w-80 max-w-md z-10 relative shadow">
-        <h3 className="text-lg mb-3 text-red-600 text-center">
+        <h3 className="text-lg mb-3 font-bold text-center">
           本当に削除しますか？
         </h3>
 
@@ -38,19 +38,17 @@ export const CardDeleteConfirmationModal = ({
           この操作は元に戻せません。今まで入力したテスト結果、目標設定、科目データが全て削除されます。
         </p>
 
-        <div className="flex justify-end space-x-3">
+        <div className="flex justify-between">
           <button
             type="button"
-            className="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none"
             onClick={onClose}
             disabled={isDeleting}
           >
             キャンセル
           </button>
-
           <button
             type="button"
-            className="px-4 py-2 text-sm text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none disabled:opacity-50"
+            className="text-red-500 font-bold"
             onClick={onConfirm}
             disabled={isDeleting}
           >

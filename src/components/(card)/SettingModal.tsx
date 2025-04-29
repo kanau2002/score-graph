@@ -107,7 +107,7 @@ const SettingModal: React.FC<Props> = ({ subject }) => {
   };
 
   return (
-    <div className="relative p-2 ml-auto" ref={dropdownRef}>
+    <div className="relative p-2 ml-auto text-gray-700" ref={dropdownRef}>
       <button onClick={() => setIsOpen(!isOpen)} className="focus:outline-none">
         <Ellipsis className="w-5 h-5" />
       </button>
@@ -122,13 +122,13 @@ const SettingModal: React.FC<Props> = ({ subject }) => {
                 <li key={item.id}>
                   <button
                     type="button"
-                    className={`w-full px-3 py-2 text-sm hover:bg-gray-100 flex items-center gap-1 rounded ${
-                      item.isRed ? "text-red-600" : ""
+                    className={`w-full px-3 py-2 text-sm hover:bg-gray-100 flex items-center gap-1 rounded justify-between ${
+                      item.isRed ? "text-red-500" : ""
                     }`}
                     onClick={() => handleSelect(item.href, item.isDeleteAction)}
                   >
-                    <Icon className="w-5 h-5" />
                     {item.name}
+                    <Icon className="w-5 h-5" />
                   </button>
                 </li>
               );

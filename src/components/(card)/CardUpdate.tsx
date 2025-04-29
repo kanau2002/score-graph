@@ -84,7 +84,10 @@ export default function CardUpdate({ subject, initialCardData }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm p-4">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white rounded-lg shadow-sm p-4 text-gray-700"
+    >
       {error && (
         <div className="bg-red-50 text-red-600 p-3 rounded mb-4">{error}</div>
       )}
@@ -112,7 +115,7 @@ export default function CardUpdate({ subject, initialCardData }: Props) {
           value={formData.finalScoreTarget}
           onChange={handleChange}
           required
-          className="w-full px-3 py-2 border rounded-md"
+          className="w-full px-3 py-2 rounded-lg bg-gray-100 focus:outline-none"
         />
       </div>
 
@@ -132,12 +135,12 @@ export default function CardUpdate({ subject, initialCardData }: Props) {
           value={formData.finalScoreLowest}
           onChange={handleChange}
           required
-          className="w-full px-3 py-2 border rounded-md"
+          className="w-full px-3 py-2 rounded-lg bg-gray-100 focus:outline-none"
         />
       </div>
 
       <div className="mb-4">
-        <label htmlFor="memo" className="block text-sm font-medium mb-1">
+        <label htmlFor="memo" className="block text-sm mb-1">
           メモ
         </label>
         <textarea
@@ -146,25 +149,21 @@ export default function CardUpdate({ subject, initialCardData }: Props) {
           rows={4}
           value={formData.memo}
           onChange={handleChange}
-          className="w-full px-3 py-2 border rounded-md resize-none"
+          className="w-full px-3 py-2 rounded-lg bg-gray-100 focus:outline-none"
           placeholder="この科目に関するメモを入力してください..."
         />
       </div>
 
-      <div className="flex justify-between">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="px-4 py-2 border rounded-md"
-        >
+      <div className="flex justify-between p-2">
+        <button type="button" onClick={() => router.back()}>
           キャンセル
         </button>
         <button
           type="submit"
           disabled={submitting}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md disabled:bg-blue-300"
+          className="text-blue-500 font-bold"
         >
-          {submitting ? "保存中..." : "保存する"}
+          {submitting ? "保存中..." : "完了"}
         </button>
       </div>
     </form>

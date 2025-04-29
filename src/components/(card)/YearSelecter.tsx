@@ -38,7 +38,7 @@ export default function YearSelecter({ subject, unAnsweredYears }: Props) {
   };
 
   return (
-    <div className="relative p-2" ref={dropdownRef}>
+    <div className="relative p-2 text-gray-700" ref={dropdownRef}>
       {/* SquarePlusボタン */}
       <button onClick={() => setIsOpen(!isOpen)}>
         <Plus className="w-6 h-6" />
@@ -46,7 +46,13 @@ export default function YearSelecter({ subject, unAnsweredYears }: Props) {
 
       {/* ドロップダウンメニュー */}
       {isOpen && (
-        <div className="absolute z-10 right-0 w-24 bg-white border border-gray-200 rounded-md shadow-lg mt-1 p-1 max-h-60 overflow-auto">
+        <div
+          className="absolute z-10 right-0 w-24 bg-white border border-gray-200 rounded-md shadow-lg mt-1 p-1 max-h-60 overflow-auto"
+          style={{
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
+          }}
+        >
           <div className="py-1 px-2 text-xs text-gray-500 border-b border-gray-100">
             入力する<br></br>回答の年度
           </div>

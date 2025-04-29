@@ -128,27 +128,29 @@ export default function TestRead({
   }
 
   return (
-    <div className="container mx-auto max-w-md bg-white shadow rounded-lg text-gray-600 pb-20">
+    <div className="container mx-auto max-w-md bg-white shadow rounded-lg text-gray-700 pb-20 p-4">
       {/* ヘッダー部分 */}
-      <div className="flex items-center p-4">
+      <div className="flex items-center pb-4">
         <button onClick={() => router.back()} className="mr-3">
           <ArrowLeft className="w-5 h-5" />
         </button>
         <h1 className="flex-1 font-bold text-lg">
           {displaySubjectName(testStructureData.subject)}-
-          {testStructureData.year}年度
+          {testStructureData.year}
         </h1>
         <div className="flex items-baseline">
           <p className="text-sm text-gray-500">
             （目標：{leftData.targetPercentage}%）
           </p>
-          <span className="text-3xl font-bold text-blue-600">
+          <span className="text-3xl font-bold text-blue-500">
             {leftData.percentage}%
           </span>
         </div>
       </div>
-      <div className="p-4 rounded-lg">
-        <div className={`flex items-center px-2 ${isHome ? "hidden" : ""}`}>
+      <div className="rounded-lg">
+        <div
+          className={`flex items-center mx-2 my-4 ${isHome ? "hidden" : ""}`}
+        >
           <UsersRound size={24} className="text-blue-500" />
           <div className="w-full ml-4">
             <FriendSelector
@@ -166,13 +168,13 @@ export default function TestRead({
             <div className="flex justify-between items-start mb-2">
               <h3 className="font-bold">{isHome ? leftData.name : "自分"}</h3>
               <div className="flex items-baseline">
-                <span className="text-xl font-bold text-blue-600">
+                <span className="text-xl font-bold text-blue-500">
                   {leftData.score}
                 </span>
                 <span className="text-sm ml-1">
                   /{testStructureData.maxScore}
                 </span>
-                <span className="ml-2 bg-blue-100 text-blue-800 text-xs py-0.5 px-2 rounded">
+                <span className="ml-2 bg-blue-100 text-blue-500 text-xs py-0.5 px-2 rounded">
                   {leftData.percentage}%
                 </span>
               </div>
@@ -208,13 +210,13 @@ export default function TestRead({
                   {isHome ? "自分" : rightData.name}
                 </h3>
                 <div className="flex items-baseline">
-                  <span className="text-xl font-bold text-green-600">
+                  <span className="text-xl font-bold text-green-500">
                     {rightData.score}
                   </span>
                   <span className="text-sm text-gray-500 ml-1">
                     /{testStructureData.maxScore}
                   </span>
-                  <span className="ml-2 bg-green-100 text-green-800 text-xs py-0.5 px-2 rounded">
+                  <span className="ml-2 bg-green-100 text-green-500 text-xs py-0.5 px-2 rounded">
                     {rightData.percentage}%
                   </span>
                 </div>
@@ -244,7 +246,7 @@ export default function TestRead({
         </div>
       </div>
       {/* テーブル部分 */}
-      <div className="px-4 mt-2 pb-5">
+      <div className="mt-6 pb-5">
         {testSections.map((section, sectionIndex) => (
           <div key={`section-group-${sectionIndex}`} className="mb-6">
             <div className="p-3 ml-2">
@@ -303,7 +305,7 @@ export default function TestRead({
                               {AnswerIcon(question.friendAnswer)}
                             </div>
                           ) : (
-                            <div className="text-center text-gray-300">−</div>
+                            <div className="text-center text-gray-500">−</div>
                           )}
                         </div>
                       </td>
@@ -335,15 +337,11 @@ export default function TestRead({
           </span>
           <div className="flex gap-8">
             <div className="flex flex-col items-center text-sm">
-              <span className="mb-1">
-                {isHome ? "先輩" : "自分"}
-              </span>
+              <span className="mb-1">{isHome ? "先輩" : "自分"}</span>
               <span className="font-bold text-xl">{leftData.score}</span>
             </div>
             <div className="flex flex-col items-center text-sm">
-              <span className="mb-1">
-                {isHome ? "自分" : "友達"}
-              </span>
+              <span className="mb-1">{isHome ? "自分" : "友達"}</span>
               <span className="font-bold text-xl">
                 {rightData ? rightData.score : "-"}
               </span>
@@ -353,12 +351,15 @@ export default function TestRead({
       </div>
 
       {/* CRUD操作できるセクション */}
-      <div className={`p-5 text-center ${isHome ? "hidden" : ""}`}>
+      <div className="flex justify-between p-2">
+        <button type="button" onClick={() => router.back()}>
+          キャンセル
+        </button>
         <button
           onClick={handleDeleteTestResult}
-          className="px-5 py-3 border border-red-300 text-sm text-red-500 rounded-xl"
+          className={`text-red-500 font-bold ${isHome ? "hidden" : ""}`}
         >
-          このテスト結果を削除
+          削除
         </button>
       </div>
     </div>

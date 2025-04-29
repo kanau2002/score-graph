@@ -17,9 +17,8 @@ export default async function CardUpdatePage({ searchParams }: Props) {
   const initialCardData = await cardService.fetchCardData(subject);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-6">
-      <div className="max-w-md mx-auto px-4">
-        <h1 className="text-xl font-bold mb-4">科目カード編集</h1>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-md mx-auto">
         <CardUpdate subject={subject} initialCardData={initialCardData} />
       </div>
     </div>

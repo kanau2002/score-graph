@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" className="h-full">
-      <body className="h-full">
+      <body className="h-full text-gray-700">
         <AuthProvider>
           <div className="min-h-full">{children}</div>
         </AuthProvider>

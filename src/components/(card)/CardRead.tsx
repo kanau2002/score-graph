@@ -69,7 +69,7 @@ export default function CardRead({ cardAllData, isHome }: Props) {
   }, [showProfileInfo, cardAllData.profileData]);
 
   return (
-    <div className="w-full rounded-lg shadow bg-white pb-4">
+    <div className="w-full rounded-lg shadow bg-white pb-4 text-gray-700">
       {/* ヘッダー部分 */}
       <div className="flex items-center p-2 ">
         <div className="w-8 h-8 m-2 relative">
@@ -283,7 +283,7 @@ export default function CardRead({ cardAllData, isHome }: Props) {
         }}
       >
         <div ref={tableRef}>
-          <table className="w-full border-collapse text-sm text-gray-600">
+          <table className="w-full border-collapse text-sm text-gray-500">
             <thead>
               <tr className="border-b border-gray-200">
                 <th className="p-2 w-18">解いた日</th>
@@ -312,7 +312,7 @@ export default function CardRead({ cardAllData, isHome }: Props) {
                     <td className="p-2 text-center truncate max-w-[150px]">
                       {result.memo}
                     </td>
-                    <td className="p-2 text-gray-400">
+                    <td className="p-2 text-gray-500">
                       <Link
                         href={
                           isHome
