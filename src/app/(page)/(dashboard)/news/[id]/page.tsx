@@ -1,19 +1,19 @@
 import { Metadata } from "next";
-import Link from "next/link";
 import { newsService } from "@/core/Service/newsService";
 import { notFound } from "next/navigation";
 import RichContent from "../../../../../components/(news)/RichContent";
+import BackButton from "@/components/general/BackButton";
 
 type NewsDetailPageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export async function generateMetadata({
   params,
 }: NewsDetailPageProps): Promise<Metadata> {
-  const newsId = parseInt(params.id);
+  const newsId = parseInt((await params).id);
   const newsItem = await newsService.getNewsById(newsId);
 
   if (!newsItem) {
@@ -29,56 +29,25 @@ export async function generateMetadata({
 }
 
 export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
-  const newsId = parseInt(params.id);
-  const newsItem = await newsService.getNewsById(newsId);
+  const newsId = parseInt((await params).id);
+  const newsData = await newsService.getNewsById(newsId);
 
-  if (!newsItem) {
+  if (!newsData) {
     notFound();
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-3xl mx-auto">
-        <div className="mb-4">
-          <Link
-            href="/news"
-            className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-            ニュース一覧に戻る
-          </Link>
+    <div className="max-w-3xl mx-auto p-4 md:p-8 text-gray-700">
+      <article className="overflow-hidden p-4">
+        <h1 className="font-bold mb-4 text-xl">{newsData.title}</h1>
+        <div className="flex items-center text-gray-500 text-xs gap-4 mb-4">
+          {newsData.date}
+          <span>{newsData.category}</span>
         </div>
-
-        <article className="bg-white rounded-lg shadow-sm overflow-hidden">
-          <div className="p-6">
-            <div className="mb-4">
-              <span className="inline-block px-3 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full">
-                {newsItem.category}
-              </span>
-              <span className="ml-3 text-gray-500">{newsItem.date}</span>
-            </div>
-
-            <h1 className="text-2xl sm:text-3xl font-bold mb-6">
-              {newsItem.title}
-            </h1>
-
-            {/* リッチコンテンツコンポーネントを使用 */}
-            <RichContent content={newsItem.content} />
-          </div>
-        </article>
-      </div>
+        {/* リッチコンテンツコンポーネントを使用 */}
+        <RichContent content={newsData.content} />
+      </article>
+      <BackButton />
     </div>
   );
 }

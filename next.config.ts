@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  env: {
+    POSTGRES_SSL: "false", // SSL接続を無効化
+  },
 };
 
 export default nextConfig;

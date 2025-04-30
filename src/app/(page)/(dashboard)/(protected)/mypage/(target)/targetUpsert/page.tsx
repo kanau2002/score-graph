@@ -1,13 +1,9 @@
 import { targetService } from "@/core/Service/targetService";
 import TargetUpsert from "../../../../../../../components/(target)/TargetUpsert";
-import { redirect } from "next/navigation";
 import { Subject } from "@/type/testType";
-import { ROUTES } from "@/constants";
 
 type Props = {
-  searchParams: {
-    subject: string;
-  };
+  params: Promise<{ subject: Subject }>;
 };
 
 const targetMonthTemplate = [
@@ -20,13 +16,8 @@ const targetMonthTemplate = [
   "2026-01",
 ];
 
-export default async function taregetUpsertPage({ searchParams }: Props) {
-  const subject = searchParams.subject;
-
-  // 科目が指定されていない場合はプロフィールページにリダイレクト
-  if (!subject) {
-    redirect(`${ROUTES.MYPAGE}`);
-  }
+export default async function taregetUpsertPage({ params }: Props) {
+  const { subject } = await params;
 
   // 目標データの取得
   const targetUpsertData = await targetService.fetchTargetUpsertData(subject);

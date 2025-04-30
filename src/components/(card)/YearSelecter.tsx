@@ -34,7 +34,7 @@ export default function YearSelecter({ subject, unAnsweredYears }: Props) {
   const handleSelect = (year: number) => {
     setIsOpen(false);
     // 選択された年に基づいてページ遷移
-    router.push(`${ROUTES.TEST_CREATE}?subject=${subject}&year=${year}`);
+    router.push(`${ROUTES.TEST_CREATE}/${subject}/${year}`);
   };
 
   return (

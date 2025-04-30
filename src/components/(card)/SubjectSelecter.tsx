@@ -36,7 +36,7 @@ const SubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
   const handleSelect = (subject: Subject) => {
     setIsOpen(false);
     // 選択された科目に基づいてページ遷移
-    router.push(`${ROUTES.CARD_CREATE}?subject=${subject}`);
+    router.push(`${ROUTES.CARD_CREATE}/${subject}`);
   };
 
   if (unAnsweredSubjects.length === 0) {

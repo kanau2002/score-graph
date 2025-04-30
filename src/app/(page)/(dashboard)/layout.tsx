@@ -11,11 +11,13 @@ export default function MainLayout({
       <div className="md:hidden">
         <Header />
       </div>
-      <main className="relative top-16 flex bg-gray-100 md:top-0">
+      <main className="flex bg-gray-100 min-h-screen">
         <div className="fixed hidden md:block">
           <Navigation />
         </div>
-        <div className="w-full md:ml-64">{children}</div>
+        <div className="relative w-full md:ml-64 top-16 md:top-0">
+          {children}
+        </div>
         <div className="md:hidden">
           <BottomNavigation />
         </div>

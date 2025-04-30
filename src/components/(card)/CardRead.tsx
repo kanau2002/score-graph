@@ -69,7 +69,7 @@ export default function CardRead({ cardAllData, isHome }: Props) {
   }, [showProfileInfo, cardAllData.profileData]);
 
   return (
-    <div className="w-full rounded-lg shadow bg-white pb-4 text-gray-700">
+    <div className="w-full rounded-lg shadow-sm bg-white pb-4 text-gray-700">
       {/* ヘッダー部分 */}
       <div className="flex items-center p-2 ">
         <div className="w-8 h-8 m-2 relative">
@@ -316,8 +316,8 @@ export default function CardRead({ cardAllData, isHome }: Props) {
                       <Link
                         href={
                           isHome
-                            ? `${ROUTES.HOME_TESTREAD}?subject=${cardAllData.subject}&year=${result.year}&uid=${cardAllData.profileData.userId}`
-                            : `${ROUTES.MYPAGE_TESTREAD}?subject=${cardAllData.subject}&year=${result.year}`
+                            ? `${ROUTES.HOME_TESTREAD}/${cardAllData.subject}/${result.year}/${cardAllData.profileData.userId}`
+                            : `${ROUTES.MYPAGE_TESTREAD}/${cardAllData.subject}/${result.year}`
                         }
                       >
                         <ArrowRightToLine size={16} className="ml-2" />

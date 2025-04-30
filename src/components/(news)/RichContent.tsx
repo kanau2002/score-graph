@@ -21,7 +21,7 @@ const RichContent: React.FC<RichContentProps> = ({
 
   return (
     <div
-      className={`${styles.container} ${className}`}
+      className={`${styles.container} ${className} text-sm`}
       dangerouslySetInnerHTML={{ __html: sanitizedContent }}
     />
   );

@@ -16,14 +16,11 @@ export default function CategoryFilter({
 
   return (
     <div className="mb-6">
-      <h2 className="text-lg font-semibold mb-2">カテゴリー</h2>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-4 justify-center">
         <Link
           href={`${pathname}?category=all`}
-          className={`px-4 py-2 rounded-full text-sm font-medium ${
-            activeCategory === "all"
-              ? "bg-blue-600 text-white"
-              : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+          className={`px-4 py-1 text-sm bg-white rounded-full ${
+            activeCategory === "all" ? "border border-gray-500" : ""
           }`}
         >
           すべて
@@ -33,10 +30,8 @@ export default function CategoryFilter({
           <Link
             key={category}
             href={`${pathname}?category=${category}`}
-            className={`px-4 py-2 rounded-full text-sm font-medium ${
-              activeCategory === category
-                ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+            className={`px-4 py-1 text-sm bg-white rounded-full ${
+              activeCategory === category ? "border border-gray-500" : ""
             }`}
           >
             {category}

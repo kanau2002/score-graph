@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import LoginForm from "./_components/LoginForm";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "ログイン | アプリ名",
@@ -17,7 +18,9 @@ export default function LoginPage() {
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <LoginForm />
+          <Suspense fallback={<div>Loading...</div>}>
+            <LoginForm />
+          </Suspense>
         </div>
       </div>
     </div>

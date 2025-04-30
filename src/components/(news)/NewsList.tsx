@@ -1,45 +1,40 @@
 import Link from "next/link";
 import { NewsItem } from "@/type/newsType";
+import { ROUTES } from "@/constants";
 
 type NewsListProps = {
-  news: NewsItem[];
+  newsDatas: NewsItem[];
 };
 
-export default function NewsList({ news }: NewsListProps) {
-  if (news.length === 0) {
+export default function NewsList({ newsDatas }: NewsListProps) {
+  if (newsDatas.length === 0) {
     return (
       <div className="text-center py-10">該当するニュースはありません</div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-      {news.map((item) => (
-        <div
-          key={item.id}
-          className="bg-white rounded-lg shadow-sm overflow-hidden"
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8 text-gray-700 md:gap-4">
+      {newsDatas.map((newaData) => (
+        <Link
+          href={`${ROUTES.NEWS}/${newaData.id}`}
+          key={newaData.id}
+          className="overflow-hidden"
         >
           <div className="p-4">
-            <span className="inline-block px-3 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full mb-2">
-              {item.category}
-            </span>
-            <h3 className="text-lg font-semibold mb-2 line-clamp-2">
-              {item.title}
+            <h3 className="text-lg mb-2 line-clamp-2 font-bold">
+              {newaData.title}
             </h3>
-            <p className="text-gray-600 text-sm mb-3 line-clamp-3">
-              {item.excerpt}
+            <p className="text-gray-500 mb-3 line-clamp-2 text-sm">
+              {newaData.excerpt}
             </p>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-500 text-xs">{item.date}</span>
-              <Link
-                href={`/news/${item.id}`}
-                className="text-blue-600 text-sm font-medium hover:text-blue-800"
-              >
-                続きを読む
-              </Link>
+            <div className="flex newaDatas-center text-gray-500 text-xs gap-4">
+              {newaData.date}
+              <span>{newaData.category}</span>
             </div>
           </div>
-        </div>
+          <div className="border-b border-gray-300 my-3 md:hidden"></div>
+        </Link>
       ))}
     </div>
   );

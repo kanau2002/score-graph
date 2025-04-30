@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { ArrowLeft, UsersRound } from "lucide-react";
+import { UsersRound } from "lucide-react";
 import React from "react";
 import {
   Answer,
@@ -15,6 +15,7 @@ import FriendSelector from "./FriendSelecter";
 import { FriendRadarChart, StudentRadarChart } from "./SectionRaderChart";
 import AnswerIcon from "./AnswerIcon";
 import { isCorrect, isMath } from "@/lib/test";
+import BackButton from "../general/BackButton";
 
 interface Props {
   leftData: AnsweredData;
@@ -131,9 +132,7 @@ export default function TestRead({
     <div className="container mx-auto max-w-md bg-white shadow rounded-lg text-gray-700 pb-20 p-4">
       {/* ヘッダー部分 */}
       <div className="flex items-center pb-4">
-        <button onClick={() => router.back()} className="mr-3">
-          <ArrowLeft className="w-5 h-5" />
-        </button>
+        <BackButton />
         <h1 className="flex-1 font-bold text-lg">
           {displaySubjectName(testStructureData.subject)}-
           {testStructureData.year}

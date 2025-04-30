@@ -65,7 +65,7 @@ const SettingModal: React.FC<Props> = ({ subject }) => {
     if (isDeleteAction) {
       setIsDeleteModalOpen(true);
     } else if (href) {
-      router.push(`${href}?subject=${subject}`);
+      router.push(`${href}/${subject}`);
     }
   };
 

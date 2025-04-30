@@ -1,7 +1,8 @@
 import { Metadata } from "next";
-import { Subject } from "@/type/testType";
-import CardUpdate from "../../../../../../../components/(card)/CardUpdate";
+
+import CardUpdate from "../../../../../../../../components/(card)/CardUpdate";
 import { cardService } from "@/core/Service/cardService";
+import { Subject } from "@/type/testType";
 
 export const metadata: Metadata = {
   title: "科目カード編集 | 学習管理アプリ",
@@ -9,11 +10,10 @@ export const metadata: Metadata = {
 };
 
 type Props = {
-  searchParams: { subject: Subject };
+  params: Promise<{ subject: Subject }>;
 };
-
-export default async function CardUpdatePage({ searchParams }: Props) {
-  const subject = searchParams.subject;
+export default async function CardUpdatePage({ params }: Props) {
+  const { subject } = await params;
   const initialCardData = await cardService.fetchCardData(subject);
 
   return (

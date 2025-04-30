@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -54,18 +55,15 @@ export default function Pagination({
   }
 
   return (
-    <div className="flex justify-center items-center space-x-1 mt-8">
+    <div className="flex justify-center items-center space-x-1 mt-8 text-gray-700">
       {/* 前のページボタン */}
       {currentPage > 1 ? (
-        <Link
-          href={`${pathname}?category=${category}&page=${currentPage - 1}`}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-        >
-          前へ
+        <Link href={`${pathname}?category=${category}&page=${currentPage - 1}`}>
+          <ChevronLeft className="size-8" />
         </Link>
       ) : (
-        <span className="px-4 py-2 text-sm font-medium text-gray-300 bg-white border border-gray-200 rounded-md cursor-not-allowed">
-          前へ
+        <span>
+          <ChevronLeft className="size-8" />
         </span>
       )}
 
@@ -75,16 +73,16 @@ export default function Pagination({
           <Link
             key={index}
             href={`${pathname}?category=${category}&page=${page}`}
-            className={`px-4 py-2 text-sm font-medium rounded-md ${
+            className={`w-8 h-8 flex justify-center items-center text-sm border rounded-lg ${
               currentPage === page
-                ? "bg-blue-600 text-white"
-                : "text-gray-700 bg-white border border-gray-300 hover:bg-gray-50"
+                ? "font-bold border-2"
+                : ""
             }`}
           >
             {page}
           </Link>
         ) : (
-          <span key={index} className="px-2 text-gray-500">
+          <span key={index} className="text-gray-500">
             {page}
           </span>
         )
@@ -92,15 +90,12 @@ export default function Pagination({
 
       {/* 次のページボタン */}
       {currentPage < totalPages ? (
-        <Link
-          href={`${pathname}?category=${category}&page=${currentPage + 1}`}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-        >
-          次へ
+        <Link href={`${pathname}?category=${category}&page=${currentPage + 1}`}>
+          <ChevronRight className="size-8" />
         </Link>
       ) : (
-        <span className="px-4 py-2 text-sm font-medium text-gray-300 bg-white border border-gray-200 rounded-md cursor-not-allowed">
-          次へ
+        <span>
+          <ChevronRight className="size-8" />
         </span>
       )}
     </div>
