@@ -22,7 +22,7 @@ export default function Header() {
 
   return (
     <div className="relative">
-      <header className="fixed z-[11] flex w-full items-center justify-between bg-white p-3 text-xs text-gray-400 shadow-sm h-16 standalone:h-22">
+      <header className="fixed z-[11] flex w-full items-center items-end justify-between bg-white p-3 text-xs text-gray-400 shadow-sm h-16">
         <Image
           src="/score-graph.png"
           alt="ScoreGraphロゴ"

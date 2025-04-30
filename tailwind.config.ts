@@ -8,9 +8,6 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
-      screens: {
-        standalone: { raw: "(display-mode: standalone)" },
-      },
     },
   },
   plugins: [],

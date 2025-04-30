@@ -15,10 +15,10 @@ export default function MainLayout({
         <div className="fixed hidden md:block">
           <Navigation />
         </div>
-        <div className="relative w-full md:ml-64 top-16 md:top-0">
+        <div className="relative w-full md:ml-64 top-16 md:top-0 standalone-top-adjust">
           {children}
         </div>
-        <div className="md:hidden">
+        <div className="standalone-only">
           <BottomNavigation />
         </div>
       </main>

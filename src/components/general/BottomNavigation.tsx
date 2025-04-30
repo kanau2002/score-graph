@@ -11,7 +11,7 @@ export default function BottomNavigation() {
   const { user, loading } = useAuth();
 
   return (
-    <div className="fixed bottom-0 left-0 z-11 w-full h-18 bg-white border-t border-gray-200 px-4 pb-4">
+    <div className="fixed bottom-0 left-0 z-11 w-full h-20 bg-white border-t border-gray-200 px-4 pb-8">
       <div className="grid h-full grid-cols-3 mx-auto max-w-xl">
         <button
           onClick={() => {
@@ -20,7 +20,7 @@ export default function BottomNavigation() {
           className="flex flex-col items-center justify-center focus:outline-none"
         >
           <HomeIcon
-            className={`w-8 h-8 ${
+            className={`w-7 h-7 ${
               pathname === ROUTES.HOME ? "font-bold" : "font-normal"
             }`}
             strokeWidth={pathname === ROUTES.HOME ? 2.5 : 1.5}
@@ -33,7 +33,7 @@ export default function BottomNavigation() {
           className="flex flex-col items-center justify-center focus:outline-none"
         >
           <Newspaper
-            className={`w-8 h-8 ${
+            className={`w-7 h-7 ${
               pathname === ROUTES.NEWS ? "font-bold" : "font-normal"
             }`}
             strokeWidth={pathname === ROUTES.NEWS ? 2.5 : 1.5}
@@ -56,7 +56,7 @@ export default function BottomNavigation() {
           className="flex flex-col items-center justify-center focus:outline-none"
         >
           <CircleUserRound
-            className={`w-8 h-8 ${
+            className={`w-7 h-7 ${
               pathname === ROUTES.MYPAGE ? "font-bold" : "font-normal"
             }`}
             strokeWidth={pathname === ROUTES.MYPAGE ? 2.5 : 1.5}

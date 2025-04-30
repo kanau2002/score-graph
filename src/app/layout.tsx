@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
-  // 他のviewport設定もここに追加できます
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -26,7 +26,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body className="text-gray-700">
+      <body
+        className="text-gray-700"
+        style={{ WebkitTapHighlightColor: "transparent" }}
+      >
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

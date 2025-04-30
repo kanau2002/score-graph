@@ -107,7 +107,9 @@ export default function CardUpdate({ subject, initialCardData }: Props) {
           </div>
         </label>
         <input
-          type="number"
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
           id="finalScoreTarget"
           name="finalScoreTarget"
           min="0"
@@ -127,7 +129,9 @@ export default function CardUpdate({ subject, initialCardData }: Props) {
           合格最低点 (0-100) *
         </label>
         <input
-          type="number"
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
           id="finalScoreLowest"
           name="finalScoreLowest"
           min="0"
