@@ -21,7 +21,7 @@ export const CardDeleteConfirmationModal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center text-gray-700">
       {/* バックドロップ */}
-      <div className="fixed inset-0 backdrop-blur-xs" onClick={onClose}></div>
+      <div className="fixed inset-0 backdrop-blur" onClick={onClose}></div>
 
       {/* モーダルコンテンツ */}
       <div className="bg-white rounded-lg p-6 w-80 max-w-md z-10 relative shadow">

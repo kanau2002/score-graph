@@ -26,10 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body
-        className="text-gray-700"
-        style={{ WebkitTapHighlightColor: "transparent" }}
-      >
+      <body className="text-gray-700">
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

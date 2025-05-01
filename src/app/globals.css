@@ -33,4 +33,9 @@ body {
   .standalone-top-adjust {
     padding-top: 49px; /* ヘッダーの通常の高さ(64px)とステータスバー分の追加高さの差 */
   }
+  /* Navigationコンポーネントの閉じるボタン調整 */
+  .standalone-nav-top-adjust {
+    padding-top: 49px; /* ステータスバーの高さ分余白を追加 */
+  }
+
 }

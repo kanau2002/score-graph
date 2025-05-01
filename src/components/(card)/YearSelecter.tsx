@@ -47,7 +47,7 @@ export default function YearSelecter({ subject, unAnsweredYears }: Props) {
       {/* ドロップダウンメニュー */}
       {isOpen && (
         <div
-          className="absolute z-10 right-0 w-24 bg-white border border-gray-200 rounded-md shadow-lg mt-1 p-1 max-h-60 overflow-auto"
+          className="absolute z-10 right-10 bottom-0 w-24 bg-white/50 backdrop-blur-lg border border-gray-200 rounded-md shadow p-1 max-h-60 overflow-auto"
           style={{
             scrollbarWidth: "none",
             msOverflowStyle: "none",
@@ -62,7 +62,7 @@ export default function YearSelecter({ subject, unAnsweredYears }: Props) {
                 <button
                   type="button"
                   className={
-                    "w-full px-3 py-2 text-sm text-left hover:bg-gray-100 rounded"
+                    "w-full px-3 py-2 text-sm text-left rounded"
                   }
                   onClick={() => handleSelect(year)}
                 >

@@ -88,7 +88,7 @@ export default function FriendPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto text-gray-700 bg-white rounded-lg p-4 mb-6 shadow-sm">
+    <div className="max-w-md mx-auto text-gray-700 bg-white rounded-lg p-4 mb-6 shadow-sm min-h-screen">
       {/* ユーザー検索セクション */}
 
       <div className="h-40">

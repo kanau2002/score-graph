@@ -86,7 +86,7 @@ export default function CardCreate({ subject }: Props) {
         )}
 
         <div className="mb-4">
-          <label htmlFor="subject" className="block text-sm font-medium mb-1">
+          <label htmlFor="subject" className="block text-sm mb-1">
             科目 *
           </label>
           <div className="px-3 py-2 rounded-lg bg-gray-100 font-bold">
@@ -97,7 +97,7 @@ export default function CardCreate({ subject }: Props) {
         <div className="mb-4">
           <label
             htmlFor="finalScoreTarget"
-            className="block text-sm font-medium mb-1"
+            className="block text-sm mb-1"
           >
             目標点 (%) *
           </label>
@@ -119,7 +119,7 @@ export default function CardCreate({ subject }: Props) {
         <div className="mb-4">
           <label
             htmlFor="finalScoreLowest"
-            className="block text-sm font-medium mb-1"
+            className="block text-sm mb-1"
           >
             最低点 (%) *
           </label>
@@ -142,7 +142,7 @@ export default function CardCreate({ subject }: Props) {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="memo" className="block text-sm font-medium mb-1">
+          <label htmlFor="memo" className="block text-sm mb-1">
             メモ
           </label>
           <textarea
