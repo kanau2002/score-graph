@@ -6,6 +6,13 @@ import { AuthProvider } from "@/context/AuthContext";
 export const metadata: Metadata = {
   title: "ScoreGraph",
   description: "センター過去問の点数記録App",
+  icons: {
+    icon: [
+      { url: "/graph.png", sizes: "32x32" },
+      { url: "/graph.png", sizes: "192x192" },
+    ],
+    apple: [{ url: "/graph.png", sizes: "180x180" }],
+  },
   manifest: "/site.webmanifest",
   appleWebApp: {
     statusBarStyle: "black-translucent",

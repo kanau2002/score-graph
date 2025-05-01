@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import LoginForm from "./_components/LoginForm";
+import LoginForm from "../../../../components/auth/LoginForm";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
