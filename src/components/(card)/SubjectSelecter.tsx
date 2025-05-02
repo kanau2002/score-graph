@@ -54,7 +54,7 @@ const SubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
         {/* ドロップダウンメニュー */}
         {isOpen && (
           <div
-            className="absolute z-10 right-22 bottom-14 w-34 bg-white/50 backdrop-blur-lg border border-gray-200 rounded-md shadow p-1 max-h-60 overflow-auto"
+            className="absolute z-10 right-22 bottom-14 w-34 bg-white border border-gray-200 rounded-lg shadow p-1 max-h-60 overflow-auto"
             style={{
               scrollbarWidth: "none",
               msOverflowStyle: "none",

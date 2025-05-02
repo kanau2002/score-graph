@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
 import React from "react";
 import { Answer, ClientTestSection, TestData } from "@/type/testType";
 import { useRouter } from "next/navigation";
@@ -10,6 +9,7 @@ import { displaySubjectName } from "@/lib/display";
 import { ROUTES } from "@/constants";
 import AnswerIcon from "./AnswerIcon";
 import { isCorrect, isMath } from "@/lib/test";
+import BackButton from "../general/BackButton";
 
 interface Props {
   testStructureData: TestData;
@@ -333,12 +333,10 @@ export default function TestCreate({ testStructureData }: Props) {
       : 0;
 
   return (
-    <div className="container mx-auto max-w-md bg-white shadow-lg rounded-xl overflow-hidden text-gray-700 pb-20">
+    <div className="container mx-auto max-w-md bg-white shadow-lg rounded-xl overflow-hidden text-gray-700 pb-20 mb-12">
       {/* ヘッダー部分 */}
       <div className="flex items-center p-4 border-b border-gray-100">
-        <button onClick={() => router.back()} className="mr-3">
-          <ArrowLeft className="w-5 h-5" />
-        </button>
+        <BackButton />
         <h1 className="flex-1 font-bold text-lg">
           {displaySubjectName(testStructureData.subject)}-
           {testStructureData.year}年度
@@ -482,9 +480,7 @@ export default function TestCreate({ testStructureData }: Props) {
           </div>
         )}
         <div className="flex justify-between p-2">
-          <button type="button" onClick={() => router.back()}>
-            キャンセル
-          </button>
+          <BackButton />
           <button
             onClick={handleSubmit}
             disabled={isSubmitting}

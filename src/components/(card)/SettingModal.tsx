@@ -114,7 +114,7 @@ const SettingModal: React.FC<Props> = ({ subject }) => {
 
       {/* ドロップダウンメニュー */}
       {isOpen && (
-        <div className="absolute z-10 right-11 top-0 w-36 bg-white/50 backdrop-blur-lg  border-gray-200 rounded-md shadow mt-1 p-1 max-h-60 overflow-auto no-scrollbar">
+        <div className="absolute z-10 right-11 top-0 w-36 bg-white border-gray-200 rounded-lg shadow mt-1 p-1 max-h-60 overflow-auto no-scrollbar">
           <ul className="py-1">
             {settingModalItems.map((item) => {
               const Icon = item.icon;

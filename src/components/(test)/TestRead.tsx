@@ -351,9 +351,7 @@ export default function TestRead({
 
       {/* CRUD操作できるセクション */}
       <div className="flex justify-between p-2">
-        <button type="button" onClick={() => router.back()}>
-          キャンセル
-        </button>
+        <BackButton />
         <button
           onClick={handleDeleteTestResult}
           className={`text-red-500 font-bold ${isHome ? "hidden" : ""}`}

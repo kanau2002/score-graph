@@ -6,6 +6,7 @@ import { CircleUserRound } from "lucide-react";
 import Image from "next/image";
 import { ProfileData, ProfileUpdateData } from "@/type/userType";
 import { ROUTES } from "@/constants";
+import BackButton from "../general/BackButton";
 
 interface ProfileEditFormProps {
   initialData: ProfileData;
@@ -143,9 +144,7 @@ export default function ProfileUpdate({ initialData }: ProfileEditFormProps) {
       </div>
 
       <div className="flex justify-between p-2">
-        <button type="button" onClick={() => router.back()}>
-          キャンセル
-        </button>
+        <BackButton />
         <button
           type="submit"
           disabled={isSubmitting}
