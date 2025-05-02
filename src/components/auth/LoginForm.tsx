@@ -61,7 +61,7 @@ export default function LoginForm() {
 
   return (
     <form
-      className="space-y-6 p-4 w-full text-gray-500"
+      className="space-y-6 p-4 w-full"
       onSubmit={handleSubmit}
     >
       <Image
