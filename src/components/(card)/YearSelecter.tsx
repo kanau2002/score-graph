@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Plus } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Subject } from "@/type/testType";
 import { ROUTES } from "@/constants";
@@ -38,10 +38,9 @@ export default function YearSelecter({ subject, unAnsweredYears }: Props) {
   };
 
   return (
-    <div className="relative p-2 text-gray-700" ref={dropdownRef}>
-      {/* SquarePlusボタン */}
-      <button onClick={() => setIsOpen(!isOpen)}>
-        <Plus className="w-6 h-6" />
+    <div className="relative text-gray-700" ref={dropdownRef}>
+      <button onClick={() => setIsOpen(!isOpen)} className="p-2">
+        <Pencil className="w-6 h-6 text-gray-500" />
       </button>
 
       {/* ドロップダウンメニュー */}
@@ -61,9 +60,7 @@ export default function YearSelecter({ subject, unAnsweredYears }: Props) {
               <li key={year}>
                 <button
                   type="button"
-                  className={
-                    "w-full px-3 py-2 text-sm text-left rounded"
-                  }
+                  className={"w-full px-3 py-2 text-sm text-left rounded"}
                   onClick={() => handleSelect(year)}
                 >
                   {year}

@@ -109,7 +109,7 @@ export default function Navigation({ setIsOpen }: Props) {
           <li>
             <button
               className="flex items-center space-x-3 rounded-lg p-2 w-full focus:outline-none"
-              onClick={() => {
+              onClick={async () => {
                 if (loading) {
                   return;
                 }
@@ -117,12 +117,11 @@ export default function Navigation({ setIsOpen }: Props) {
                   setIsOpen?.(false);
                   router.push(ROUTES.LOGIN);
                   return;
-                }
-                // ログアウト処理と画面遷移
-                logout().then(() => {
+                } else {
+                  // ログアウト処理と画面遷移
                   setIsOpen?.(false);
-                  window.location.href = ROUTES.HOME;
-                });
+                  return logout();
+                }
               }}
             >
               {!user ? (

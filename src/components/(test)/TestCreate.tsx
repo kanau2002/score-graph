@@ -9,7 +9,7 @@ import { displaySubjectName } from "@/lib/display";
 import { ROUTES } from "@/constants";
 import AnswerIcon from "./AnswerIcon";
 import { isCorrect, isMath } from "@/lib/test";
-import BackButton from "../general/BackButton";
+import BackMypageLink from "../general/BackMypageLink";
 
 interface Props {
   testStructureData: TestData;
@@ -336,7 +336,6 @@ export default function TestCreate({ testStructureData }: Props) {
     <div className="container mx-auto max-w-md bg-white shadow-lg rounded-xl overflow-hidden text-gray-700 pb-20 mb-12">
       {/* ヘッダー部分 */}
       <div className="flex items-center p-4 border-b border-gray-100">
-        <BackButton />
         <h1 className="flex-1 font-bold text-lg">
           {displaySubjectName(testStructureData.subject)}-
           {testStructureData.year}年度
@@ -480,7 +479,7 @@ export default function TestCreate({ testStructureData }: Props) {
           </div>
         )}
         <div className="flex justify-between p-2">
-          <BackButton />
+          <BackMypageLink />
           <button
             onClick={handleSubmit}
             disabled={isSubmitting}

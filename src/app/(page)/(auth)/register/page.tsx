@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import RegisterForm from "../../../../components/auth/RegisterForm";
+import RegisterForm from "../../../../components/(auth)/RegisterForm";
 
 export const metadata: Metadata = {
   title: "新規登録 | ScoreGraph",

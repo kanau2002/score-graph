@@ -9,6 +9,12 @@ export default function BottomNavigation() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, loading } = useAuth();
+  console.log("pathname", pathname);
+
+  // 各ルートのアクティブ状態を判定
+  const isHomeActive = pathname.startsWith(ROUTES.HOME);
+  const isNewsActive = pathname.startsWith(ROUTES.NEWS);
+  const isMypageActive = pathname.startsWith(ROUTES.MYPAGE);
 
   return (
     <div className="fixed bottom-0 left-0 z-11 w-full h-20 bg-white border-t border-gray-200 px-4 pb-8 text-gray-700">
@@ -20,10 +26,8 @@ export default function BottomNavigation() {
           className="flex flex-col items-center justify-center focus:outline-none"
         >
           <HomeIcon
-            className={`w-7 h-7 ${
-              pathname === ROUTES.HOME ? "font-bold" : ""
-            }`}
-            strokeWidth={pathname === ROUTES.HOME ? 2.5 : 1.5}
+            className={`w-7 h-7 ${isHomeActive ? "font-bold" : ""}`}
+            strokeWidth={isHomeActive ? 2.5 : 1.5}
           />
         </button>
         <button
@@ -33,10 +37,8 @@ export default function BottomNavigation() {
           className="flex flex-col items-center justify-center focus:outline-none"
         >
           <Newspaper
-            className={`w-7 h-7 ${
-              pathname === ROUTES.NEWS ? "font-bold" : ""
-            }`}
-            strokeWidth={pathname === ROUTES.NEWS ? 2.5 : 1.5}
+            className={`w-7 h-7 ${isNewsActive ? "font-bold" : ""}`}
+            strokeWidth={isNewsActive ? 2.5 : 1.5}
           />
         </button>
         <button
@@ -57,9 +59,9 @@ export default function BottomNavigation() {
         >
           <CircleUserRound
             className={`w-7 h-7 ${
-              pathname === ROUTES.MYPAGE ? "font-bold" : "font-normal"
+              isMypageActive ? "font-bold" : "font-normal"
             }`}
-            strokeWidth={pathname === ROUTES.MYPAGE ? 2.5 : 1.5}
+            strokeWidth={isMypageActive ? 2.5 : 1.5}
           />
         </button>
       </div>

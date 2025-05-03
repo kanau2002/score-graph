@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Subject } from "@/type/testType";
 import { CardData } from "@/type/cardType";
 import { displaySubjectName } from "@/lib/display";
+import BackMypageLink from "../general/BackMypageLink";
 
 type Props = {
   subject: Subject;
@@ -97,10 +98,7 @@ export default function CardUpdate({ subject, initialCardData }: Props) {
       </h2>
 
       <div className="mb-4">
-        <label
-          htmlFor="finalScoreTarget"
-          className="block text-sm font-medium mb-1 flex"
-        >
+        <label htmlFor="finalScoreTarget" className="block text-sm mb-1 flex">
           合格目標点 (0-100) *
           <div className="text-xs text-gray-500 ml-auto">
             ※ 合格最低点の1.1倍が目安
@@ -122,10 +120,7 @@ export default function CardUpdate({ subject, initialCardData }: Props) {
       </div>
 
       <div className="mb-4">
-        <label
-          htmlFor="finalScoreLowest"
-          className="block text-sm font-medium mb-1"
-        >
+        <label htmlFor="finalScoreLowest" className="block text-sm mb-1">
           合格最低点 (0-100) *
         </label>
         <input
@@ -154,14 +149,12 @@ export default function CardUpdate({ subject, initialCardData }: Props) {
           value={formData.memo}
           onChange={handleChange}
           className="w-full px-3 py-2 rounded-lg bg-gray-100 focus:outline-none"
-          placeholder="この科目に関するメモを入力してください..."
+          placeholder="例）英語は1月から英語長文ポラリス1の文を例文としてスラスラ言えるレベルをテーマに30分/日音読をしたことで伸びた気がします。..."
         />
       </div>
 
       <div className="flex justify-between p-2">
-        <button type="button" onClick={() => router.back()}>
-          キャンセル
-        </button>
+        <BackMypageLink />
         <button
           type="submit"
           disabled={submitting}

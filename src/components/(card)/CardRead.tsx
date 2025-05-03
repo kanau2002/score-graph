@@ -5,8 +5,8 @@ import {
   SquareUserRound,
   MessageSquareText,
   ListFilter,
-  ArrowRightToLine,
   CircleUserRound,
+  ChevronRight,
 } from "lucide-react";
 import {
   Line,
@@ -85,8 +85,8 @@ export default function CardRead({ cardAllData, isHome }: Props) {
             <CircleUserRound className="w-full h-full" />
           )}
         </div>
-        <div className="text-xs flex">
-          <p className="font-bold">{cardAllData.profileData.userName}</p>
+        <div className="text-xs flex font-bold">
+          <p className="mr-2">{cardAllData.profileData.userName}</p>
           <p> {displaySubjectName(cardAllData.subject)}</p>
         </div>
         <div className={`ml-auto mr-2 ${isHome ? "hidden" : ""}`}>
@@ -338,7 +338,7 @@ export default function CardRead({ cardAllData, isHome }: Props) {
                 <th className="p-2 w-12">結果</th>
                 <th className="p-2 w-12">年度</th>
                 <th className="p-2">メモ</th>
-                <th className="p-2 w-12">詳細</th>
+                <th className="pl-1 pr-3 w-12">詳細</th>
               </tr>
             </thead>
             <tbody>
@@ -358,16 +358,16 @@ export default function CardRead({ cardAllData, isHome }: Props) {
                       router.push(url);
                     }}
                   >
-                    <td className="p-2 text-center">{result.date}</td>
-                    <td className="p-2 text-center font-bold">
+                    <td className="px-2 py-3 text-center">{result.date}</td>
+                    <td className="px-2 py-3 text-center font-bold">
                       {result.percentage}
                     </td>
-                    <td className="p-2 text-center">{result.year}</td>
-                    <td className="p-2 text-center truncate max-w-[150px]">
+                    <td className="px-2 py-3 text-center">{result.year}</td>
+                    <td className="px-2 py-3 text-center truncate max-w-[150px]">
                       {result.memo}
                     </td>
-                    <td className="p-2 text-gray-500">
-                      <ArrowRightToLine size={16} className="ml-2" />
+                    <td className="pl-1 pr-3 py-3 text-gray-500">
+                      <ChevronRight size={16} className="ml-2" />
                     </td>
                   </tr>
                 )

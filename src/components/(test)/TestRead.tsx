@@ -15,7 +15,8 @@ import FriendSelector from "./FriendSelecter";
 import { FriendRadarChart, StudentRadarChart } from "./SectionRaderChart";
 import AnswerIcon from "./AnswerIcon";
 import { isCorrect, isMath } from "@/lib/test";
-import BackButton from "../general/BackButton";
+import BackHomeButton from "../general/BackHomeButton";
+import BackMypageLink from "../general/BackMypageLink";
 
 interface Props {
   leftData: AnsweredData;
@@ -129,10 +130,9 @@ export default function TestRead({
   }
 
   return (
-    <div className="container mx-auto max-w-md bg-white shadow rounded-lg text-gray-700 pb-20 p-4">
+    <div className="container mx-auto max-w-md bg-white shadow rounded-lg text-gray-700 pb-20 p-4 mb-6">
       {/* ヘッダー部分 */}
       <div className="flex items-center pb-4">
-        <BackButton />
         <h1 className="flex-1 font-bold text-lg">
           {displaySubjectName(testStructureData.subject)}-
           {testStructureData.year}
@@ -283,7 +283,7 @@ export default function TestRead({
                       <td className="p-3">
                         <div className="flex justify-center">
                           <div
-                            className={`flex items-center justify-center rounded-full w-8 h-8 shadow-sm ${bgStyle(
+                            className={`flex items-center justify-center rounded-full w-8 h-8 ${bgStyle(
                               question.correctAnswer,
                               question.studentAnswer
                             )}`}
@@ -296,7 +296,7 @@ export default function TestRead({
                         <div className="flex justify-center">
                           {rightData ? (
                             <div
-                              className={`flex items-center justify-center rounded-full w-8 h-8 shadow-sm ${bgStyle(
+                              className={`flex items-center justify-center rounded-full w-8 h-8 ${bgStyle(
                                 question.correctAnswer,
                                 question.friendAnswer
                               )}`}
@@ -304,7 +304,7 @@ export default function TestRead({
                               {AnswerIcon(question.friendAnswer)}
                             </div>
                           ) : (
-                            <div className="text-center text-gray-500">−</div>
+                            <div className="text-center text-gray-500">-</div>
                           )}
                         </div>
                       </td>
@@ -320,7 +320,7 @@ export default function TestRead({
                       {section.sectionTotal.studentTotal}
                     </td>
                     <td className="p-3 text-center">
-                      {rightData ? section.sectionTotal.friendTotal : "−"}
+                      {rightData ? section.sectionTotal.friendTotal : "-"}
                     </td>
                   </tr>
                 </tfoot>
@@ -351,7 +351,8 @@ export default function TestRead({
 
       {/* CRUD操作できるセクション */}
       <div className="flex justify-between p-2">
-        <BackButton />
+        {isHome ? <BackHomeButton /> : <BackMypageLink />}
+
         <button
           onClick={handleDeleteTestResult}
           className={`text-red-500 font-bold ${isHome ? "hidden" : ""}`}

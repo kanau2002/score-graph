@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Ellipsis, Crosshair, SquareAsterisk, Trash2 } from "lucide-react";
+import { Ellipsis, Trash2, ChartSpline, SquarePen } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Subject } from "@/type/testType";
 import { toast } from "react-hot-toast"; // トースト通知（必要に応じてインストール）
@@ -9,15 +9,15 @@ import { CardDeleteConfirmationModal } from "./CardDeleteConfirmationModal";
 const settingModalItems = [
   {
     id: 1,
-    name: "目標設定",
-    icon: Crosshair,
+    name: "目標の設定",
+    icon: ChartSpline,
     href: ROUTES.TARGET_UPSERT,
     isRed: false,
   },
   {
     id: 2,
     name: "カード編集",
-    icon: SquareAsterisk,
+    icon: SquarePen,
     href: ROUTES.CARD_UPDATE,
     isRed: false,
   },
@@ -109,7 +109,7 @@ const SettingModal: React.FC<Props> = ({ subject }) => {
   return (
     <div className="relative p-2 ml-auto text-gray-700" ref={dropdownRef}>
       <button onClick={() => setIsOpen(!isOpen)} className="focus:outline-none">
-        <Ellipsis className="w-5 h-5" />
+        <Ellipsis className="w-5 h-5 text-gray-500" />
       </button>
 
       {/* ドロップダウンメニュー */}

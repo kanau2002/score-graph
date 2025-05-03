@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { useFollow } from "@/app/hooks/useFollow";
 import axios from "axios";
-import { CircleUserRound, Search } from "lucide-react";
+import { UserRound, Search } from "lucide-react";
+import BackMypageLink from "@/components/general/BackMypageLink";
 
 interface User {
   id: number;
@@ -90,7 +91,6 @@ export default function FriendPage() {
   return (
     <div className="max-w-md mx-auto text-gray-700 bg-white rounded-lg p-4 mb-6 shadow-sm min-h-screen">
       {/* ユーザー検索セクション */}
-
       <div className="h-40">
         <div className="relative">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -123,7 +123,7 @@ export default function FriendPage() {
                 className="flex items-center justify-between p-3"
               >
                 <div className="flex items-center">
-                  <CircleUserRound className="w-6 h-6 mr-2" />
+                  <UserRound className="w-6 h-6 mr-2" />
                   {user.userName}
                   <span className="text-gray-500">（ID: {user.id}）</span>
                 </div>
@@ -150,18 +150,14 @@ export default function FriendPage() {
           </div>
         )}
       </div>
-
       {/* 相互フォローユーザーセクション */}
-
       <h2 className="font-bold mb-2">フレンド</h2>
-
       {/* エラー表示 */}
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
           {error}
         </div>
       )}
-
       {/* 相互フォローユーザーリスト */}
       <div className="space-y-2">
         {mutualFollows.length === 0 ? (
@@ -175,7 +171,7 @@ export default function FriendPage() {
               className="flex items-center justify-between p-3"
             >
               <div className="flex items-center">
-                <CircleUserRound className="w-6 h-6 mr-2" />
+                <UserRound className="w-6 h-6 mr-2" />
                 {user.userName}
                 <span className="text-gray-500">（ID: {user.id}）</span>
               </div>
@@ -189,6 +185,9 @@ export default function FriendPage() {
             </div>
           ))
         )}
+      </div>
+      <div className="mt-16">
+        <BackMypageLink />
       </div>
     </div>
   );

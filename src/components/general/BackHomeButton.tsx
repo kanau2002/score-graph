@@ -1,12 +1,18 @@
-import { ROUTES } from "@/constants";
+"use client";
 import { ChevronLeft, HomeIcon } from "lucide-react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function BackHomeButton() {
+  const router = useRouter();
   return (
-    <Link href={ROUTES.HOME} className="flex">
+    <button
+      onClick={() => {
+        router.back();
+      }}
+      className="flex"
+    >
       <ChevronLeft />
       <HomeIcon />
-    </Link>
+    </button>
   );
 }
