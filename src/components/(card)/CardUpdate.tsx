@@ -6,6 +6,7 @@ import { Subject } from "@/type/testType";
 import { CardData } from "@/type/cardType";
 import { displaySubjectName } from "@/lib/display";
 import BackMypageLink from "../general/BackMypageLink";
+import { ROUTES } from "@/constants";
 
 type Props = {
   subject: Subject;
@@ -73,7 +74,7 @@ export default function CardUpdate({ subject, initialCardData }: Props) {
       }
 
       // 更新成功時、カード一覧ページにリダイレクト
-      router.back();
+      router.push(ROUTES.MYPAGE);
       router.refresh(); // キャッシュを更新
     } catch (err) {
       setError(

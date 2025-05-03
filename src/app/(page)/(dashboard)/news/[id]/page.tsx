@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { newsService } from "@/core/Service/newsService";
 import { notFound } from "next/navigation";
 import RichContent from "../../../../../components/(news)/RichContent";
-import BackButton from "@/components/general/BackButton";
+import BackNewsButton from "@/components/general/BackNewsButton";
 
 type NewsDetailPageProps = {
   params: Promise<{
@@ -47,7 +47,7 @@ export default async function NewsDetailPage({ params }: NewsDetailPageProps) {
         {/* リッチコンテンツコンポーネントを使用 */}
         <RichContent content={newsData.content} />
       </article>
-      <BackButton />
+      <BackNewsButton />
     </div>
   );
 }

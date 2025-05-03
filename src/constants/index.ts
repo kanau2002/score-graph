@@ -11,6 +11,7 @@ export const ROUTES = {
   MYPAGE_TESTREAD: "mypage/testRead",
   TEST_CREATE: "mypage/testCreate",
   TARGET_UPSERT: "mypage/targetUpsert",
+  CONTACT: "/contact",
   LOGIN: "/login",
   REGISTER: "/register",
 } as const;

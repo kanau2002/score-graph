@@ -3,7 +3,7 @@ import { ROUTES } from "@/constants";
 import Link from "next/link";
 import React from "react";
 // import Image from "next/image";
-import { LockKeyhole, LogIn, Newspaper, X } from "lucide-react";
+import { LockKeyhole, LogIn, Newspaper, Send, X } from "lucide-react";
 import { HomeIcon, UsersRound, CircleUserRound, LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -104,6 +104,17 @@ export default function Navigation({ setIsOpen }: Props) {
               <span>フレンド</span>
               {!user && <LockKeyhole className="size-5 ml-auto" />}
             </button>
+            <hr className="border-1 border-white opacity-30" />
+          </li>
+          <li>
+            <Link
+              href={ROUTES.CONTACT}
+              className="flex items-center space-x-3 rounded-lg p-2"
+              onClick={() => setIsOpen?.(false)}
+            >
+              <Send className="size-6" />
+              <span>お問い合わせ</span>
+            </Link>
             <hr className="border-1 border-white opacity-30" />
           </li>
           <li>
