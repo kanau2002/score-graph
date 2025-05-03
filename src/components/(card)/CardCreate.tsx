@@ -76,9 +76,7 @@ export default function CardCreate({ subject }: Props) {
   };
 
   return (
-    <div className="max-w-md mx-auto">
-      <h1 className="text-xl font-bold mb-4">科目カード作成</h1>
-
+    <div className="max-w-md mx-auto text-gray-700">
       <form
         onSubmit={handleSubmit}
         className="bg-white rounded-lg shadow-sm p-4"
@@ -88,10 +86,10 @@ export default function CardCreate({ subject }: Props) {
         )}
 
         <div className="mb-4">
-          <label htmlFor="subject" className="block text-sm font-medium mb-1">
+          <label htmlFor="subject" className="block text-sm mb-1">
             科目 *
           </label>
-          <div className="p-2">
+          <div className="px-3 py-2 rounded-lg bg-gray-100 font-bold">
             <p>{displaySubjectName(subject)}</p>
           </div>
         </div>
@@ -99,19 +97,21 @@ export default function CardCreate({ subject }: Props) {
         <div className="mb-4">
           <label
             htmlFor="finalScoreTarget"
-            className="block text-sm font-medium mb-1"
+            className="block text-sm mb-1"
           >
             目標点 (%) *
           </label>
           <input
-            type="number"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             id="finalScoreTarget"
             name="finalScoreTarget"
             min="0"
             max="100"
             value={formData.finalScoreTarget}
             onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md"
+            className="w-full px-3 py-2 rounded-lg bg-gray-100 focus:outline-none"
             required
           />
         </div>
@@ -119,19 +119,21 @@ export default function CardCreate({ subject }: Props) {
         <div className="mb-4">
           <label
             htmlFor="finalScoreLowest"
-            className="block text-sm font-medium mb-1"
+            className="block text-sm mb-1"
           >
             最低点 (%) *
           </label>
           <input
-            type="number"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             id="finalScoreLowest"
             name="finalScoreLowest"
             min="0"
             max="100"
             value={formData.finalScoreLowest}
             onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md"
+            className="w-full px-3 py-2 rounded-lg bg-gray-100 focus:outline-none"
             required
           />
           <p className="text-xs text-gray-500 mt-1">
@@ -140,7 +142,7 @@ export default function CardCreate({ subject }: Props) {
         </div>
 
         <div className="mb-4">
-          <label htmlFor="memo" className="block text-sm font-medium mb-1">
+          <label htmlFor="memo" className="block text-sm mb-1">
             メモ
           </label>
           <textarea
@@ -149,24 +151,20 @@ export default function CardCreate({ subject }: Props) {
             value={formData.memo}
             onChange={handleChange}
             rows={4}
-            className="w-full px-3 py-2 border rounded-md resize-none"
+            className="w-full px-3 py-2 rounded-lg bg-gray-100 focus:outline-none"
           />
         </div>
 
-        <div className="flex justify-between">
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="px-4 py-2 border rounded-md"
-          >
+        <div className="flex justify-between p-2">
+          <button type="button" onClick={() => router.back()}>
             キャンセル
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md disabled:bg-blue-300"
+            className="text-blue-500 font-bold"
           >
-            {isSubmitting ? "作成中..." : "作成する"}
+            {isSubmitting ? "作成中..." : "完了"}
           </button>
         </div>
       </form>

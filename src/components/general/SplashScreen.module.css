@@ -1,0 +1,53 @@
+/* メインコンテナのアニメーション */
+@keyframes scaleIn {
+  from { 
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+  to { 
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* テキストの色変化アニメーション */
+@keyframes fadeInColor {
+  0% {
+    color: rgba(156, 163, 175, 0); /* 完全に透明 */
+  }
+  100% {
+    color: rgba(107, 114, 128, 1); /* グレー500 - 少し濃い色 */
+  }
+}
+
+/* メインコンテナのアニメーション適用 */
+.mainAnimation {
+  animation: scaleIn 1s ease-out forwards;
+}
+
+/* ロゴとグラフのコンテナ */
+.logoContainer {
+  transition: all 1s ease-out;
+}
+
+/* 非表示状態 */
+.hidden {
+  opacity: 0;
+  transform: translateY(1rem);
+}
+
+/* 表示状態 */
+.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* タップテキスト初期状態 */
+.tapText {
+  color: rgba(156, 163, 175, 0);
+}
+
+/* タップテキストのフェードイン */
+.fadeIn {
+  animation: fadeInColor 1s ease-out 2s forwards; /* 2秒遅延、1秒かけて色を濃く */
+}

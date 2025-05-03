@@ -84,7 +84,7 @@ export default function DatePicker({
       {/* 表示用のiOS風UI */}
       <div
         onClick={handleOpenPicker}
-        className="w-full bg-white border-gray-500 text-gray-600 border-2 rounded-lg px-4 py-3 cursor-pointer"
+        className="w-full px-4 py-3 rounded-lg bg-gray-100 focus:outline-none"
       >
         <div className="flex items-center justify-between">
           <span className={`${formattedDate ? "" : "text-gray-500"}`}>

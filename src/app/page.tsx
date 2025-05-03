@@ -1,6 +1,5 @@
-import Link from "next/link";
-import { ROUTES } from "@/constants";
+import SplashScreen from "@/components/general/SplashScreen";
 
 export default function RootPage() {
-  return <Link href={ROUTES.HOME}>ホーム</Link>;
+  return <SplashScreen />;
 }

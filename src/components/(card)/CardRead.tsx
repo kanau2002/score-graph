@@ -5,8 +5,8 @@ import {
   SquareUserRound,
   MessageSquareText,
   ListFilter,
-  ArrowRightToLine,
   CircleUserRound,
+  ChevronRight,
 } from "lucide-react";
 import {
   Line,
@@ -20,13 +20,13 @@ import {
   ComposedChart,
 } from "recharts";
 import Image from "next/image";
-import Link from "next/link";
 import { TestResult } from "@/type/testType";
 import { displaySubjectName } from "@/lib/display";
 import YearSelecter from "./YearSelecter";
 import { ROUTES } from "@/constants";
 import { CardAllData } from "@/type/cardType";
 import SettingModal from "./SettingModal";
+import { useRouter } from "next/navigation";
 
 interface Props {
   cardAllData: CardAllData;
@@ -43,6 +43,7 @@ export default function CardRead({ cardAllData, isHome }: Props) {
   const profileInfoRef = useRef<HTMLDivElement>(null);
   const [descriptionHeight, setDescriptionHeight] = useState<number>(0);
   const [profileInfoHeight, setProfileInfoHeight] = useState<number>(0);
+  const router = useRouter();
 
   // テーブルの高さを測定
   useEffect(() => {
@@ -69,7 +70,7 @@ export default function CardRead({ cardAllData, isHome }: Props) {
   }, [showProfileInfo, cardAllData.profileData]);
 
   return (
-    <div className="w-full rounded-lg shadow bg-white pb-4">
+    <div className="w-full rounded-lg shadow-sm bg-white pb-4 text-gray-700">
       {/* ヘッダー部分 */}
       <div className="flex items-center p-2 ">
         <div className="w-8 h-8 m-2 relative">
@@ -84,9 +85,9 @@ export default function CardRead({ cardAllData, isHome }: Props) {
             <CircleUserRound className="w-full h-full" />
           )}
         </div>
-        <div className="text-xs flex">
-          <p className="font-bold">{cardAllData.profileData.userName}</p>
-          <p>　{displaySubjectName(cardAllData.subject)}</p>
+        <div className="text-xs flex font-bold">
+          <p className="mr-2">{cardAllData.profileData.userName}</p>
+          <p> {displaySubjectName(cardAllData.subject)}</p>
         </div>
         <div className={`ml-auto mr-2 ${isHome ? "hidden" : ""}`}>
           <SettingModal subject={cardAllData.subject} />
@@ -101,19 +102,25 @@ export default function CardRead({ cardAllData, isHome }: Props) {
             margin={{ top: 5, right: 20, bottom: 5, left: -10 }}
           >
             {/* 目標の得点率（線グラフ） */}
-            {/* 目標の得点率（線グラフ） */}
             <Line
               type="monotone"
               dataKey="targetPercentage"
-              stroke="#6366F1"
+              stroke="#8884d8"
               strokeWidth={2}
-              dot={{ r: 4, fill: "#6366F1" }}
+              dot={{ r: 4, fill: "#8884d8" }}
               activeDot={{ r: 6 }}
               name="目標"
             />
 
             {/* 結果の得点率（棒グラフ） */}
-            <Bar dataKey="percentage" fill="#8884d8" barSize={20} name="結果" />
+            <Bar
+              dataKey="percentage"
+              fill="#8884d8"
+              fillOpacity={0.8}
+              barSize={20}
+              name="結果"
+              radius={[2, 2, 0, 0]}
+            />
 
             <CartesianGrid
               stroke="#ccc"
@@ -131,7 +138,48 @@ export default function CardRead({ cardAllData, isHome }: Props) {
 
             <YAxis domain={[0, 100]} />
 
-            <Tooltip />
+            <Tooltip
+              content={({ active, payload }) => {
+                if (active && payload && payload.length) {
+                  // 目標と結果のデータを取得
+                  const targetData = payload.find(
+                    (p) => p.dataKey === "targetPercentage"
+                  );
+                  const resultData = payload.find(
+                    (p) => p.dataKey === "percentage"
+                  );
+
+                  return (
+                    <div className="custom-tooltip bg-white border border-gray-200 px-2 py-3 rounded-lg shadow-lg">
+                      <div
+                        className="flex gap-1 items-center"
+                        style={{ color: "#888888" }}
+                      >
+                        <span>{targetData?.name || "目標"}</span>:
+                        <span className="font-bold text-lg">
+                          {targetData?.value}
+                        </span>
+                      </div>
+
+                      <div
+                        className="flex gap-1 items-center"
+                        style={{ color: "#8884d8" }}
+                      >
+                        <span>{resultData?.name || "結果"}</span>:
+                        <span className="font-bold text-lg">
+                          {resultData?.value}
+                        </span>
+                      </div>
+
+                      <div className="text-gray-400 text-xs text-right">
+                        {payload[0].payload.month}
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
+              }}
+            />
 
             {/* 目標スコアのリファレンスライン */}
             <ReferenceLine
@@ -167,35 +215,35 @@ export default function CardRead({ cardAllData, isHome }: Props) {
       {/* アクションボタン */}
       <div className="flex items-center px-2">
         <button
-          className="p-2"
           onClick={() => setShowProfileInfo(!showProfileInfo)}
           aria-expanded={showProfileInfo}
+          className="p-2"
         >
           <SquareUserRound
             className={`w-6 h-6 transform transition-transform duration-300 ${
-              showProfileInfo ? "text-blue-500" : ""
+              showProfileInfo ? "" : "text-gray-500"
             }`}
           />
         </button>
         <button
-          className="p-2"
           onClick={() => setShowFullDescription(!showFullDescription)}
           aria-expanded={showFullDescription}
+          className="p-2"
         >
           <MessageSquareText
             className={`w-6 h-6 transform transition-transform duration-300 ${
-              showFullDescription ? "text-blue-500" : ""
+              showFullDescription ? "" : "text-gray-500"
             }`}
           />
         </button>
         <button
-          className="p-2 "
           onClick={() => setShowTable(!showTable)}
           aria-expanded={showTable}
+          className="p-2 "
         >
           <ListFilter
             className={`w-6 h-6 transform transition-transform duration-300 ${
-              showTable ? "text-blue-500" : ""
+              showTable ? "" : "text-gray-500"
             }`}
           />
         </button>
@@ -229,7 +277,7 @@ export default function CardRead({ cardAllData, isHome }: Props) {
 
       {/* プロフィール情報の短縮表示（閉じているとき） */}
       {isHome === true && !showProfileInfo && (
-        <div className="px-4 mt-2">
+        <div className="px-4 mt-2 text-gray-500">
           <p className="text-sm mb-2">
             〜{isHome ? "受験校" : "志望校"}〜
             <br />・{cardAllData.profileData.targetUniversities[0]}
@@ -238,7 +286,7 @@ export default function CardRead({ cardAllData, isHome }: Props) {
               cardAllData.profileData.targetUniversities[1].substring(0, 10) +
                 "..."}
             <button
-              className="text-gray-500 font-medium ml-1"
+              className="text-gray-400 ml-1"
               onClick={() => setShowProfileInfo(true)}
             >
               続きを読む
@@ -283,14 +331,14 @@ export default function CardRead({ cardAllData, isHome }: Props) {
         }}
       >
         <div ref={tableRef}>
-          <table className="w-full border-collapse text-sm text-gray-600">
+          <table className="w-full border-collapse text-sm text-gray-500">
             <thead>
               <tr className="border-b border-gray-200">
                 <th className="p-2 w-18">解いた日</th>
                 <th className="p-2 w-12">結果</th>
                 <th className="p-2 w-12">年度</th>
                 <th className="p-2">メモ</th>
-                <th className="p-2 w-12">詳細</th>
+                <th className="pl-1 pr-3 w-12">詳細</th>
               </tr>
             </thead>
             <tbody>
@@ -303,25 +351,23 @@ export default function CardRead({ cardAllData, isHome }: Props) {
                         ? "border-b border-gray-200"
                         : ""
                     }`}
+                    onClick={() => {
+                      const url = isHome
+                        ? `${ROUTES.HOME_TESTREAD}/${cardAllData.subject}/${result.year}/${cardAllData.profileData.userId}`
+                        : `${ROUTES.MYPAGE_TESTREAD}/${cardAllData.subject}/${result.year}`;
+                      router.push(url);
+                    }}
                   >
-                    <td className="p-2 text-center">{result.date}</td>
-                    <td className="p-2 text-center font-bold">
+                    <td className="px-2 py-3 text-center">{result.date}</td>
+                    <td className="px-2 py-3 text-center font-bold">
                       {result.percentage}
                     </td>
-                    <td className="p-2 text-center">{result.year}</td>
-                    <td className="p-2 text-center truncate max-w-[150px]">
+                    <td className="px-2 py-3 text-center">{result.year}</td>
+                    <td className="px-2 py-3 text-center truncate max-w-[150px]">
                       {result.memo}
                     </td>
-                    <td className="p-2 text-gray-400">
-                      <Link
-                        href={
-                          isHome
-                            ? `${ROUTES.HOME_TESTREAD}?subject=${cardAllData.subject}&year=${result.year}&uid=${cardAllData.profileData.userId}`
-                            : `${ROUTES.MYPAGE_TESTREAD}?subject=${cardAllData.subject}&year=${result.year}`
-                        }
-                      >
-                        <ArrowRightToLine size={16} className="ml-2" />
-                      </Link>
+                    <td className="pl-1 pr-3 py-3 text-gray-500">
+                      <ChevronRight size={16} className="ml-2" />
                     </td>
                   </tr>
                 )

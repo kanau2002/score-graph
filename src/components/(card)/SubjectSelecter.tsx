@@ -36,7 +36,7 @@ const SubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
   const handleSelect = (subject: Subject) => {
     setIsOpen(false);
     // 選択された科目に基づいてページ遷移
-    router.push(`${ROUTES.CARD_CREATE}?subject=${subject}`);
+    router.push(`${ROUTES.CARD_CREATE}/${subject}`);
   };
 
   if (unAnsweredSubjects.length === 0) {
@@ -45,7 +45,7 @@ const SubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
 
   return (
     <>
-      <div className="relative" ref={dropdownRef}>
+      <div className="relative text-gray-700" ref={dropdownRef}>
         {/* Plusボタン */}
         <button onClick={() => setIsOpen(!isOpen)}>
           <SquarePlus />
@@ -53,7 +53,13 @@ const SubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
 
         {/* ドロップダウンメニュー */}
         {isOpen && (
-          <div className="absolute z-10 right-4 bottom-10 w-36 bg-white border border-gray-200 rounded-md shadow-lg mt-1 p-1 max-h-60 overflow-auto">
+          <div
+            className="absolute z-10 right-22 bottom-14 w-34 bg-white border border-gray-200 rounded-lg shadow p-1 max-h-60 overflow-auto"
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
+          >
             <div className="py-1 px-2 text-xs text-gray-500 border-b border-gray-100">
               追加する科目を選択
             </div>

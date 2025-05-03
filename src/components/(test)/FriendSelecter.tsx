@@ -39,18 +39,18 @@ const FriendSelector: React.FC<Props> = ({
 
   return (
     <>
-      <div className="relative" ref={dropdownRef}>
+      <div className="relative text-gray-700" ref={dropdownRef}>
         {/* セレクトトリガー */}
         <button
           type="button"
           className="w-full bg-white border border-gray-300 rounded-md px-4 py-2 text-left flex justify-between items-center focus:outline-none "
           onClick={() => setIsOpen(!isOpen)}
         >
-          <span className={selectedFriend ? "text-gray-900" : "text-gray-500"}>
+          <span className={selectedFriend ? "" : "text-gray-500"}>
             {selectedFriend ? selectedFriend.name : "フレンドを選択"}
           </span>
           <ChevronDown
-            className={`h-5 w-5 text-gray-400 transition-transform ${
+            className={`h-5 w-5 text-gray-500 transition-transform ${
               isOpen ? "transform rotate-180" : ""
             }`}
           />

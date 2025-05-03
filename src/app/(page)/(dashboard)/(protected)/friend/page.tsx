@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from "react";
 import { useFollow } from "@/app/hooks/useFollow";
 import axios from "axios";
-import { CircleUserRound } from "lucide-react";
+import { UserRound, Search } from "lucide-react";
+import BackMypageLink from "@/components/general/BackMypageLink";
 
 interface User {
   id: number;
@@ -13,7 +14,6 @@ export default function FriendPage() {
   // ユーザー検索関連の状態
   const [searchId, setSearchId] = useState("");
   const [searchResults, setSearchResults] = useState<User[]>([]);
-  const [isSearching, setIsSearching] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
 
   // フォロー管理関連の状態
@@ -27,26 +27,22 @@ export default function FriendPage() {
     unfollowUser,
   } = useFollow();
 
-  // 初期データ読み込み
-  useEffect(() => {
-    fetchMutualFollows();
-  }, [fetchMutualFollows]);
-
-  // ユーザーID検索処理
-  const handleSearch = async () => {
-    if (!searchId.trim()) {
-      setSearchError("ユーザーIDを入力してください");
+  // 検索処理関数
+  const performSearch = async (id: string) => {
+    if (!id.trim()) {
+      setSearchResults([]);
+      setSearchError(null);
       return;
     }
 
     // 入力が数値かどうかチェック
-    const userId = parseInt(searchId, 10);
+    const userId = parseInt(id, 10);
     if (isNaN(userId)) {
       setSearchError("ユーザーIDは数値で入力してください");
+      setSearchResults([]);
       return;
     }
 
-    setIsSearching(true);
     setSearchError(null);
 
     try {
@@ -68,10 +64,24 @@ export default function FriendPage() {
       } else {
         setSearchError("ユーザーの検索中にエラーが発生しました");
       }
-    } finally {
-      setIsSearching(false);
+      setSearchResults([]);
     }
   };
+
+  // 検索IDが変わるたびに検索実行（debounceなし）
+  useEffect(() => {
+    if (searchId) {
+      performSearch(searchId);
+    } else {
+      setSearchResults([]);
+      setSearchError(null);
+    }
+  }, [searchId]);
+
+  // 初期データ読み込み
+  useEffect(() => {
+    fetchMutualFollows();
+  }, [fetchMutualFollows]);
 
   // ユーザーがすでにフォロー中かチェック
   const isFollowing = (userId: number): boolean => {
@@ -79,27 +89,22 @@ export default function FriendPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-2">
+    <div className="max-w-md mx-auto text-gray-700 bg-white rounded-lg p-4 mb-6 shadow-sm min-h-screen">
       {/* ユーザー検索セクション */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 className="text-xl font-bold mb-4">ユーザー検索</h2>
-
-        <div className="flex mb-4">
+      <div className="h-40">
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-gray-400" />
+          </div>
           <input
-            type="number"
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             value={searchId}
             onChange={(e) => setSearchId(e.target.value)}
             placeholder="ユーザーIDで検索..."
-            className="flex-grow px-4 py-2 border rounded-l focus:outline-none focus:ring-none"
-            onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+            className="w-full pl-10 pr-3 py-2 rounded-lg bg-gray-100 focus:outline-none"
           />
-          <button
-            onClick={handleSearch}
-            disabled={isSearching}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-r"
-          >
-            {isSearching ? "検索中..." : "検索"}
-          </button>
         </div>
 
         {/* エラーメッセージ */}
@@ -111,109 +116,78 @@ export default function FriendPage() {
 
         {/* 検索結果 */}
         {searchResults.length > 0 && (
-          <div>
-            <h3 className="font-semibold mb-2">検索結果</h3>
-            <div className="space-y-2">
-              {searchResults.map((user) => (
-                <div
-                  key={user.id}
-                  className="flex items-center justify-between p-3 border rounded hover:bg-gray-50"
-                >
-                  <div className="flex items-center">
-                    <CircleUserRound className="w-6 h-6" />
-                    <span className="font-medium ml-2">{user.userName}</span>
-                    <span className="text-gray-500">（ID: {user.id}）</span>
-                  </div>
-
-                  {isFollowing(user.id) ? (
-                    <button
-                      onClick={() => unfollowUser(user.id)}
-                      className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
-                      disabled={loading}
-                    >
-                      フォロー解除
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => followUser(user.id)}
-                      className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm"
-                      disabled={loading}
-                    >
-                      フォローする
-                    </button>
-                  )}
+          <div className="space-y-2 mt-6">
+            {searchResults.map((user) => (
+              <div
+                key={user.id}
+                className="flex items-center justify-between p-3"
+              >
+                <div className="flex items-center">
+                  <UserRound className="w-6 h-6 mr-2" />
+                  {user.userName}
+                  <span className="text-gray-500">（ID: {user.id}）</span>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
 
-      {/* フレンド管理セクション - 相互フォローのみ */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h2 className="text-xl font-bold mb-4">相互フォローユーザー</h2>
-
-        {/* エラー表示 */}
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
-
-        {/* ローディング表示 */}
-        {loading ? (
-          <div className="text-center py-4">
-            <svg
-              className="animate-spin h-6 w-6 text-blue-500 mx-auto"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-          </div>
-        ) : (
-          // 相互フォローユーザーリスト
-          <div className="space-y-2">
-            {mutualFollows.length === 0 ? (
-              <p className="text-gray-500 text-center py-4">
-                相互フォローしているユーザーはいません
-              </p>
-            ) : (
-              mutualFollows.map((user) => (
-                <div
-                  key={user.id}
-                  className="flex items-center justify-between p-3 border rounded hover:bg-gray-50"
-                >
-                  <div className="flex items-center">
-                    <CircleUserRound className="w-6 h-6" />
-                    <span className="font-medium ml-2">{user.userName}</span>
-                    <span className="text-gray-500">（ID: {user.id}）</span>
-                  </div>
+                {isFollowing(user.id) ? (
                   <button
                     onClick={() => unfollowUser(user.id)}
-                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm"
+                    className="text-gray-500 px-3 py-1 border rounded text-sm"
                     disabled={loading}
                   >
                     フォロー解除
                   </button>
-                </div>
-              ))
-            )}
+                ) : (
+                  <button
+                    onClick={() => followUser(user.id)}
+                    className="text-blue-500 px-3 py-1 border rounded text-sm"
+                    disabled={loading}
+                  >
+                    フォローする
+                  </button>
+                )}
+              </div>
+            ))}
           </div>
         )}
+      </div>
+      {/* 相互フォローユーザーセクション */}
+      <h2 className="font-bold mb-2">フレンド</h2>
+      {/* エラー表示 */}
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          {error}
+        </div>
+      )}
+      {/* 相互フォローユーザーリスト */}
+      <div className="space-y-2">
+        {mutualFollows.length === 0 ? (
+          <p className="text-gray-500 text-center py-4">
+            相互フォローしているユーザーはいません
+          </p>
+        ) : (
+          mutualFollows.map((user) => (
+            <div
+              key={user.id}
+              className="flex items-center justify-between p-3"
+            >
+              <div className="flex items-center">
+                <UserRound className="w-6 h-6 mr-2" />
+                {user.userName}
+                <span className="text-gray-500">（ID: {user.id}）</span>
+              </div>
+              <button
+                onClick={() => unfollowUser(user.id)}
+                className="text-gray-500 px-3 py-1 border rounded text-sm"
+                disabled={loading}
+              >
+                フォロー解除
+              </button>
+            </div>
+          ))
+        )}
+      </div>
+      <div className="mt-16">
+        <BackMypageLink />
       </div>
     </div>
   );

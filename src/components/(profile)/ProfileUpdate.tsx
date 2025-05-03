@@ -6,6 +6,7 @@ import { CircleUserRound } from "lucide-react";
 import Image from "next/image";
 import { ProfileData, ProfileUpdateData } from "@/type/userType";
 import { ROUTES } from "@/constants";
+import BackMypageLink from "../general/BackMypageLink";
 
 interface ProfileEditFormProps {
   initialData: ProfileData;
@@ -72,15 +73,15 @@ export default function ProfileUpdate({ initialData }: ProfileEditFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-sm p-4">
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white rounded-lg shadow-sm p-4 text-gray-700"
+    >
       {error && (
         <div className="bg-red-50 text-red-600 p-3 rounded mb-4">{error}</div>
       )}
-      <h1 className="text-xl font-bold mb-4">プロフィール編集</h1>
+      <h1 className="text-xl font-bold mb-6">プロフィール編集</h1>
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">
-          プロフィール画像
-        </label>
         <div className="w-24 h-24 relative mx-auto mb-2">
           {formData.thumbnailUrl ? (
             <Image
@@ -99,7 +100,7 @@ export default function ProfileUpdate({ initialData }: ProfileEditFormProps) {
       </div>
 
       <div className="mb-4">
-        <label htmlFor="userName" className="block text-sm font-medium mb-1">
+        <label htmlFor="userName" className="block text-sm mb-1">
           ユーザー名 *
         </label>
         <input
@@ -109,12 +110,12 @@ export default function ProfileUpdate({ initialData }: ProfileEditFormProps) {
           value={formData.userName}
           onChange={handleInputChange}
           required
-          className="w-full px-3 py-2 border rounded-md"
+          className="w-full px-3 py-2 rounded-lg bg-gray-100 focus:outline-none"
         />
       </div>
 
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">志望校</label>
+        <label className="block text-sm mb-1">志望校</label>
         {[0, 1, 2].map((index) => (
           <div key={index} className="mb-2">
             <input
@@ -122,14 +123,14 @@ export default function ProfileUpdate({ initialData }: ProfileEditFormProps) {
               value={formData.targetUniversities[index] || ""}
               onChange={(e) => handleUniversityChange(index, e.target.value)}
               placeholder={`志望校 ${index + 1}`}
-              className="w-full px-3 py-2 border rounded-md"
+              className="w-full px-3 py-2 rounded-lg bg-gray-100 focus:outline-none"
             />
           </div>
         ))}
       </div>
 
       <div className="mb-4">
-        <label htmlFor="memo" className="block text-sm font-medium mb-1">
+        <label htmlFor="memo" className="block text-sm mb-1">
           自己紹介
         </label>
         <textarea
@@ -138,24 +139,18 @@ export default function ProfileUpdate({ initialData }: ProfileEditFormProps) {
           value={formData.memo}
           onChange={handleInputChange}
           rows={5}
-          className="w-full px-3 py-2 border rounded-md resize-none"
+          className="w-full px-3 py-2 rounded-lg bg-gray-100 focus:outline-none"
         />
       </div>
 
-      <div className="flex justify-between">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="px-4 py-2 border rounded-md"
-        >
-          キャンセル
-        </button>
+      <div className="flex justify-between p-2">
+        <BackMypageLink />
         <button
           type="submit"
           disabled={isSubmitting}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md disabled:bg-blue-300"
+          className="text-blue-500 font-bold"
         >
-          {isSubmitting ? "保存中..." : "保存する"}
+          {isSubmitting ? "保存中..." : "完了"}
         </button>
       </div>
     </form>

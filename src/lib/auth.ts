@@ -19,7 +19,7 @@ export async function comparePasswords(
 }
 
 export function generateToken(userId: number): string {
-  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: "7d" });
+  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: "30d" });
 }
 
 export function verifyToken(token: string): { userId: number } | null {
@@ -43,7 +43,7 @@ export async function setAuthCookie(token: string): Promise<void> {
     value: token,
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 7, // 7日間
+    maxAge: 60 * 60 * 24 * 30, // 7日間
     path: "/",
   });
 }

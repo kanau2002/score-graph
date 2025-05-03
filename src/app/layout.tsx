@@ -1,11 +1,29 @@
 import type React from "react";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
-  title: "score-graph",
+  title: "ScoreGraph",
   description: "センター過去問の点数記録App",
+  icons: {
+    icon: [
+      { url: "/graph.png", sizes: "32x32" },
+      { url: "/graph.png", sizes: "192x192" },
+    ],
+    apple: [{ url: "/graph.png", sizes: "180x180" }],
+  },
+  manifest: "/site.webmanifest",
+  appleWebApp: {
+    statusBarStyle: "black-translucent",
+    title: "ScoreGraph",
+    capable: true, // フルスクリーンモード有効化（オプション）
+  },
+};
+export const viewport: Viewport = {
+  initialScale: 1,
+  viewportFit: "cover",
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -14,11 +32,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className="h-full">
-      <body className="h-full">
-        <AuthProvider>
-          <div className="min-h-full">{children}</div>
-        </AuthProvider>
+    <html lang="ja">
+      <body className="text-gray-700">
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );

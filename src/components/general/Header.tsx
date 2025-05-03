@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
 import { CgMenu, CgProfile } from "react-icons/cg";
 import Navigation from "./Navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -22,14 +21,15 @@ export default function Header() {
 
   return (
     <div className="relative">
-      <header className="fixed top-0 z-[11] flex w-full items-center justify-between bg-white p-3 text-xs text-gray-400 shadow-sm">
-        <Image
+      <header className="fixed z-[11] flex w-full items-center items-end justify-between bg-white p-3 text-xs text-gray-700 shadow-sm h-16">
+        {/* <Image
           src="/score-graph.png"
           alt="ScoreGraphロゴ"
           width={150}
           height={50}
           className="mr-4"
-        />
+        /> */}
+        <h1 className="text-2xl font-bold font-serif ml-2">ScoreGraph</h1>
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.push(ROUTES.FRIEND)}
@@ -57,7 +57,7 @@ export default function Header() {
 
       {isOpen && (
         <div
-          className="fixed inset-0 z-12 bg-black/50"
+          className="fixed inset-0 z-12 backdrop-blur"
           onClick={() => setIsOpen(false)}
         />
       )}

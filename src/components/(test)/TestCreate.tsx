@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
 import React from "react";
 import { Answer, ClientTestSection, TestData } from "@/type/testType";
 import { useRouter } from "next/navigation";
@@ -10,6 +9,7 @@ import { displaySubjectName } from "@/lib/display";
 import { ROUTES } from "@/constants";
 import AnswerIcon from "./AnswerIcon";
 import { isCorrect, isMath } from "@/lib/test";
+import BackMypageLink from "../general/BackMypageLink";
 
 interface Props {
   testStructureData: TestData;
@@ -333,28 +333,24 @@ export default function TestCreate({ testStructureData }: Props) {
       : 0;
 
   return (
-    <div className="container mx-auto max-w-md bg-white shadow-lg rounded-xl overflow-hidden text-gray-600 pb-20">
+    <div className="container mx-auto max-w-md bg-white shadow-lg rounded-xl overflow-hidden text-gray-700 pb-20 mb-12">
       {/* ヘッダー部分 */}
       <div className="flex items-center p-4 border-b border-gray-100">
-        <button onClick={() => router.back()} className="mr-3">
-          <ArrowLeft className="w-5 h-5" />
-        </button>
         <h1 className="flex-1 font-bold text-lg">
           {displaySubjectName(testStructureData.subject)}-
           {testStructureData.year}年度
         </h1>
         <div className="flex items-baseline">
           <span className="text-3xl font-bold text-blue-600 ml-2">
-            {percentage}%
+            {percentage}
+            <span className="text-lg">%</span>
           </span>
         </div>
       </div>
 
       {/* 日付選択部分 */}
       <div className="p-5">
-        <div className="ml-5">
-          <h2 className="font-bold mb-3">解いた日</h2>
-        </div>
+        <h2 className="text-sm font-bold mb-2 ml-4">解いた日</h2>
         <DatePicker
           onDateChange={handleDateChange}
           initialDate={selectedDate}
@@ -366,8 +362,8 @@ export default function TestCreate({ testStructureData }: Props) {
       <div className="px-5 mt-4">
         {updatedTestSections.map((section, sectionIndex) => (
           <div key={`section-group-${sectionIndex}`} className="mb-6">
-            <div className="p-3 ml-2">
-              <h3 className="font-bold">大問{section.section}</h3>
+            <div className="mb-2 ml-4">
+              <h3 className="font-bold text-sm">大問{section.section}</h3>
             </div>
 
             <div className="overflow-hidden rounded-xl border border-gray-200 mb-3">
@@ -415,7 +411,7 @@ export default function TestCreate({ testStructureData }: Props) {
                                     `${sectionIndex}-${questionIndex}`
                                   ],
                                   question.correctAnswer
-                                )} transition-all duration-200 shadow-sm transform hover:scale-105`}
+                                )} transition-all duration-200 shadow-sm transform hover:scale-110`}
                                 onClick={() =>
                                   handleAnswerChange(
                                     sectionIndex,
@@ -465,9 +461,9 @@ export default function TestCreate({ testStructureData }: Props) {
 
       {/* メモ入力欄 */}
       <div className="px-5 mb-8">
-        <h2 className="font-bold mb-3 ml-5">メモ</h2>
+        <h2 className="font-bold text-sm mb-2 ml-5">メモ</h2>
         <textarea
-          className="w-full p-4 border-2 rounded-xl focus:outline-none text-sm border-gray-500"
+          className="w-full px-3 py-2 rounded-lg bg-gray-100 focus:outline-none"
           placeholder="任意でメモを入力できます。例）時間制限は設けませんでした。80分で大問6の前まで解答しました。"
           rows={4}
           value={memo}
@@ -482,15 +478,16 @@ export default function TestCreate({ testStructureData }: Props) {
             {submitError}
           </div>
         )}
-        <button
-          onClick={handleSubmit}
-          disabled={isSubmitting}
-          className={`px-5 py-3 rounded-xl text-white transition-colors ${
-            isSubmitting ? "bg-gray-400" : "bg-blue-500"
-          }`}
-        >
-          {isSubmitting ? "送信中..." : "回答を送信する"}
-        </button>
+        <div className="flex justify-between p-2">
+          <BackMypageLink />
+          <button
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className="text-blue-500 font-bold"
+          >
+            {isSubmitting ? "送信中..." : "完了"}
+          </button>
+        </div>
       </div>
     </div>
   );

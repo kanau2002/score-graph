@@ -2,8 +2,8 @@
 import { ROUTES } from "@/constants";
 import Link from "next/link";
 import React from "react";
-import Image from "next/image";
-import { LockKeyhole, LogIn, Newspaper, X } from "lucide-react";
+// import Image from "next/image";
+import { LockKeyhole, LogIn, Newspaper, Send, X } from "lucide-react";
 import { HomeIcon, UsersRound, CircleUserRound, LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -32,22 +32,23 @@ export default function Navigation({ setIsOpen }: Props) {
   ];
 
   return (
-    <div className="h-screen w-64 bg-gray-400 p-4 text-white">
+    <div className="h-screen w-64 bg-gray-400/60 p-4 text-white backdrop-blur-lg">
       {setIsOpen && (
-        <div className="mb-6 flex justify-end">
+        <div className="mb-6 flex justify-end standalone-nav-top-adjust">
           <button onClick={() => setIsOpen(false)} className="text-white">
             <X className="size-6" />
           </button>
         </div>
       )}
-      <div className={`mx-2 mt-4 mb-6 hidden md:block`}>
-        <Image
+      <div className="mx-2 mt-4 mb-6">
+        {/* <Image
           src="/score-graph.png"
           alt="ScoreGraphロゴ"
           width={150}
           height={50}
           className="mr-4"
-        />
+        /> */}
+        <h1 className="text-2xl font-bold font-serif">ScoreGraph</h1>
       </div>
       <nav className="">
         <ul className="space-y-4">
@@ -55,7 +56,7 @@ export default function Navigation({ setIsOpen }: Props) {
             <li key={index}>
               <Link
                 href={item.href}
-                className="flex items-center space-x-3 rounded-lg p-2 transition-colors hover:bg-gray-500"
+                className="flex items-center space-x-3 rounded-lg p-2"
                 onClick={() => setIsOpen?.(false)}
               >
                 {React.createElement(item.icon, { className: "size-6" })}
@@ -66,7 +67,7 @@ export default function Navigation({ setIsOpen }: Props) {
           ))}
           <li>
             <button
-              className="flex items-center space-x-3 rounded-lg p-2 transition-colors hover:bg-gray-500 w-full focus:outline-none"
+              className="flex items-center space-x-3 rounded-lg p-2 w-full"
               onClick={() => {
                 if (loading) {
                   return;
@@ -87,7 +88,7 @@ export default function Navigation({ setIsOpen }: Props) {
           </li>
           <li>
             <button
-              className="flex items-center space-x-3 rounded-lg p-2 transition-colors hover:bg-gray-500 w-full focus:outline-none"
+              className="flex items-center space-x-3 rounded-lg p-2 w-full focus:outline-none"
               onClick={() => {
                 if (loading) {
                   return;
@@ -106,9 +107,20 @@ export default function Navigation({ setIsOpen }: Props) {
             <hr className="border-1 border-white opacity-30" />
           </li>
           <li>
+            <Link
+              href={ROUTES.CONTACT}
+              className="flex items-center space-x-3 rounded-lg p-2"
+              onClick={() => setIsOpen?.(false)}
+            >
+              <Send className="size-6" />
+              <span>お問い合わせ</span>
+            </Link>
+            <hr className="border-1 border-white opacity-30" />
+          </li>
+          <li>
             <button
-              className="flex items-center space-x-3 rounded-lg p-2 transition-colors hover:bg-gray-500 w-full focus:outline-none"
-              onClick={() => {
+              className="flex items-center space-x-3 rounded-lg p-2 w-full focus:outline-none"
+              onClick={async () => {
                 if (loading) {
                   return;
                 }
@@ -116,12 +128,11 @@ export default function Navigation({ setIsOpen }: Props) {
                   setIsOpen?.(false);
                   router.push(ROUTES.LOGIN);
                   return;
-                }
-                // ログアウト処理と画面遷移
-                logout().then(() => {
+                } else {
+                  // ログアウト処理と画面遷移
                   setIsOpen?.(false);
-                  window.location.href = ROUTES.HOME;
-                });
+                  return logout();
+                }
               }}
             >
               {!user ? (

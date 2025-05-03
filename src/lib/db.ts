@@ -1,4 +1,3 @@
-// src/lib/db.ts
 import { Pool } from "pg";
 
 // 環境変数からデータベース接続情報を取得
@@ -9,8 +8,10 @@ const pool = new Pool({
   port: parseInt(process.env.POSTGRES_PORT || "5432"),
   database: process.env.POSTGRES_DB,
   ssl:
-    process.env.NODE_ENV === "production"
-      ? { rejectUnauthorized: false }
+    process.env.POSTGRES_SSL === "true"
+      ? {
+          rejectUnauthorized: false,
+        }
       : false,
 });
 

@@ -173,6 +173,15 @@ CREATE TABLE friend_follow (
   CHECK (follower_id != following_id) -- 自分自身をフォローできないようにする
 );
 
+-- お問い合わせテーブル
+CREATE TABLE contact (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  message TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- 各テーブルに対してトリガーを作成
 CREATE TRIGGER update_users_modtime 
 BEFORE UPDATE ON users 
@@ -200,5 +209,9 @@ FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 CREATE TRIGGER update_news_modtime 
 BEFORE UPDATE ON news 
+FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+CREATE TRIGGER update_contact_modtime 
+BEFORE UPDATE ON contact 
 FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 

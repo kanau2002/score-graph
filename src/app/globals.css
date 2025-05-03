@@ -17,3 +17,25 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* iPhone用のスタイル設定 */
+.standalone-only {
+  display: none;
+}
+
+@media screen and (display-mode: standalone) {
+  header {
+    height: 115px !important;
+  }
+  .standalone-only {
+    display: block;
+  }
+  .standalone-top-adjust {
+    padding-top: 49px; /* ヘッダーの通常の高さ(64px)とステータスバー分の追加高さの差 */
+  }
+  /* Navigationコンポーネントの閉じるボタン調整 */
+  .standalone-nav-top-adjust {
+    padding-top: 49px; /* ステータスバーの高さ分余白を追加 */
+  }
+
+}

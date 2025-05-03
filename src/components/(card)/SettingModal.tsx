@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Ellipsis, Crosshair, SquareAsterisk, Trash2 } from "lucide-react";
+import { Ellipsis, Trash2, ChartSpline, SquarePen } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Subject } from "@/type/testType";
 import { toast } from "react-hot-toast"; // トースト通知（必要に応じてインストール）
@@ -9,15 +9,15 @@ import { CardDeleteConfirmationModal } from "./CardDeleteConfirmationModal";
 const settingModalItems = [
   {
     id: 1,
-    name: "目標設定",
-    icon: Crosshair,
+    name: "目標の設定",
+    icon: ChartSpline,
     href: ROUTES.TARGET_UPSERT,
     isRed: false,
   },
   {
     id: 2,
     name: "カード編集",
-    icon: SquareAsterisk,
+    icon: SquarePen,
     href: ROUTES.CARD_UPDATE,
     isRed: false,
   },
@@ -65,7 +65,7 @@ const SettingModal: React.FC<Props> = ({ subject }) => {
     if (isDeleteAction) {
       setIsDeleteModalOpen(true);
     } else if (href) {
-      router.push(`${href}?subject=${subject}`);
+      router.push(`${href}/${subject}`);
     }
   };
 
@@ -107,14 +107,14 @@ const SettingModal: React.FC<Props> = ({ subject }) => {
   };
 
   return (
-    <div className="relative p-2 ml-auto" ref={dropdownRef}>
+    <div className="relative p-2 ml-auto text-gray-700" ref={dropdownRef}>
       <button onClick={() => setIsOpen(!isOpen)} className="focus:outline-none">
-        <Ellipsis className="w-5 h-5" />
+        <Ellipsis className="w-5 h-5 text-gray-500" />
       </button>
 
       {/* ドロップダウンメニュー */}
       {isOpen && (
-        <div className="absolute z-10 right-0 w-36 bg-white border border-gray-200 rounded-md shadow-lg mt-1 p-1 max-h-60 overflow-auto no-scrollbar">
+        <div className="absolute z-10 right-11 top-0 w-36 bg-white border-gray-200 rounded-lg shadow mt-1 p-1 max-h-60 overflow-auto no-scrollbar">
           <ul className="py-1">
             {settingModalItems.map((item) => {
               const Icon = item.icon;
@@ -122,13 +122,13 @@ const SettingModal: React.FC<Props> = ({ subject }) => {
                 <li key={item.id}>
                   <button
                     type="button"
-                    className={`w-full px-3 py-2 text-sm hover:bg-gray-100 flex items-center gap-1 rounded ${
-                      item.isRed ? "text-red-600" : ""
+                    className={`w-full px-3 py-2 text-sm hover:bg-gray-100 flex items-center gap-1 rounded justify-between ${
+                      item.isRed ? "text-red-500" : ""
                     }`}
                     onClick={() => handleSelect(item.href, item.isDeleteAction)}
                   >
-                    <Icon className="w-5 h-5" />
                     {item.name}
+                    <Icon className="w-5 h-5" />
                   </button>
                 </li>
               );
