@@ -1,15 +1,13 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { ROUTES } from "@/constants";
-import Image from "next/image";
-import { UserRoundPlus } from "lucide-react";
-import BackHomeLink from "../general/BackHomeLink";
 
-export default function LoginForm() {
+// SearchParamsを使用するコンポーネントを分離
+function LoginFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login } = useAuth();
@@ -60,16 +58,7 @@ export default function LoginForm() {
   };
 
   return (
-    <form className="space-y-6 p-4 w-full" onSubmit={handleSubmit}>
-      <Image
-        src="/graph.png"
-        alt="Logo"
-        width={200}
-        height={200}
-        className="mx-auto mb-2"
-      />
-      <h1 className="text-center text-2xl font-bold">ログイン</h1>
-
+    <form className="space-y-6" onSubmit={handleSubmit}>
       {error && (
         <div className="bg-red-50 border-l-4 border-red-500 p-4">
           <p className="text-sm text-red-700">{error}</p>
@@ -82,56 +71,78 @@ export default function LoginForm() {
         </div>
       )}
 
-      <div className="mb-2">
-        <label htmlFor="email" className="text-sm">
+      <div>
+        <label
+          htmlFor="email"
+          className="block text-sm font-medium text-gray-700"
+        >
           メールアドレス
         </label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          autoComplete="email"
-          required
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full px-3 py-2 rounded-lg bg-white/60 focus:outline-none mt-1"
-        />
+        <div className="mt-1">
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+            value={formData.email}
+            onChange={handleChange}
+            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          />
+        </div>
       </div>
 
       <div>
-        <label htmlFor="password" className="text-sm">
+        <label
+          htmlFor="password"
+          className="block text-sm font-medium text-gray-700"
+        >
           パスワード
         </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          autoComplete="current-password"
-          required
-          value={formData.password}
-          onChange={handleChange}
-          className="w-full px-3 py-2 rounded-lg bg-white/60 focus:outline-none mt-1"
-        />
+        <div className="mt-1">
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autoComplete="current-password"
+            required
+            value={formData.password}
+            onChange={handleChange}
+            className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          />
+        </div>
       </div>
 
-      <div className="text-center">
+      <div>
         <button
           type="submit"
           disabled={loading}
-          className="border-2 rounded-lg px-3 py-1 font-bold text-sm"
+          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
         >
-          {loading ? "処理中..." : "LOGIN"}
+          {loading ? "処理中..." : "ログイン"}
         </button>
       </div>
 
-      <Link
-        href={ROUTES.REGISTER}
-        className="text-sm mt-6 flex items-center justify-center gap-2"
-      >
-        初めての方はこちら
-        <UserRoundPlus className="size-5" />
-      </Link>
-      <BackHomeLink />
+      <div className="text-sm text-center mt-4">
+        <p className="text-gray-600">
+          アカウントをお持ちでないですか？{" "}
+          <Link
+            href="/register"
+            className="font-medium text-blue-600 hover:text-blue-500"
+          >
+            アカウント登録
+          </Link>
+        </p>
+      </div>
     </form>
+  );
+}
+
+// メインのLoginFormコンポーネント
+export default function LoginForm() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginFormContent />
+    </Suspense>
   );
 }
