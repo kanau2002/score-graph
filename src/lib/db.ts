@@ -1,31 +1,36 @@
 // src/lib/db.ts
 import { Pool } from "pg";
 
-// 環境変数から接続情報を取得
+// 接続文字列を優先
+const connectionString = process.env.DATABASE_URL;
+
+// 接続情報をログ出力（パスワードを隠す）
+const safeConnectionString = connectionString
+  ? connectionString.replace(/:[^:@]+@/, ":******@")
+  : "未設定";
+
+console.log("使用するDB設定:", {
+  connectionString: safeConnectionString,
+});
+
+// ダイレクト接続のパラメータはフォールバックとしてのみ使用
 const dbConfig = {
   user: process.env.POSTGRES_USER || "postgres",
   password: process.env.POSTGRES_PASSWORD,
-  host: process.env.POSTGRES_HOST || "db.rgyearxvfiioltnpdldl.supabase.co", // 'postgres.'から'db.'に修正
-  port: parseInt(process.env.POSTGRES_PORT || "5432"), // 6543から5432に修正
+  host: process.env.POSTGRES_HOST || "aws-0-ap-northeast-1.pooler.supabase.com",
+  port: parseInt(process.env.POSTGRES_PORT || "6543"),
   database: process.env.POSTGRES_DATABASE || "postgres",
   ssl: {
     rejectUnauthorized: false,
   },
 };
 
-// DATABASE_URLが設定されている場合はそちらを優先
-const connectionString = process.env.DATABASE_URL;
-
-// 接続情報をログに出力（パスワードを隠す）
-console.log("使用するDB設定（パスワード除く）:", {
-  ...dbConfig,
-  password: "********",
-  connectionString: connectionString ? "設定あり" : "未設定",
-});
-
-// Pool インスタンスを作成
+// Pool インスタンスを作成 - 接続文字列を優先
 const pool = connectionString
-  ? new Pool({ connectionString, ssl: { rejectUnauthorized: false } })
+  ? new Pool({
+      connectionString,
+      ssl: { rejectUnauthorized: false },
+    })
   : new Pool(dbConfig);
 
 // 接続エラーを検知するイベントリスナー
