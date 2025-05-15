@@ -10,8 +10,8 @@ export async function GET() {
     const pool = new Pool({
       user: "postgres",
       password: "Kanau888",
-      host: "postgres.rgyearxvfiioltnpdldl.supabase.co",
-      port: 6543,
+      host: "db.rgyearxvfiioltnpdldl.supabase.co",
+      port: 5432,
       database: "postgres",
       ssl: {
         rejectUnauthorized: false,
