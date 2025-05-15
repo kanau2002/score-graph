@@ -23,6 +23,7 @@ CREATE TYPE answer_enum AS ENUM (
   '5',
   '6',
   '7',
+  '8',
   'CORRECT',
   'INCORRECT',
   'SKIPPED'

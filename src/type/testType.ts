@@ -23,6 +23,7 @@ export enum Answer {
   FIVE = "5",
   SIX = "6",
   SEVEN = "7",
+  EIGHT = "8",
   CORRECT = "CORRECT",
   INCORRECT = "INCORRECT",
   SKIPPED = "SKIPPED",

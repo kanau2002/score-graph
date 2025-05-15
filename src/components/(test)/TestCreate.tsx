@@ -34,6 +34,7 @@ export default function TestCreate({ testStructureData }: Props) {
         Answer.FIVE,
         Answer.SIX,
         Answer.SEVEN,
+        Answer.EIGHT,
         Answer.SKIPPED,
       ];
 
