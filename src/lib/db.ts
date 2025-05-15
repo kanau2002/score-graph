@@ -8,10 +8,9 @@ const pool = new Pool({
   host: process.env.POSTGRES_HOST,
   port: parseInt(process.env.POSTGRES_PORT || "5432"),
   database: process.env.POSTGRES_DATABASE || process.env.POSTGRES_DB, // 両方の変数名に対応
-  ssl: 
-    process.env.NODE_ENV === "production" || process.env.POSTGRES_SSL === "true"
-      ? { rejectUnauthorized: false }
-      : false, // 本番環境では常にSSLを使用
+  ssl: {
+    rejectUnauthorized: false, // セルフサイン証明書も許可する設定
+  }, // 本番環境では常にSSLを使用
 });
 
 // 接続テスト用の関数
@@ -19,7 +18,7 @@ export async function testConnection() {
   try {
     const client = await pool.connect();
     console.log("Database connected successfully");
-    const result = await client.query('SELECT NOW()');
+    const result = await client.query("SELECT NOW()");
     console.log("Database time:", result.rows[0]);
     client.release();
     return true;
@@ -30,7 +29,7 @@ export async function testConnection() {
       database: process.env.POSTGRES_DATABASE || process.env.POSTGRES_DB,
       user: process.env.POSTGRES_USER,
       port: process.env.POSTGRES_PORT,
-      ssl: process.env.NODE_ENV === "production" || process.env.POSTGRES_SSL === "true"
+      ssl: true,
     });
     return false;
   }
