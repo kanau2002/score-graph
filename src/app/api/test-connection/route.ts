@@ -1,38 +1,62 @@
-// test-connection.js
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const dotenv = require("dotenv");
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { Pool } = require("pg");
-// .env.localファイルの読み込み
-dotenv.config({ path: ".env.local" });
+// src/app/api/test-connection/route.ts
+import { testConnection } from "@/lib/db";
+import { NextResponse } from "next/server";
 
-// DATABASE_URL環境変数を優先
-const connectionString = process.env.DATABASE_URL;
-
-// 接続情報をログ出力（パスワードを隠す）
-const safeConnectionString = connectionString
-  ? connectionString.replace(/:[^:@]+@/, ":******@")
-  : "未設定";
-
-console.log("Connection string:", safeConnectionString);
-
-const pool = new Pool({
-  connectionString,
-  ssl: { rejectUnauthorized: false },
-});
-
-async function testConnection() {
+export async function GET() {
   try {
-    const client = await pool.connect();
-    console.log("Connected successfully to the database");
-    const result = await client.query("SELECT NOW()");
-    console.log("Current time from DB:", result.rows[0]);
-    client.release();
-  } catch (err) {
-    console.error("Database connection error:", err);
-  } finally {
-    await pool.end();
+    console.log("Starting database connection test...");
+
+    // 環境変数が設定されているか確認
+    const envVars = {
+      POSTGRES_USER: process.env.POSTGRES_USER,
+      POSTGRES_HOST: process.env.POSTGRES_HOST,
+      POSTGRES_PORT: process.env.POSTGRES_PORT,
+      POSTGRES_DATABASE: process.env.POSTGRES_DATABASE,
+      DATABASE_URL: process.env.DATABASE_URL?.replace(/:.+@/, ":****@"), // パスワードを隠す
+    };
+
+    console.log("Environment variables check:", envVars);
+
+    const result = await testConnection();
+
+    if (result) {
+      return NextResponse.json({
+        status: "success",
+        message: "Database connection successful",
+        env: envVars,
+      });
+    } else {
+      return NextResponse.json(
+        {
+          status: "error",
+          message: "Database connection failed",
+          env: envVars,
+        },
+        { status: 500 }
+      );
+    }
+  } catch (error) {
+    console.error("Error testing database connection:", error);
+
+    return NextResponse.json(
+      {
+        status: "error",
+        message: "Error testing database connection",
+        error:
+          error instanceof Error
+            ? {
+                message: error.message,
+                stack: error.stack,
+              }
+            : String(error),
+        env: {
+          POSTGRES_USER: process.env.POSTGRES_USER,
+          POSTGRES_HOST: process.env.POSTGRES_HOST,
+          POSTGRES_PORT: process.env.POSTGRES_PORT,
+          POSTGRES_DATABASE: process.env.POSTGRES_DATABASE,
+        },
+      },
+      { status: 500 }
+    );
   }
 }
-
-testConnection();
