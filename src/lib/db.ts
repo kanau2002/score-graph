@@ -1,27 +1,24 @@
 // src/lib/db.ts
 import { Pool } from "pg";
 
-// 環境変数のチェック
-console.log("DB接続情報チェック:", {
-  POSTGRES_USER: process.env.POSTGRES_USER || "未設定",
-  POSTGRES_HOST: process.env.POSTGRES_HOST || "未設定",
-  POSTGRES_PORT: process.env.POSTGRES_PORT || "未設定",
-  POSTGRES_DATABASE: process.env.POSTGRES_DATABASE || "未設定",
-  DATABASE_URL: process.env.DATABASE_URL ? "設定済み" : "未設定",
-});
-
-// 環境変数が設定されていない場合でも動作するよう直接値を使用
-const pool = new Pool({
-  user: process.env.POSTGRES_USER || "postgres",
-  password: process.env.POSTGRES_PASSWORD || "Kanau888",
-  host:
-    process.env.POSTGRES_HOST || "postgres.rgyearxvfiioltnpdldl.supabase.co",
-  port: parseInt(process.env.POSTGRES_PORT || "6543"),
-  database: process.env.POSTGRES_DATABASE || "postgres",
+// ハードコードされた接続設定
+const dbConfig = {
+  user: "postgres",
+  password: "Kanau888",
+  host: "postgres.rgyearxvfiioltnpdldl.supabase.co",
+  port: 6543,
+  database: "postgres",
   ssl: {
     rejectUnauthorized: false,
   },
+};
+
+console.log("使用するDB設定（パスワード除く）:", {
+  ...dbConfig,
+  password: "********",
 });
+
+const pool = new Pool(dbConfig);
 
 // 接続エラーを検知するイベントリスナー
 pool.on("error", (err) => {
@@ -46,13 +43,6 @@ export async function testConnection() {
     }
     return false;
   }
-}
-
-// もし環境変数が設定されていなければコンソールに警告を表示
-if (!process.env.POSTGRES_HOST || !process.env.POSTGRES_USER) {
-  console.warn(
-    "警告: DB接続用の環境変数が不足しています。デフォルト値を使用します。"
-  );
 }
 
 export { pool };
