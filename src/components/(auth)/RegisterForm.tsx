@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
@@ -9,7 +9,7 @@ import Image from "next/image";
 import { LogIn } from "lucide-react";
 import BackHomeLink from "../general/BackHomeLink";
 
-export default function RegisterForm() {
+function RegisterFormContent() {
   const router = useRouter();
   const { register } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -171,5 +171,13 @@ export default function RegisterForm() {
       </Link>
       <BackHomeLink />
     </form>
+  );
+}
+
+export default function RegisterForm() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RegisterFormContent />
+    </Suspense>
   );
 }
