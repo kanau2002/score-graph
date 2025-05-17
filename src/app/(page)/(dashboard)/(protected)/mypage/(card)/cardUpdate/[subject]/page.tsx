@@ -1,19 +1,13 @@
-import { Metadata } from "next";
-
 import CardUpdate from "../../../../../../../../components/(card)/CardUpdate";
 import { cardService } from "@/core/Service/cardService";
 import { Subject } from "@/type/testType";
-
-export const metadata: Metadata = {
-  title: "科目カード編集 | 学習管理アプリ",
-  description: "科目カードの情報を編集します",
-};
 
 type Props = {
   params: Promise<{ subject: Subject }>;
 };
 export default async function CardUpdatePage({ params }: Props) {
   const { subject } = await params;
+  // 合格最低点など、Cardで必要となる既に入力済みのデータを取得 (返り値：CardData型)
   const initialCardData = await cardService.fetchCardData(subject);
 
   return (

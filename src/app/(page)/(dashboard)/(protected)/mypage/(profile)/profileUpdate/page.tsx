@@ -2,7 +2,7 @@ import { userService } from "@/core/Service/userService";
 import ProfileUpdate from "../../../../../../../components/(profile)/ProfileUpdate";
 
 export default async function ProfileUpdatePage() {
-  // 現在のプロフィール情報を取得
+  // userのプロフィール情報を取得 (返り値：ProfileData型)
   const profileInfo = await userService.fetchProfileData();
 
   return (

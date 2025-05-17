@@ -19,7 +19,7 @@ const targetMonthTemplate = [
 export default async function taregetUpsertPage({ params }: Props) {
   const { subject } = await params;
 
-  // 目標データの取得
+  // 前回入力した目標データを取得 (返り値：TargetUpsertData型)
   const targetUpsertData = await targetService.fetchTargetUpsertData(subject);
 
   // データ取得に失敗した場合はエラーメッセージを表示

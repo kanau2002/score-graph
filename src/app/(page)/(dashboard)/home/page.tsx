@@ -2,9 +2,8 @@ import { cardService } from "@/core/Service/cardService";
 import CardRead from "../../../../components/(card)/CardRead";
 
 export default async function HomePage() {
-  const [cardAllDatas] = await Promise.all([
-    cardService.fetchCardAllDatasAtHome(),
-  ]);
+  // homeの全科目のカードを取得 (返り値：CardAllData[]型)
+  const cardAllDatas = await cardService.fetchCardAllDatasAtHome();
 
   return (
     <div className="max-w-md mx-auto rounded-lg mb-32">
