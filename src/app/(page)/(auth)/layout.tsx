@@ -4,6 +4,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    // 背景画像
     <div
       className="min-h-screen text-gray-500 flex items-center justify-center"
       style={{

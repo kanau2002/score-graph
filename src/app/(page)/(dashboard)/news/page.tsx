@@ -21,7 +21,7 @@ export default async function NewsPage({ searchParams }: Props) {
   const resolvedSearchParams = await searchParams;
   const category = resolvedSearchParams?.category || "all";
   const currentPage = Number(resolvedSearchParams?.page) || 1;
-  // ニュースデータの取得
+  // 個別NEWSデータを取得 (返り値：NewsPaginationResult型)
   const { news, totalPages, categories } = await newsService.getNews(
     category,
     currentPage
