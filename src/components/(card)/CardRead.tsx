@@ -101,16 +101,18 @@ export default function CardRead({ cardAllData, isHome }: Props) {
             data={cardAllData.chartData}
             margin={{ top: 5, right: 20, bottom: 5, left: -10 }}
           >
-            {/* 目標の得点率（線グラフ） */}
-            <Line
-              type="monotone"
-              dataKey="targetPercentage"
-              stroke="#8884d8"
-              strokeWidth={2}
-              dot={{ r: 4, fill: "#8884d8" }}
-              activeDot={{ r: 6 }}
-              name="目標"
-            />
+            {/* 目標の得点率（線グラフ） - ホーム画面では非表示 */}
+            {!isHome && (
+              <Line
+                type="monotone"
+                dataKey="targetPercentage"
+                stroke="#8884d8"
+                strokeWidth={2}
+                dot={{ r: 4, fill: "#8884d8" }}
+                activeDot={{ r: 6 }}
+                name="目標"
+              />
+            )}
 
             {/* 結果の得点率（棒グラフ） */}
             <Bar
