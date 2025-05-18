@@ -26,7 +26,7 @@ export class AuthService {
       const userId = await this.repository.createUser(
         data.email,
         hashedPassword,
-        data.userName
+        data.fullName
       );
 
       const token = generateToken(userId);

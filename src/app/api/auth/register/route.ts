@@ -4,10 +4,10 @@ import { setAuthCookie } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password, userName } = await request.json();
+    const { email, password, fullName } = await request.json();
 
     // 必須項目の検証
-    if (!email || !password || !userName) {
+    if (!email || !password || !fullName) {
       return NextResponse.json(
         { success: false, error: "すべての項目を入力してください" },
         { status: 400 }
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 新規ユーザー登録処理
-    const result = await authService.signup({ email, password, userName });
+    const result = await authService.signup({ email, password, fullName });
 
     if (!result.success) {
       return NextResponse.json(
