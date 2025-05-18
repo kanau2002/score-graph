@@ -166,7 +166,8 @@ class CardService {
   async fetchCardAllDatasAtMypage(): Promise<CardAllData[]> {
     const userId = await getCurrentUserId();
     // 基本データの取得
-    const cardAllDatasRaw = await this.repository.fetchCardAllDatasAtMypageRaw(
+    const profileData = await new UserRepository().fetchProfileData(userId);
+    const cardAllDatasRaw = await this.repository.fetchCardAllDatasByUserRaw(
       userId
     );
 
@@ -194,7 +195,7 @@ class CardService {
           testResults: data.testResults,
           unAnsweredYears: unAnsweredYears,
           chartData: this.createChartData(data.testResults, monthlyTargets),
-          profileData: await new UserRepository().fetchProfileData(data.userId),
+          profileData: profileData,
         };
       })
     );
@@ -203,9 +204,12 @@ class CardService {
   }
 
   // 科目カード情報の取得（ホームページ向け - 最適化版）
-  async fetchCardAllDatasAtHome(): Promise<CardAllData[]> {
+  async fetchCardAllDatas(uid: number | null): Promise<CardAllData[]> {
     // 基本データの取得
-    const cardAllDatasRaw = await this.repository.fetchCardAllDatasAtHomeRaw(5);
+    const cardAllDatasRaw =
+      uid === null
+        ? await this.repository.fetchCardAllDatasAtHomeRaw(5)
+        : await this.repository.fetchCardAllDatasByUserRaw(uid);
 
     // 各科目ごとにデータを処理（目標データは取得しない）
     const cardAllDatas: CardAllData[] = await Promise.all(

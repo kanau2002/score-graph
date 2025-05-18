@@ -264,7 +264,7 @@ export class CardRepository {
   }
 
   // testsテーブルからデータを取得するメソッド
-  async fetchCardAllDatasAtMypageRaw(
+  async fetchCardAllDatasByUserRaw(
     userId: number
   ): Promise<CardAllDataRaw[]> {
     const query = `
@@ -300,7 +300,7 @@ export class CardRepository {
       const result = await pool.query(query, [userId]);
       return result.rows;
     } catch (error) {
-      console.error("fetchCardAllDatasAtMypageRawの取得エラー:", error);
+      console.error("fetchCardAllDatasByUserRawの取得エラー:", error);
       throw error;
     }
   }

@@ -14,8 +14,7 @@ class UserService {
   }
 
   // プロフィール情報の取得
-  async fetchProfileData(): Promise<ProfileData> {
-    const userId = await getCurrentUserId();
+  async fetchProfileData(userId: number): Promise<ProfileData> {
     return this.repository.fetchProfileData(userId);
   }
 
