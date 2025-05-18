@@ -72,8 +72,6 @@ class CardService {
         };
       }
 
-      // 実際のアプリでは認証情報からユーザーIDを取得する
-
       // リポジトリを呼び出してデータを更新
       return await this.repository.updateCard({
         userId,
@@ -164,7 +162,7 @@ class CardService {
     }
   }
 
-  // 科目カード情報の取得（更新版）
+  // 科目カード情報の取得（マイページ向け）
   async fetchCardAllDatasAtMypage(): Promise<CardAllData[]> {
     const userId = await getCurrentUserId();
     // 基本データの取得
@@ -195,7 +193,7 @@ class CardService {
           memo: data.memo,
           testResults: data.testResults,
           unAnsweredYears: unAnsweredYears,
-          chartData: this.integrateChartData(data.testResults, monthlyTargets),
+          chartData: this.createChartData(data.testResults, monthlyTargets),
           profileData: await new UserRepository().fetchProfileData(data.userId),
         };
       })
@@ -204,35 +202,23 @@ class CardService {
     return cardAllDatas;
   }
 
-  // 科目カード情報の取得（更新版）
+  // 科目カード情報の取得（ホームページ向け - 最適化版）
   async fetchCardAllDatasAtHome(): Promise<CardAllData[]> {
     // 基本データの取得
     const cardAllDatasRaw = await this.repository.fetchCardAllDatasAtHomeRaw(5);
 
-    // 各科目ごとに月次目標データを取得
+    // 各科目ごとにデータを処理（目標データは取得しない）
     const cardAllDatas: CardAllData[] = await Promise.all(
       cardAllDatasRaw.map(async (data) => {
-        // 未回答年度の取得
-        const answeredYears = data.testResults.map((a) => Number(a.year));
-        const unAnsweredYears = this.getUnAnsweredYears(
-          data.subject,
-          answeredYears
-        );
-
-        // 月次目標データの取得
-        const monthlyTargets = await new TargetRepository().fetchMonthlyTargets(
-          data.subject,
-          data.userId
-        );
-
+        // ホームページでは目標データは使用しないため、monthlyTargetsはnullで指定
         return {
           subject: data.subject,
           finalScoreTarget: data.finalScoreTarget,
           finalScoreLowest: data.finalScoreLowest,
           memo: data.memo,
           testResults: data.testResults,
-          unAnsweredYears: unAnsweredYears,
-          chartData: this.integrateChartData(data.testResults, monthlyTargets),
+          unAnsweredYears: [], // ホームページでは不要
+          chartData: this.createChartData(data.testResults), // 目標データなしで呼び出し
           profileData: await new UserRepository().fetchProfileData(data.userId),
         };
       })
@@ -253,15 +239,20 @@ class CardService {
     return allYears.filter((year) => !answeredYears.includes(year));
   }
 
-  // テスト結果と月次目標データを統合するヘルパーメソッド
-  private integrateChartData(
+  /**
+   * チャートデータを作成する汎用メソッド
+   * @param testResults テスト結果データ
+   * @param monthlyTargets 月次目標データ（オプショナル）
+   * @returns 整形されたチャートデータ
+   */
+  private createChartData(
     testResults: TestResult[],
-    monthlyTargets: MonthlyTarget[]
+    monthlyTargets?: MonthlyTarget[]
   ): ChartData[] {
     // 月別データを格納するためのマップ
     const monthlyDataMap = new Map<string, ChartData>();
 
-    // 1. テスト結果データを処理
+    // テスト結果データを処理
     testResults.forEach((result: TestResult) => {
       const date = new Date(result.date);
       const month = date.getMonth() + 1;
@@ -274,7 +265,7 @@ class CardService {
       });
     });
 
-    // 2. 月次目標データを統合
+    // 月次目標データが指定されている場合は統合
     if (monthlyTargets && monthlyTargets.length > 0) {
       monthlyTargets.forEach((target) => {
         // target.targetMonth はフォーマット "YYYY-MM" で保存されていると仮定
