@@ -15,6 +15,7 @@ interface ProfileEditFormProps {
 export default function ProfileUpdate({ initialData }: ProfileEditFormProps) {
   const router = useRouter();
   const [formData, setFormData] = useState<ProfileUpdateData>({
+    fullName: initialData.fullName,
     userName: initialData.userName,
     targetUniversities: [...initialData.targetUniversities],
     memo: initialData.memo,
@@ -99,9 +100,23 @@ export default function ProfileUpdate({ initialData }: ProfileEditFormProps) {
         </p>
       </div>
 
+      <div className="mb-2">
+        <label htmlFor="fullName" className="block text-sm mb-1">
+          氏名 *
+        </label>
+        <input
+          type="text"
+          id="fullName"
+          name="fullName"
+          value={formData.fullName}
+          onChange={handleInputChange}
+          required
+          className="w-full px-3 py-2 rounded-lg bg-gray-100 focus:outline-none"
+        />
+      </div>
       <div className="mb-4">
         <label htmlFor="userName" className="block text-sm mb-1">
-          ユーザー名 *
+          アプリ内で使用するニックネーム
         </label>
         <input
           type="text"
@@ -109,7 +124,6 @@ export default function ProfileUpdate({ initialData }: ProfileEditFormProps) {
           name="userName"
           value={formData.userName}
           onChange={handleInputChange}
-          required
           className="w-full px-3 py-2 rounded-lg bg-gray-100 focus:outline-none"
         />
       </div>

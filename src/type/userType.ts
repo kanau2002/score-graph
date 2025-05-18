@@ -1,5 +1,6 @@
 export interface ProfileData {
   userId: number;
+  fullName: string;
   userName: string;
   targetUniversities: string[];
   memo: string;
@@ -7,6 +8,7 @@ export interface ProfileData {
 }
 
 export interface ProfileUpdateData {
+  fullName: string;
   userName: string;
   targetUniversities: string[];
   memo: string;

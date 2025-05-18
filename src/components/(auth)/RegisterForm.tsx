@@ -90,7 +90,7 @@ function RegisterFormContent() {
 
       <div className="mb-2">
         <label htmlFor="fullName" className="text-sm mb-1">
-          フルネーム
+          氏名
         </label>
         <input
           id="fullName"
