@@ -16,7 +16,7 @@ function RegisterFormContent() {
   const [error, setError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
-    userName: "",
+    fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -32,7 +32,7 @@ function RegisterFormContent() {
     setError(null);
 
     // 入力検証
-    if (!formData.userName || !formData.email || !formData.password) {
+    if (!formData.fullName || !formData.email || !formData.password) {
       setError("すべての項目を入力してください");
       return;
     }
@@ -52,7 +52,7 @@ function RegisterFormContent() {
       const result = await register(
         formData.email,
         formData.password,
-        formData.userName
+        formData.fullName
       );
 
       if (result.success) {
@@ -89,15 +89,15 @@ function RegisterFormContent() {
       )}
 
       <div className="mb-2">
-        <label htmlFor="userName" className="text-sm mb-1">
-          ユーザー名
+        <label htmlFor="fullName" className="text-sm mb-1">
+          氏名
         </label>
         <input
-          id="userName"
-          name="userName"
+          id="fullName"
+          name="fullName"
           type="text"
           required
-          value={formData.userName}
+          value={formData.fullName}
           onChange={handleChange}
           className="w-full px-3 py-2 rounded-lg bg-white/60 focus:outline-none mt-1"
         />

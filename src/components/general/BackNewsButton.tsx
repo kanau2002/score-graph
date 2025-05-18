@@ -1,5 +1,5 @@
 "use client";
-import { Newspaper, HomeIcon } from "lucide-react";
+import { ChevronLeft, Newspaper } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function BackHomeButton() {
@@ -11,8 +11,8 @@ export default function BackHomeButton() {
       }}
       className="flex"
     >
+      <ChevronLeft />
       <Newspaper />
-      <HomeIcon />
     </button>
   );
 }

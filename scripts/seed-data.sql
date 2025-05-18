@@ -9,9 +9,10 @@ ALTER SEQUENCE cards_id_seq RESTART WITH 1;
 ALTER SEQUENCE test_answer_id_seq RESTART WITH 1;
 
 -- プロフィールデータの挿入
-INSERT INTO users (user_name, email, password, memo, targetUniversity_1, targetUniversity_2, targetUniversity_3, is_graduated)
+INSERT INTO users (full_name, user_name, email, password, memo, targetUniversity_1, targetUniversity_2, targetUniversity_3, is_graduated)
 VALUES (
   '植田佳和侑', 
+  '部活忙しいマン', 
   'ueda@example.com',
   '$2b$10$7xMwy.XFezqUklyRtP9E.uWYvdNoQg3bVvMV9PBikz0ABzHaLBV0S',
   'サッカー部の活動時間が長く、勉強時間が1日2時間程度しか取れていないため、内職をして時間を確保したり、過去問をもとに本当に必要なものを優先したりと工夫して勉強しています。',
@@ -21,30 +22,37 @@ VALUES (
   FALSE
 ),
 ('大貫蒔門',
+'陸上頑張るマン',
 'onuki@example.com',
 '$2b$10$7xMwy.XFezqUklyRtP9E.uWYvdNoQg3bVvMV9PBikz0ABzHaLBV0S',
 '陸上部で頑張っています。', '千葉大学-教育学部-中学数学', '千葉大学-理学部-数学科', null, FALSE),
 ('磯辺慧美理',
+'花壇に教科書落としたマン',
 'isobe@example.com',
 '$2b$10$7xMwy.XFezqUklyRtP9E.uWYvdNoQg3bVvMV9PBikz0ABzHaLBV0S',
 'アイデア甲子園に出場します。', '国際医療福祉大-医学部', null, null, FALSE),
 ('藤岡優仁',
+'生徒会頑張るマン',
 'fujioka@example.com',
 '$2b$10$7xMwy.XFezqUklyRtP9E.uWYvdNoQg3bVvMV9PBikz0ABzHaLBV0S',
 'サッカー部と生徒会を頑張っています。', '千葉大学-理学部-物理学科', null, null, FALSE),
 ('星野心紀',
+'ダンス頑張るマン',
 'hoshino@example.com',
 '$2b$10$7xMwy.XFezqUklyRtP9E.uWYvdNoQg3bVvMV9PBikz0ABzHaLBV0S',
 '新学期のクラス替えが楽しみです。', '千葉大学-園芸学部-園芸学科', null, null, FALSE),
 ('恒崎優太郎',
+'絶対医学部行くマン',
 'tunezaki@example.com',
 '$2b$10$7xMwy.XFezqUklyRtP9E.uWYvdNoQg3bVvMV9PBikz0ABzHaLBV0S',
 '現役で合格できました!私立医学部の中で学費が一番安いのは嬉しいけど共通テストの3日後が入試で大変でした。', '国際医療福祉大学ー医学部ー医学科（合格）', '昭和大学ー医学部ー医学科（一次試験合格）', '千葉大ー医学部ー医学科（不合格）', TRUE),
 ('増田優菜',
+'成績鰻登りマン',
 'masuda@example.com',
 '$2b$10$7xMwy.XFezqUklyRtP9E.uWYvdNoQg3bVvMV9PBikz0ABzHaLBV0S',
 '袖ヶ浦高校から千葉大看護学部へ', '千葉大学-看護学部-看護学科（合格）', '法政大学ー生命科学部ー応用植物学科（合格）', '明治大学ー農学部ー農学科（不合格）', TRUE),
 ('山本隆起',
+'着実に合格するマン',
 'yamamoto@example.com',
 '$2b$10$7xMwy.XFezqUklyRtP9E.uWYvdNoQg3bVvMV9PBikz0ABzHaLBV0S',
 '圧倒的実力で確実に中央法へ', '中央大学-法学部（合格）', null, null, TRUE);

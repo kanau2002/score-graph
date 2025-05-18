@@ -5,6 +5,9 @@ import { cardService } from "@/core/Service/cardService";
 import { userService } from "@/core/Service/userService";
 
 export default async function MyPage() {
+  // 自分のプロフィールデータを取得 (返り値：ProfileData型)
+  // マイページの全科目のカードを取得 (返り値：CardAllData[]型)
+  // カード作成のためにまだ未作成の科目データを取得 (返り値：Subject型)
   const [profileData, cardAllDatas, unAnsweredSubjects] = await Promise.all([
     userService.fetchProfileData(),
     cardService.fetchCardAllDatasAtMypage(),

@@ -32,29 +32,20 @@ CREATE TYPE answer_enum AS ENUM (
 -- ユーザープロフィール情報テーブル
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
-  user_name VARCHAR(100) NOT NULL,
+  full_name VARCHAR(50) NOT NULL,
+  user_name VARCHAR(50) NOT NULL,
   email VARCHAR(255) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
   memo TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  targetUniversity_1 VARCHAR(100),
-  targetUniversity_2 VARCHAR(100),
-  targetUniversity_3 VARCHAR(100),
+  targetUniversity_1 VARCHAR(50),
+  targetUniversity_2 VARCHAR(50),
+  targetUniversity_3 VARCHAR(50),
   birth_date TIMESTAMP,
   is_graduated BOOLEAN DEFAULT FALSE,
   thumbnail_url TEXT
 );
-
--- トークンリフレッシュ用のテーブル（オプション）
--- CREATE TABLE IF NOT EXISTS refresh_tokens (
---   id SERIAL PRIMARY KEY,
---   user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
---   token VARCHAR(255) UNIQUE NOT NULL,
---   expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
---   created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
---   UNIQUE(user_id, token)
--- );
 
 -- 科目カードテーブル
 CREATE TABLE cards (

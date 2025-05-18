@@ -9,6 +9,7 @@ export class UserRepository {
         `
       SELECT 
         u.id, 
+        u.full_name, 
         u.user_name, 
         u.memo,
         u.targetUniversity_1,
@@ -38,6 +39,7 @@ export class UserRepository {
 
       const profileData: ProfileData = {
         userId: result.rows[0].id,
+        fullName: result.rows[0].full_name,
         userName: result.rows[0].user_name,
         targetUniversities: targetUniversities,
         memo: result.rows[0].memo,
@@ -54,6 +56,7 @@ export class UserRepository {
   // プロフィール情報の更新
   async updateProfileData(data: {
     userId: number;
+    fullName: string;
     userName: string;
     targetUniversities: string[];
     memo: string;
@@ -67,16 +70,18 @@ export class UserRepository {
       await pool.query(
         `UPDATE users
        SET 
-        user_name = $1,
-        targetUniversity_1 = $2,
-        targetUniversity_2 = $3,
-        targetUniversity_3 = $4,
-        memo = $5,
-        thumbnail_url = $6,
+        full_name = $1,
+        user_name = $2,
+        targetUniversity_1 = $3,
+        targetUniversity_2 = $4,
+        targetUniversity_3 = $5,
+        memo = $6,
+        thumbnail_url = $7,
         updated_at = CURRENT_TIMESTAMP
        WHERE 
-        id = $7`,
+        id = $8`,
         [
+          data.fullName,
           data.userName,
           data.targetUniversities[0] || null,
           data.targetUniversities[1] || null,
