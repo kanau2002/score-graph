@@ -4,12 +4,13 @@ import { cardService } from "@/core/Service/cardService";
 import { userService } from "@/core/Service/userService";
 
 type Props = {
-  params: {
+  params: Promise<{
     uid: string;
-  };
+  }>;
 };
 export default async function UserPage({ params }: Props) {
-  const userId = Number(params.uid);
+  const { uid } = await params;
+  const userId = Number(uid);
   // userごとの全科目のカードを取得 (返り値：CardAllData[]型)
   const [profileData, cardAllDatas] = await Promise.all([
     userService.fetchProfileData(userId),
