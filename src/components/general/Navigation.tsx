@@ -120,17 +120,19 @@ export default function Navigation({ setIsOpen }: Props) {
           <li>
             <button
               className="flex items-center space-x-3 rounded-lg p-2 w-full focus:outline-none"
-              onClick={async () => {
+              onClick={() => {
                 if (loading) {
                   return;
                 }
                 if (!user) {
+                  // ログイン処理と画面遷移
                   setIsOpen?.(false);
                   router.push(ROUTES.LOGIN);
                   return;
                 } else {
                   // ログアウト処理と画面遷移
                   setIsOpen?.(false);
+                  alert("ログアウトに成功しました。ログインページへ移動します。");
                   return logout();
                 }
               }}
