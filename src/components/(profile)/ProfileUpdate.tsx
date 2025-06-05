@@ -102,7 +102,7 @@ export default function ProfileUpdate({ initialData }: ProfileEditFormProps) {
 
       <div className="mb-2">
         <label htmlFor="fullName" className="block text-sm mb-1">
-          氏名 *
+          氏名 *<span className="text-gray-500 text-xs">（正式名：10文字以内）</span>
         </label>
         <input
           type="text"
@@ -116,7 +116,7 @@ export default function ProfileUpdate({ initialData }: ProfileEditFormProps) {
       </div>
       <div className="mb-4">
         <label htmlFor="userName" className="block text-sm mb-1">
-          アプリ内で使用するニックネーム
+          ニックネーム<span className="text-gray-500 text-xs">（公開用：10文字以内）</span>
         </label>
         <input
           type="text"
