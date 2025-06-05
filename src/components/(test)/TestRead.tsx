@@ -15,7 +15,7 @@ import FriendSelector from "./FriendSelecter";
 import { FriendRadarChart, StudentRadarChart } from "./SectionRaderChart";
 import AnswerIcon from "./AnswerIcon";
 import { isCorrect, isMath } from "@/lib/test";
-import BackHomeButton from "../general/BackHomeButton";
+import BackPersonalButton from "../general/BackPersonalButton";
 import BackMypageLink from "../general/BackMypageLink";
 
 interface Props {
@@ -36,6 +36,8 @@ export default function TestRead({
   const [selectedFriend, setSelectedFriend] = useState<AnsweredData | null>(
     null
   );
+
+  console.log("isHome", isHome);
 
   // 単純な値の計算
   const isThreeChoice = isMath(testStructureData.subject);
@@ -351,7 +353,7 @@ export default function TestRead({
 
       {/* CRUD操作できるセクション */}
       <div className="flex justify-between p-2">
-        {isHome ? <BackHomeButton /> : <BackMypageLink />}
+        {isHome ? <BackPersonalButton /> : <BackMypageLink />}
 
         <button
           onClick={handleDeleteTestResult}

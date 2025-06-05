@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { HomeIcon, Newspaper, CircleUserRound } from "lucide-react";
+import { HomeIcon, Newspaper, SquareUserRound } from "lucide-react";
 import { ROUTES } from "@/constants";
 import { useAuth } from "@/context/AuthContext";
 
@@ -57,7 +57,7 @@ export default function BottomNavigation() {
           }}
           className="flex flex-col items-center justify-center focus:outline-none"
         >
-          <CircleUserRound
+          <SquareUserRound
             className={`w-7 h-7 ${
               isMypageActive ? "font-bold" : "font-normal"
             }`}

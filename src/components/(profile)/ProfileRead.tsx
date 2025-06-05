@@ -6,8 +6,19 @@ import Link from "next/link";
 
 type Props = {
   profileData: ProfileData;
+  where: "personal" | "my";
 };
-export default function ProfileRead({ profileData }: Props) {
+export default function ProfileRead({ profileData, where }: Props) {
+  let isCanEdit;
+  switch (where) {
+    case "personal":
+      isCanEdit = false;
+      break;
+    case "my":
+      isCanEdit = true;
+      break;
+  }
+
   return (
     <div className="p-4 rounded-lg shadow-sm bg-white pb-6 text-gray-700">
       <div className="flex items-center justify-between">
@@ -26,11 +37,13 @@ export default function ProfileRead({ profileData }: Props) {
           </div>
           <p className="font-bold">{profileData.userName}</p>
         </div>
-        <div className="flex justify-end">
-          <Link href={ROUTES.PROFILE_UPDATE}>
-            <UserRoundPen />
-          </Link>
-        </div>
+        {isCanEdit && (
+          <div className="flex justify-end">
+            <Link href={ROUTES.PROFILE_UPDATE}>
+              <UserRoundPen />
+            </Link>
+          </div>
+        )}
       </div>
       <p className="text-sm mb-2">
         〜志望校〜

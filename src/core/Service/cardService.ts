@@ -12,6 +12,8 @@ import { testStructureDatas } from "@/constants/TestStructureData";
 import { MonthlyTarget } from "@/type/targetType";
 import { getCurrentUserId } from "@/lib/auth";
 import { UserRepository } from "../Repository/userRepository";
+import { followService } from "./followService";
+import { userService } from "./userService";
 
 class CardService {
   private repository: CardRepository;
@@ -195,6 +197,44 @@ class CardService {
           testResults: data.testResults,
           unAnsweredYears: unAnsweredYears,
           chartData: this.createChartData(data.testResults, monthlyTargets),
+          profileData: profileData,
+        };
+      })
+    );
+
+    return cardAllDatas;
+  }
+
+  // 科目カード情報の取得（マイページ向け）
+  async fetchCardAllDatasAtPersonal(userId: number): Promise<CardAllData[]> {
+    // 卒業生でない場合、相互フォローでなければ空配列を返す
+    // 卒業生か否か
+    const isGraduated = await userService.fetchIsGraduated(userId);
+    if (!isGraduated) {
+      // 相互フォローか否か
+      const { isFollowing, isFollower } = await followService.checkFollowStatus(
+        userId
+      );
+      if (!(isFollowing && isFollower)) return [];
+    }
+
+    // 基本データの取得
+    const profileData = await new UserRepository().fetchProfileData(userId);
+    const cardAllDatasRaw = await this.repository.fetchCardAllDatasByUserRaw(
+      userId
+    );
+
+    // 各科目ごとに月次目標データを取得
+    const cardAllDatas: CardAllData[] = await Promise.all(
+      cardAllDatasRaw.map(async (data) => {
+        return {
+          subject: data.subject,
+          finalScoreTarget: data.finalScoreTarget,
+          finalScoreLowest: data.finalScoreLowest,
+          memo: data.memo,
+          testResults: data.testResults,
+          unAnsweredYears: [], // personalページでは不要
+          chartData: this.createChartData(data.testResults), // 目標データなしで呼び出し
           profileData: profileData,
         };
       })

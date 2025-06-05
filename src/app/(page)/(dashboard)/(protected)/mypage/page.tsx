@@ -18,9 +18,9 @@ export default async function MyPage() {
 
   return (
     <div className="max-w-md mx-auto rounded-lg mb-32">
-      <ProfileRead profileData={profileData} />
+      <ProfileRead profileData={profileData} where={"my"} />
       {cardAllDatas.map((cardAllData, index) => (
-        <CardRead key={index} cardAllData={cardAllData} isHome={false} />
+        <CardRead key={index} cardAllData={cardAllData} where={"my"} />
       ))}
       {unAnsweredSubjects.length > 0 && (
         <div className="text-center my-8">

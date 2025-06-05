@@ -1,13 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import {
-  SquareUserRound,
-  MessageSquareText,
-  ListFilter,
-  CircleUserRound,
-  ChevronRight,
-} from "lucide-react";
+import { SquareUserRound, CircleUserRound, ChevronRight } from "lucide-react";
 import {
   Line,
   CartesianGrid,
@@ -28,30 +22,38 @@ import { CardAllData } from "@/type/cardType";
 import SettingModal from "./SettingModal";
 import { useRouter } from "next/navigation";
 
-interface Props {
+type Props = {
   cardAllData: CardAllData;
-  isHome: boolean;
-}
+  where: "home" | "my" | "personal";
+};
 
-export default function CardRead({ cardAllData, isHome }: Props) {
-  const [showTable, setShowTable] = useState(true);
-  const [tableHeight, setTableHeight] = useState<number>(0);
+export default function CardRead({ cardAllData, where }: Props) {
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [showProfileInfo, setShowProfileInfo] = useState(false);
-  const tableRef = useRef<HTMLDivElement>(null);
   const descriptionRef = useRef<HTMLDivElement>(null);
   const profileInfoRef = useRef<HTMLDivElement>(null);
   const [descriptionHeight, setDescriptionHeight] = useState<number>(0);
   const [profileInfoHeight, setProfileInfoHeight] = useState<number>(0);
   const router = useRouter();
 
-  // テーブルの高さを測定
-  useEffect(() => {
-    if (tableRef.current) {
-      const height = tableRef.current.scrollHeight;
-      setTableHeight(showTable ? height : 0);
-    }
-  }, [showTable, cardAllData.subject]);
+  let isCanEdit, isFull, isTarget;
+  switch (where) {
+    case "home":
+      isCanEdit = false;
+      isFull = false;
+      isTarget = false;
+      break;
+    case "personal":
+      isCanEdit = false;
+      isFull = true;
+      isTarget = false;
+      break;
+    case "my":
+      isCanEdit = true;
+      isFull = true;
+      isTarget = true;
+      break;
+  }
 
   // 説明文の高さを測定
   useEffect(() => {
@@ -72,7 +74,17 @@ export default function CardRead({ cardAllData, isHome }: Props) {
   return (
     <div className="w-full rounded-lg shadow-sm bg-white pb-4 text-gray-700">
       {/* ヘッダー部分 */}
-      <div className="flex items-center p-2 ">
+      <div
+        className="flex items-center p-2"
+        onClick={
+          !isFull
+            ? () =>
+                router.push(
+                  `${ROUTES.PERSONAL}/${cardAllData.profileData.userId}`
+                )
+            : undefined
+        }
+      >
         <div className="w-8 h-8 m-2 relative">
           {cardAllData.profileData.thumbnailUrl ? (
             <Image
@@ -89,9 +101,11 @@ export default function CardRead({ cardAllData, isHome }: Props) {
           <p className="mr-2">{cardAllData.profileData.userName}</p>
           <p> {displaySubjectName(cardAllData.subject)}</p>
         </div>
-        <div className={`ml-auto mr-2 ${isHome ? "hidden" : ""}`}>
-          <SettingModal subject={cardAllData.subject} />
-        </div>
+        {isCanEdit && (
+          <div className="ml-auto mr-2">
+            <SettingModal subject={cardAllData.subject} />
+          </div>
+        )}
       </div>
 
       {/* グラフ部分 */}
@@ -102,7 +116,7 @@ export default function CardRead({ cardAllData, isHome }: Props) {
             margin={{ top: 5, right: 20, bottom: 5, left: -10 }}
           >
             {/* 目標の得点率（線グラフ） - ホーム画面では非表示 */}
-            {!isHome && (
+            {isTarget && (
               <Line
                 type="monotone"
                 dataKey="targetPercentage"
@@ -153,15 +167,17 @@ export default function CardRead({ cardAllData, isHome }: Props) {
 
                   return (
                     <div className="custom-tooltip bg-white border border-gray-200 px-2 py-3 rounded-lg shadow-lg">
-                      <div
-                        className="flex gap-1 items-center"
-                        style={{ color: "#888888" }}
-                      >
-                        <span>{targetData?.name || "目標"}</span>:
-                        <span className="font-bold text-lg">
-                          {targetData?.value}
-                        </span>
-                      </div>
+                      {isTarget && (
+                        <div
+                          className="flex gap-1 items-center"
+                          style={{ color: "#888888" }}
+                        >
+                          <span>{targetData?.name || "目標"}</span>:
+                          <span className="font-bold text-lg">
+                            {targetData?.value}
+                          </span>
+                        </div>
+                      )}
 
                       <div
                         className="flex gap-1 items-center"
@@ -216,45 +232,14 @@ export default function CardRead({ cardAllData, isHome }: Props) {
 
       {/* アクションボタン */}
       <div className="flex items-center px-2">
-        <button
-          onClick={() => setShowProfileInfo(!showProfileInfo)}
-          aria-expanded={showProfileInfo}
-          className="p-2"
-        >
-          <SquareUserRound
-            className={`w-6 h-6 transform transition-transform duration-300 ${
-              showProfileInfo ? "" : "text-gray-500"
-            }`}
-          />
-        </button>
-        <button
-          onClick={() => setShowFullDescription(!showFullDescription)}
-          aria-expanded={showFullDescription}
-          className="p-2"
-        >
-          <MessageSquareText
-            className={`w-6 h-6 transform transition-transform duration-300 ${
-              showFullDescription ? "" : "text-gray-500"
-            }`}
-          />
-        </button>
-        <button
-          onClick={() => setShowTable(!showTable)}
-          aria-expanded={showTable}
-          className="p-2 "
-        >
-          <ListFilter
-            className={`w-6 h-6 transform transition-transform duration-300 ${
-              showTable ? "" : "text-gray-500"
-            }`}
-          />
-        </button>
-        <div className={`ml-auto ${isHome ? "hidden" : ""}`}>
-          <YearSelecter
-            subject={cardAllData.subject}
-            unAnsweredYears={cardAllData.unAnsweredYears}
-          />
-        </div>
+        {isCanEdit && (
+          <div className="ml-auto">
+            <YearSelecter
+              subject={cardAllData.subject}
+              unAnsweredYears={cardAllData.unAnsweredYears}
+            />
+          </div>
+        )}
       </div>
 
       {/* プロフィール情報（アニメーション付きトグル表示） */}
@@ -268,7 +253,7 @@ export default function CardRead({ cardAllData, isHome }: Props) {
       >
         <div ref={profileInfoRef} className="px-4 pb-4">
           <div className="text-sm">
-            〜{isHome ? "受験校" : "志望校"}〜
+            〜受験校〜
             {cardAllData.profileData.targetUniversities.map((univ, index) => (
               <div key={index}>・{univ}</div>
             ))}
@@ -278,10 +263,10 @@ export default function CardRead({ cardAllData, isHome }: Props) {
       </div>
 
       {/* プロフィール情報の短縮表示（閉じているとき） */}
-      {isHome === true && !showProfileInfo && (
+      {isFull === false && !showProfileInfo && (
         <div className="px-4 mt-2 text-gray-500">
           <p className="text-sm mb-2">
-            〜{isHome ? "受験校" : "志望校"}〜
+            〜受験校〜
             <br />・{cardAllData.profileData.targetUniversities[0]}
             <br />・
             {cardAllData.profileData.targetUniversities[1] &&
@@ -310,7 +295,7 @@ export default function CardRead({ cardAllData, isHome }: Props) {
           <p className="text-sm">{cardAllData.memo}</p>
         </div>
       </div>
-      {isHome === false && !showFullDescription && cardAllData.memo && (
+      {isFull === true && !showFullDescription && cardAllData.memo && (
         <div className="px-4 mt-2 text-sm">
           <p className="truncate">
             {cardAllData.memo.substring(0, 20) + "..."}
@@ -324,15 +309,22 @@ export default function CardRead({ cardAllData, isHome }: Props) {
         </div>
       )}
 
+      {!isFull && (
+        <button
+          onClick={() =>
+            router.push(`${ROUTES.PERSONAL}/${cardAllData.profileData.userId}`)
+          }
+          aria-expanded={showProfileInfo}
+          className="flex ml-auto mr-2"
+        >
+          <SquareUserRound className="w-5 h-5 text-gray-500" />
+          <ChevronRight className="w-5 h-5 text-gray-500" />
+        </button>
+      )}
+
       {/* テスト結果テーブル（アニメーション付きトグル表示） */}
-      <div
-        className="overflow-hidden transition-all duration-300 ease-in-out mt-4"
-        style={{
-          maxHeight: tableHeight,
-          opacity: tableHeight > 0 ? 1 : 0,
-        }}
-      >
-        <div ref={tableRef}>
+      {isFull && (
+        <div className="mt-4">
           <table className="w-full border-collapse text-sm text-gray-500">
             <thead>
               <tr className="border-b border-gray-200">
@@ -354,9 +346,9 @@ export default function CardRead({ cardAllData, isHome }: Props) {
                         : ""
                     }`}
                     onClick={() => {
-                      const url = isHome
-                        ? `${ROUTES.HOME_TESTREAD}/${cardAllData.subject}/${result.year}/${cardAllData.profileData.userId}`
-                        : `${ROUTES.MYPAGE_TESTREAD}/${cardAllData.subject}/${result.year}`;
+                      const url = isCanEdit
+                        ? `${ROUTES.MYPAGE_TESTREAD}/${cardAllData.subject}/${result.year}`
+                        : `${cardAllData.profileData.userId}/testRead/${cardAllData.subject}/${result.year}`;
                       router.push(url);
                     }}
                   >
@@ -377,7 +369,7 @@ export default function CardRead({ cardAllData, isHome }: Props) {
             </tbody>
           </table>
         </div>
-      </div>
+      )}
     </div>
   );
 }

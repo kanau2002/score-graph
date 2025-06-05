@@ -2,7 +2,7 @@
 import { ChevronLeft, Newspaper } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export default function BackHomeButton() {
+export default function BackNewsButton() {
   const router = useRouter();
   return (
     <button

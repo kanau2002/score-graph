@@ -42,6 +42,11 @@ class UserService {
       };
     }
   }
+
+  // そのユーザーが卒業済みか否かの取得
+  async fetchIsGraduated(userId: number): Promise<boolean> {
+    return this.repository.fetchIsGraduated(userId);
+  }
 }
 
 export const userService = new UserService();

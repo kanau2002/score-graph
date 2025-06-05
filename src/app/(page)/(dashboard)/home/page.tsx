@@ -8,7 +8,7 @@ export default async function HomePage() {
   return (
     <div className="max-w-md mx-auto rounded-lg mb-32">
       {cardAllDatas.map((cardAllData, index) => (
-        <CardRead key={index} cardAllData={cardAllData} isHome={true} />
+        <CardRead key={index} cardAllData={cardAllData} where={"home"} />
       ))}
     </div>
   );

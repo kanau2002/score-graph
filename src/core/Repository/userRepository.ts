@@ -106,4 +106,12 @@ export class UserRepository {
       };
     }
   }
+  // そのユーザーが卒業済みか否かの取得
+  async fetchIsGraduated(userId: number): Promise<boolean> {
+    const result = await pool.query(
+      `SELECT is_graduated FROM users WHERE id = $1;`,
+      [userId]
+    );
+    return result.rows[0];
+  }
 }

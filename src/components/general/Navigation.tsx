@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 // import Image from "next/image";
 import { LockKeyhole, LogIn, Newspaper, Send, X } from "lucide-react";
-import { HomeIcon, UsersRound, CircleUserRound, LogOut } from "lucide-react";
+import { HomeIcon, UsersRound, SquareUserRound, LogOut } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 
@@ -80,7 +80,7 @@ export default function Navigation({ setIsOpen }: Props) {
                 router.push(ROUTES.MYPAGE);
               }}
             >
-              <CircleUserRound className="size-6" />
+              <SquareUserRound className="size-6" />
               <span>マイページ</span>
               {!user && <LockKeyhole className="size-5 ml-auto" />}
             </button>

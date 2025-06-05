@@ -4,6 +4,8 @@ import { useFollow } from "@/app/hooks/useFollow";
 import axios from "axios";
 import { UserRound, Search } from "lucide-react";
 import BackMypageLink from "@/components/general/BackMypageLink";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "@/constants";
 
 interface User {
   id: number;
@@ -15,6 +17,7 @@ export default function FriendPage() {
   const [searchId, setSearchId] = useState("");
   const [searchResults, setSearchResults] = useState<User[]>([]);
   const [searchError, setSearchError] = useState<string | null>(null);
+  const router = useRouter();
 
   // フォロー管理関連の状態
   const {
@@ -122,11 +125,14 @@ export default function FriendPage() {
                 key={user.id}
                 className="flex items-center justify-between p-3"
               >
-                <div className="flex items-center">
+                <button
+                  onClick={() => router.push(`${ROUTES.PERSONAL}/${user.id}`)}
+                  className="flex items-center"
+                >
                   <UserRound className="w-6 h-6 mr-2" />
                   {user.userName}
                   <span className="text-gray-500">（ID: {user.id}）</span>
-                </div>
+                </button>
 
                 {isFollowing(user.id) ? (
                   <button
@@ -170,7 +176,10 @@ export default function FriendPage() {
               key={user.id}
               className="flex items-center justify-between p-3"
             >
-              <div className="flex items-center">
+              <div
+                onClick={() => router.push(`${ROUTES.PERSONAL}/${user.id}`)}
+                className="flex items-center"
+              >
                 <UserRound className="w-6 h-6 mr-2" />
                 {user.userName}
                 <span className="text-gray-500">（ID: {user.id}）</span>
