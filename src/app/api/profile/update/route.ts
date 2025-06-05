@@ -13,6 +13,12 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+    if (data.userName.length > 10) {
+      return NextResponse.json(
+        { success: false, error: "ユーザー名は10文字以内で入力してください。" },
+        { status: 400 }
+      );
+    }
 
     // プロフィール更新処理を実行
     const result = await userService.updateProfileData(data);
