@@ -16,7 +16,14 @@ const RichContent: React.FC<RichContentProps> = ({
   // クライアントサイドでサニタイズを行う
   const sanitizedContent = DOMPurify.sanitize(content, {
     ADD_TAGS: ["iframe"], // 動画埋め込み用にiframeを許可
-    ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"], // iframe用の属性を許可
+    ADD_ATTR: [
+      "allow",
+      "allowfullscreen",
+      "frameborder",
+      "scrolling",
+      "target", // リンクのtarget属性を許可
+      "rel", // リンクのrel属性を許可
+    ], // iframe用の属性を許可
   });
 
   return (
