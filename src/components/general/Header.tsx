@@ -33,15 +33,16 @@ export default function Header() {
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.push(ROUTES.FRIEND)}
-            className={`relative flex flex-col items-center ${
-              user ? "" : "hidden"
-            }`}
+            className={`flex flex-col items-center ${user ? "" : "hidden"}`}
           >
             <UsersRound className="text-2xl" />
             フレンド
           </button>
 
-          <button onClick={handleLogin} className="flex flex-col items-center">
+          <button
+            onClick={handleLogin}
+            className={`flex flex-col items-center ${user ? "hidden" : ""}`}
+          >
             <CgProfile className="text-2xl" />
             ログイン
           </button>
