@@ -76,7 +76,7 @@ export default function ProfileUpdate({ initialData }: ProfileEditFormProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-lg shadow-sm p-4 text-gray-700"
+      className="bg-white rounded-lg shadow-sm p-4 text-gray-700 mb-24"
     >
       {error && (
         <div className="bg-red-50 text-red-600 p-3 rounded mb-4">{error}</div>
