@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import { SquarePlus } from "lucide-react";
 import { Subject } from "@/type/testType";
 import { displaySubjectName } from "@/lib/display";
-import { ROUTES } from "@/constants";
 
-interface Props {
+type Props = {
   unAnsweredSubjects: Subject[];
-}
+};
 
-const SubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
+function SubjectSelecter({ unAnsweredSubjects }: Props) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -33,10 +33,36 @@ const SubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
     };
   }, []);
 
-  const handleSelect = (subject: Subject) => {
+  const handleSelect = async (subject: Subject) => {
     setIsOpen(false);
-    // 選択された科目に基づいてページ遷移
-    router.push(`${ROUTES.CARD_CREATE}/${subject}`);
+    setIsCreating(true);
+
+    try {
+      // デフォルト値でカードを作成
+      const response = await fetch("/api/cards/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          subject,
+          finalScoreTarget: 75,
+          finalScoreLowest: 60,
+          memo: "",
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // 作成成功時、ページをリフレッシュ
+        router.refresh();
+      }
+    } catch (err) {
+      console.error("カード作成エラー:", err);
+    } finally {
+      setIsCreating(false);
+    }
   };
 
   if (unAnsweredSubjects.length === 0) {
@@ -47,12 +73,25 @@ const SubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
     <>
       <div className="relative text-gray-700" ref={dropdownRef}>
         {/* Plusボタン */}
-        <button onClick={() => setIsOpen(!isOpen)}>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          disabled={isCreating}
+          className={`${isCreating ? "opacity-50 cursor-not-allowed" : ""}`}
+        >
           <SquarePlus />
         </button>
 
+        {/* ローディング表示 */}
+        {isCreating && (
+          <div className="absolute z-10 right-22 bottom-14 w-34 bg-white border border-gray-200 rounded-lg shadow p-3">
+            <div className="text-xs text-gray-500 text-center">
+              カード作成中...
+            </div>
+          </div>
+        )}
+
         {/* ドロップダウンメニュー */}
-        {isOpen && (
+        {isOpen && !isCreating && (
           <div
             className="absolute z-10 right-22 bottom-14 w-34 bg-white border border-gray-200 rounded-lg shadow p-1 max-h-60 overflow-auto"
             style={{
@@ -83,6 +122,6 @@ const SubjectSelecter: React.FC<Props> = ({ unAnsweredSubjects }) => {
       </div>
     </>
   );
-};
+}
 
 export default SubjectSelecter;
