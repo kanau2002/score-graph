@@ -8,7 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 export default function BottomNavigation() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   console.log("pathname", pathname);
 
   // 各ルートのアクティブ状態を判定
@@ -43,10 +43,6 @@ export default function BottomNavigation() {
         </button>
         <button
           onClick={() => {
-            // まだロード中の場合は何もしない
-            if (loading) {
-              return;
-            }
             // ユーザーがログインしていない場合
             if (!user) {
               alert("ログイン後に見れます");
