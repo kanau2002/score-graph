@@ -166,38 +166,24 @@ export class CardRepository {
   // 利用可能な科目の一覧を取得するメソッド
   async fetchUnAnsweredSubjects(userId: number): Promise<Subject[]> {
     try {
-      // すでに作成されている科目を取得
-      const existingQuery = `
-        SELECT subject 
-        FROM cards 
-        WHERE user_id = $1
-      `;
-
-      const existingResult = await pool.query(existingQuery, [userId]);
-      const existingSubjects = existingResult.rows.map((row) => row.subject);
-
-      // 全科目の一覧を取得
-      const allSubjectsQuery = `
-        SELECT unnest(enum_range(NULL::subject_enum)) AS subject
-      `;
-
-      const allSubjectsResult = await pool.query(allSubjectsQuery);
-      const allSubjects = allSubjectsResult.rows.map(
-        (row) => row.subject as Subject
+      // 既存科目のみDBから取得（1回のクエリのみ）
+      const result = await pool.query(
+        `SELECT subject FROM cards WHERE user_id = $1`,
+        [userId]
       );
 
-      // まだ作成されていない科目のみをフィルタリング
-      const availableSubjects = allSubjects.filter(
-        (subject) => !existingSubjects.includes(subject)
-      );
+      // Setを使用して高速な存在チェック
+      const existingSubjects = new Set(result.rows.map((row) => row.subject));
 
-      return availableSubjects;
+      // TypeScriptのenumから直接全科目を取得し、フィルタリング
+      return Object.values(Subject).filter(
+        (subject) => !existingSubjects.has(subject)
+      );
     } catch (error) {
       console.error("利用可能な科目取得エラー:", error);
       return [];
     }
   }
-
   // 科目カードとそれに関連するデータを削除するメソッド
   async deleteCard(
     userId: number,
@@ -264,9 +250,7 @@ export class CardRepository {
   }
 
   // testsテーブルからデータを取得するメソッド
-  async fetchCardAllDatasByUserRaw(
-    userId: number
-  ): Promise<CardAllDataRaw[]> {
+  async fetchCardAllDatasByUserRaw(userId: number): Promise<CardAllDataRaw[]> {
     const query = `
     SELECT 
       c.user_id AS "userId",

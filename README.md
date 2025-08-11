@@ -29,15 +29,6 @@ iPhoneでネイティブアプリのように利用可能：
 3. 「ホーム画面に追加」を選択
 
 
-## 📱 対応科目
-
-- リーディング
-- リスニング
-- 数学IA・数学IIB
-- 理科（化学・物理・生物）
-- 社会（日本史・世界史・地理・公民）
-- 情報
-
 ## 🛠️ 技術スタック
 
 ### フロントエンド
@@ -61,56 +52,6 @@ iPhoneでネイティブアプリのように利用可能：
 ### インフラ
 - **Vercel** - ホスティング・デプロイ
 - **PostgreSQL (Supabase)** - データベース
-
-## 🚀 セットアップ
-
-### 前提条件
-- Node.js 18.0 以上
-- PostgreSQL データベース
-
-### 1. リポジトリのクローン
-```bash
-git clone https://github.com/yourusername/score-graph.git
-cd score-graph
-```
-
-### 2. 依存関係のインストール
-```bash
-npm install
-```
-
-### 3. 環境変数の設定
-`.env.local` ファイルを作成し、以下の変数を設定：
-
-```env
-# データベース接続
-DATABASE_URL=your_postgresql_connection_string
-POSTGRES_USER=your_username
-POSTGRES_PASSWORD=your_password
-POSTGRES_HOST=your_host
-POSTGRES_PORT=5432
-POSTGRES_DATABASE=your_database_name
-POSTGRES_SSL=true
-
-# JWT認証
-JWT_SECRET=your_jwt_secret_key
-```
-
-### 4. データベースの初期化
-```bash
-# テーブル作成
-npm run init-db
-
-# サンプルデータの投入
-npm run seed-db
-```
-
-### 5. 開発サーバーの起動
-```bash
-npm run dev
-```
-
-アプリケーションが `http://localhost:3000` で起動します。
 
 ## 📁 プロジェクト構造
 
@@ -204,25 +145,9 @@ npm run seed-db
 - CSRFプロテクション
 - SQLインジェクション対策
 
-## 🤝 貢献
-
-プルリクエストやイシューの報告を歓迎します。
-
-### 開発の流れ
-1. フォーク
-2. フィーチャーブランチを作成
-3. 変更をコミット
-4. プルリクエストを作成
-
-## 📄 ライセンス
-
-このプロジェクトはMITライセンスの下で公開されています。
-
 ## 📞 お問い合わせ
 
 - **アプリ内**: お問い合わせフォームから
 - **GitHub**: Issues タブから報告
 
 ---
-
-**受験勉強の効率化とモチベーション向上をサポートします！**

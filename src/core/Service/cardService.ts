@@ -244,12 +244,9 @@ class CardService {
   }
 
   // 科目カード情報の取得（ホームページ向け - 最適化版）
-  async fetchCardAllDatas(uid: number | null): Promise<CardAllData[]> {
+  async fetchCardAllDatas(): Promise<CardAllData[]> {
     // 基本データの取得
-    const cardAllDatasRaw =
-      uid === null
-        ? await this.repository.fetchCardAllDatasAtHomeRaw(5)
-        : await this.repository.fetchCardAllDatasByUserRaw(uid);
+    const cardAllDatasRaw = await this.repository.fetchCardAllDatasAtHomeRaw(5);
 
     // 各科目ごとにデータを処理（目標データは取得しない）
     const cardAllDatas: CardAllData[] = await Promise.all(

@@ -6,13 +6,9 @@ import styles from "./RichContent.module.css";
 
 interface RichContentProps {
   content: string;
-  className?: string;
 }
 
-const RichContent: React.FC<RichContentProps> = ({
-  content,
-  className = "",
-}) => {
+const RichContent: React.FC<RichContentProps> = ({ content }) => {
   // クライアントサイドでサニタイズを行う
   const sanitizedContent = DOMPurify.sanitize(content, {
     ADD_TAGS: ["iframe"], // 動画埋め込み用にiframeを許可
@@ -28,7 +24,7 @@ const RichContent: React.FC<RichContentProps> = ({
 
   return (
     <div
-      className={`${styles.container} ${className} text-sm`}
+      className={`${styles.container} text-sm`}
       dangerouslySetInnerHTML={{ __html: sanitizedContent }}
     />
   );
