@@ -18,6 +18,18 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* 画面の向きを縦向きに固定 */
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
 /* iPhone用のスタイル設定 */
 .standalone-only {
   display: none;
@@ -37,5 +49,11 @@ body {
   .standalone-nav-top-adjust {
     padding-top: 49px; /* ステータスバーの高さ分余白を追加 */
   }
+}
 
+/* 横向き時のメインコンテンツを非表示 */
+@media screen and (orientation: landscape) {
+  body > * {
+    display: none;
+  }
 }
