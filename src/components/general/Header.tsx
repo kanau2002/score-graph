@@ -7,7 +7,7 @@ import { ROUTES } from "@/constants";
 import { useRouter } from "next/navigation";
 import { UsersRound } from "lucide-react";
 
-export default function Header() {
+export default function Header({ isBadge }: { isBadge: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
   const router = useRouter();
@@ -22,21 +22,21 @@ export default function Header() {
   return (
     <div className="relative">
       <header className="fixed z-[11] flex w-full items-center items-end justify-between bg-white p-3 text-xs text-gray-700 shadow-sm h-16">
-        {/* <Image
-          src="/score-graph.png"
-          alt="ScoreGraphロゴ"
-          width={150}
-          height={50}
-          className="mr-4"
-        /> */}
         <h1 className="text-2xl font-bold font-serif ml-2">ScoreGraph</h1>
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.push(ROUTES.FRIEND)}
-            className={`flex flex-col items-center ${user ? "" : "hidden"}`}
+            className={`flex flex-col items-center relative ${
+              user ? "" : "hidden"
+            }`}
           >
             <UsersRound className="text-2xl" />
             フレンド
+            <div
+              className={`${
+                isBadge ? "" : "hidden"
+              } absolute -top-0.5 -right-0.5 bg-red-500 rounded-full w-2 h-2`}
+            ></div>
           </button>
 
           <button
