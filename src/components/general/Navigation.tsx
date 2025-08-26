@@ -41,13 +41,6 @@ export default function Navigation({ setIsOpen }: Props) {
         </div>
       )}
       <div className="mx-2 mt-4 mb-6">
-        {/* <Image
-          src="/score-graph.png"
-          alt="ScoreGraphロゴ"
-          width={150}
-          height={50}
-          className="mr-4"
-        /> */}
         <h1 className="text-2xl font-bold font-serif">ScoreGraph</h1>
       </div>
       <nav className="">
@@ -132,7 +125,9 @@ export default function Navigation({ setIsOpen }: Props) {
                 } else {
                   // ログアウト処理と画面遷移
                   setIsOpen?.(false);
-                  alert("ログアウトに成功しました。ログインページへ移動します。");
+                  alert(
+                    "ログアウトに成功しました。ログインページへ移動します。"
+                  );
                   return logout();
                 }
               }}

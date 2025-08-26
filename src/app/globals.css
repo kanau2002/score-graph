@@ -27,7 +27,14 @@ html {
 body {
   height: 100%;
   width: 100%;
-  overflow: hidden;
+  /* デスクトップでのスクロールを妨げないよう、モバイル時のみoverflowを制御 */
+}
+
+/* モバイル（幅 <= 768px 目安）でのみスクロールを抑制 */
+@media screen and (max-width: 768px) {
+  body {
+    overflow: hidden;
+  }
 }
 
 /* iPhone用のスタイル設定 */
@@ -51,8 +58,8 @@ body {
   }
 }
 
-/* 横向き時のメインコンテンツを非表示 */
-@media screen and (orientation: landscape) {
+/* 横向き時のメインコンテンツを非表示（モバイルのみ適用） */
+@media screen and (max-width: 768px) and (orientation: landscape) {
   body > * {
     display: none;
   }

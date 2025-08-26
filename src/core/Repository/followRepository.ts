@@ -125,18 +125,26 @@ export class FollowRepository {
     }
   }
 
-  // NULL値をフィルタリングするヘルパーメソッド
-  private filterNullValues(
-    obj: Record<string, number | null>
-  ): Record<number, number> {
-    const filtered: Record<number, number> = {};
+  // 自分をフォローしてくれているが、自分はまだフォローし返していない人の一覧を取得
+  async fetchFollowersNotFollowingBack(userId: number): Promise<FollowUser[]> {
+    const query = `
+      SELECT u.id, u.user_name as "userName"
+      FROM users u
+      JOIN friend_follow f ON f.follower_id = u.id
+      WHERE f.following_id = $1
+      AND NOT EXISTS (
+        SELECT 1 FROM friend_follow 
+        WHERE follower_id = $1 AND following_id = u.id
+      )
+      ORDER BY u.user_name
+    `;
 
-    for (const [key, value] of Object.entries(obj)) {
-      if (value !== null) {
-        filtered[Number(key)] = value as number;
-      }
+    try {
+      const result = await pool.query(query, [userId]);
+      return result.rows;
+    } catch (error) {
+      console.error("フォロワー（未フォロー返し）取得エラー:", error);
+      throw error;
     }
-
-    return filtered;
   }
 }

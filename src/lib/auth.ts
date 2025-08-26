@@ -43,7 +43,7 @@ export async function setAuthCookie(token: string): Promise<void> {
     value: token,
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    maxAge: 60 * 60 * 24 * 30, // 7日間
+    maxAge: 60 * 60 * 24 * 30 * 12, // 12ヶ月間
     path: "/",
   });
 }

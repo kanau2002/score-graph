@@ -1,15 +1,17 @@
 import Header from "@/components/general/Header";
 import BottomNavigation from "@/components/general/BottomNavigation";
 import Navigation from "@/components/general/Navigation";
-export default function MainLayout({
+import { followService } from "@/core/Service/followService";
+export default async function MainLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isBadge = await followService.isFollowersNotFollowingBack();
   return (
     <>
       <div className="md:hidden">
-        <Header />
+        <Header isBadge={isBadge} />
       </div>
       <main className="flex bg-gray-100 min-h-screen standalone-top-adjust">
         <div className="fixed hidden md:block">
