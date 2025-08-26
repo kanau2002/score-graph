@@ -35,7 +35,7 @@ export default function Header({ isBadge }: { isBadge: boolean }) {
             <div
               className={`${
                 isBadge ? "" : "hidden"
-              } absolute -top-0.5 -right-0.5 bg-red-500 rounded-full w-2 h-2`}
+              } absolute top-0 right-1 bg-red-500 rounded-full w-2 h-2 border border-gray-200`}
             ></div>
           </button>
 
