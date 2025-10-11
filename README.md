@@ -37,9 +37,6 @@ iPhoneでネイティブアプリのように利用可能：
 - **Next.js 15.2.1** - React フレームワーク
 - **TypeScript** - 型安全性の確保
 - **Tailwind CSS 4** - スタイリング
-- **Framer Motion** - アニメーション
-- **Recharts** - グラフ描画
-- **Lucide React** - アイコン
 
 ### バックエンド
 - **Next.js API Routes** - サーバーレス関数
