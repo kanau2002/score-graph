@@ -1,6 +1,6 @@
 import { FollowUser } from "@/type/followType";
 import { FollowRepository } from "../Repository/followRepository";
-import { getCurrentUserId } from "@/lib/auth";
+import { getAuthCookie, getCurrentUserId } from "@/lib/auth";
 
 class FollowService {
   private repository: FollowRepository;
@@ -55,10 +55,15 @@ class FollowService {
 
   // 自分をフォローしてくれているが、自分はまだフォローし返していない人がいるかチェック
   async isFollowersNotFollowingBack(): Promise<boolean> {
-    const userId = await getCurrentUserId();
-    const followersNotFollowingBack =
-      await this.repository.fetchFollowersNotFollowingBack(userId);
-    return followersNotFollowingBack.length > 0;
+    const token = await getAuthCookie();
+    if (!token) {
+      return false;
+    } else {
+      const userId = await getCurrentUserId();
+      const followersNotFollowingBack =
+        await this.repository.fetchFollowersNotFollowingBack(userId);
+      return followersNotFollowingBack.length > 0;
+    }
   }
 }
 
