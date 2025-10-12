@@ -1,12 +1,17 @@
 import dotenv from "dotenv";
-dotenv.config({ path: ".env.local" });
+dotenv.config({ path: ".env.development" });
 
 import { pool } from "../src/lib/db";
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from "fs";
+import * as path from "path";
 
 async function initDb() {
   try {
+    if (process.env.NODE_ENV !== "development") {
+      throw new Error(
+        "This script can only be run in a development environment."
+      );
+    }
     console.log("Connecting to database with the following credentials:");
     console.log(`User: ${process.env.POSTGRES_USER}`);
     console.log(`Host: ${process.env.POSTGRES_HOST}`);
@@ -44,18 +49,18 @@ async function initDb() {
 
     // schema.sqlからSQLを読み込む
     console.log("Reading schema from schema.sql file...");
-    const schemaPath = path.join(__dirname, 'schema.sql');
-    
+    const schemaPath = path.join(__dirname, "schema.sql");
+
     if (!fs.existsSync(schemaPath)) {
       throw new Error(`Schema file not found at path: ${schemaPath}`);
     }
-    
-    const schemaSql = fs.readFileSync(schemaPath, 'utf8');
+
+    const schemaSql = fs.readFileSync(schemaPath, "utf8");
     console.log(`Read ${schemaSql.length} characters from schema file`);
-    
+
     // schema.sqlを実行 - 複数のステートメントに分割して実行
     console.log("Executing schema SQL...");
-    
+
     // 単一のトランザクションとして実行
     await client.query("BEGIN");
     try {

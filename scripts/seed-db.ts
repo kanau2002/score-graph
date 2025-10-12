@@ -1,6 +1,6 @@
 // scripts/seed-db.ts
 import dotenv from "dotenv";
-dotenv.config({ path: ".env.local" });
+dotenv.config({ path: ".env.development" });
 
 import { pool } from "../src/lib/db";
 import fs from "fs";
@@ -8,6 +8,11 @@ import path from "path";
 
 async function seedDb() {
   try {
+    if (process.env.NODE_ENV !== "development") {
+      throw new Error(
+        "This script can only be run in a development environment."
+      );
+    }
     console.log("Connecting to database to seed test data...");
 
     // テストデータのSQLファイルを読み込む
