@@ -2,6 +2,8 @@ import type React from "react";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
+import { Suspense } from "react";
+import GoogleAnalyticsInitializer from "@/components/general/GoogleAnalyticsInitializer";
 
 export const metadata: Metadata = {
   title: "ScoreGraph",
@@ -34,6 +36,9 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className="text-gray-700">
+        <Suspense fallback={null}>
+          <GoogleAnalyticsInitializer />
+        </Suspense>
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

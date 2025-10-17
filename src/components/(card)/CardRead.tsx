@@ -21,6 +21,7 @@ import { ROUTES } from "@/constants";
 import { CardAllData } from "@/type/cardType";
 import SettingModal from "./SettingModal";
 import { useRouter } from "next/navigation";
+import { GoogleAnalytics } from "@/lib/GoogleAnalytics";
 
 type Props = {
   cardAllData: CardAllData;
@@ -78,10 +79,15 @@ export default function CardRead({ cardAllData, where }: Props) {
         className="flex items-center p-2"
         onClick={
           !isFull
-            ? () =>
+            ? () => {
+                GoogleAnalytics("goToPersonalPage", {
+                  where: "Avator",
+                  timestamp: new Date().toISOString(),
+                });
                 router.push(
                   `${ROUTES.PERSONAL}/${cardAllData.profileData.userId}`
-                )
+                );
+              }
             : undefined
         }
       >
@@ -311,9 +317,13 @@ export default function CardRead({ cardAllData, where }: Props) {
 
       {!isFull && (
         <button
-          onClick={() =>
-            router.push(`${ROUTES.PERSONAL}/${cardAllData.profileData.userId}`)
-          }
+          onClick={() => {
+            GoogleAnalytics("goToPersonalPage", {
+              where: "Icon_SquareUserRound",
+              timestamp: new Date().toISOString(),
+            });
+            router.push(`${ROUTES.PERSONAL}/${cardAllData.profileData.userId}`);
+          }}
           aria-expanded={showProfileInfo}
           className="flex ml-auto mr-2"
         >
