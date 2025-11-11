@@ -114,6 +114,15 @@ npm run init-db
 
 # サンプルデータ投入
 npm run seed-db
+
+# 開発用DBの状態確認
+brew services list | grep postgresql
+
+# 開発用DBの起動
+brew services start postgresql@14
+
+# 開発用DBの停止
+brew services stop postgresql@14
 ```
 
 ## 🏗️ アーキテクチャ
