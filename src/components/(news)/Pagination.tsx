@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 type PaginationProps = {
   totalPages: number;
   currentPage: number;
-  category: string;
+  category: string | null;
 };
 
 export default function Pagination({
@@ -16,6 +16,8 @@ export default function Pagination({
   category,
 }: PaginationProps) {
   const pathname = usePathname();
+
+  const categoryClause = category ? `category=${category}&` : "";
 
   // ページネーションの表示範囲を計算（改善版）
   const getPageRange = () => {
@@ -58,7 +60,7 @@ export default function Pagination({
     <div className="flex justify-center items-center space-x-1 mt-8 text-gray-700">
       {/* 前のページボタン */}
       {currentPage > 1 ? (
-        <Link href={`${pathname}?category=${category}&page=${currentPage - 1}`}>
+        <Link href={`${pathname}?${categoryClause}page=${currentPage - 1}`}>
           <ChevronLeft className="size-8" />
         </Link>
       ) : (
@@ -72,11 +74,9 @@ export default function Pagination({
         typeof page === "number" ? (
           <Link
             key={index}
-            href={`${pathname}?category=${category}&page=${page}`}
+            href={`${pathname}?${categoryClause}page=${page}`}
             className={`w-8 h-8 flex justify-center items-center text-sm border rounded-lg ${
-              currentPage === page
-                ? "font-bold border-2"
-                : ""
+              currentPage === page ? "font-bold border-2" : ""
             }`}
           >
             {page}
@@ -90,7 +90,7 @@ export default function Pagination({
 
       {/* 次のページボタン */}
       {currentPage < totalPages ? (
-        <Link href={`${pathname}?category=${category}&page=${currentPage + 1}`}>
+        <Link href={`${pathname}?${categoryClause}page=${currentPage + 1}`}>
           <ChevronRight className="size-8" />
         </Link>
       ) : (

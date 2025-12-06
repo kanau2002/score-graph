@@ -1,5 +1,5 @@
 import { NewsRepository } from "../Repository/newsRepository";
-import { NewsItem, NewsPaginationResult } from "../../type/newsType";
+import { NewsItem } from "../../type/newsType";
 
 class NewsService {
   private repository: NewsRepository;
@@ -10,35 +10,31 @@ class NewsService {
 
   /**
    * ニュース一覧を取得する
-   * @param category カテゴリ（指定なしの場合は全て）
+   * @param category カテゴリ（nullの場合は全て）
    * @param page ページ番号（デフォルト: 1）
    * @param perPage 1ページあたりの表示件数（デフォルト: 9）
    */
-  async getNews(
-    category: string = "all",
-    page: number = 1,
-    perPage: number = 9
-  ): Promise<NewsPaginationResult> {
+  async getNews(category: string | null, page: number): Promise<NewsItem[]> {
     try {
-      // 入力値の検証
-      const validPage = Math.max(1, page); // 1未満は1に設定
-      const validPerPage = Math.min(50, Math.max(1, perPage)); // 1〜50の範囲に制限
+      const offset = (page - 1) * 9;
+      const limit = 9;
 
-      return await this.repository.fetchNews({
-        category: category === "all" ? undefined : category,
-        page: validPage,
-        perPage: validPerPage,
-      });
+      return await this.repository.fetchNews(category, limit, offset);
     } catch (error) {
       console.error("ニュース取得エラー:", error);
       // エラーが発生した場合は空のデータを返す
-      return {
-        news: [],
-        totalPages: 0,
-        totalItems: 0,
-        categories: [],
-      };
+      return [];
     }
+  }
+
+  async getTotalPages(category: string | null) {
+    const totalItems: number = await this.repository.countAllItems(category);
+    const totalPages = Math.ceil(totalItems / 9);
+    return totalPages;
+  }
+
+  async getCategoryNames() {
+    return await this.repository.fetchCategoryNames();
   }
 
   /**

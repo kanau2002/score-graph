@@ -4,13 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 type CategoryFilterProps = {
-  categories: string[];
-  activeCategory: string;
+  categoryNames: string[];
+  currentCategory: string | null;
 };
 
 export default function CategoryFilter({
-  categories,
-  activeCategory,
+  categoryNames,
+  currentCategory,
 }: CategoryFilterProps) {
   const pathname = usePathname();
 
@@ -18,23 +18,23 @@ export default function CategoryFilter({
     <div className="mb-6">
       <div className="flex flex-wrap gap-4 justify-center">
         <Link
-          href={`${pathname}?category=all`}
+          href={`${pathname}`}
           className={`px-4 py-1 text-sm bg-white rounded-full ${
-            activeCategory === "all" ? "border border-gray-500" : ""
+            currentCategory === null ? "" : "border border-gray-500"
           }`}
         >
           すべて
         </Link>
 
-        {categories.map((category) => (
+        {categoryNames.map((categoryName) => (
           <Link
-            key={category}
-            href={`${pathname}?category=${category}`}
+            key={categoryName}
+            href={`${pathname}?category=${categoryName}`}
             className={`px-4 py-1 text-sm bg-white rounded-full ${
-              activeCategory === category ? "border border-gray-500" : ""
+              currentCategory === null ? "" : "border border-gray-500"
             }`}
           >
-            {category}
+            {categoryName}
           </Link>
         ))}
       </div>
