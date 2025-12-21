@@ -18,7 +18,14 @@ export default function SplashScreen() {
       href={ROUTES.HOME}
       className="flex items-center justify-center min-h-screen"
     >
-      <div className={isAnimated ? styles.mainAnimation : ""}>
+      <div
+        className={`flex flex-col items-center justify-center w-screen h-screen fixed top-0 left-0 ${
+          isAnimated ? styles.mainAnimation : ""
+        }`}
+        style={{
+          height: "100dvh", // Dynamic viewport height for mobile
+        }}
+      >
         {/* ロゴとグラフ画像のコンテナ */}
         <div
           className={`${styles.logoContainer} ${

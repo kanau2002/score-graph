@@ -43,19 +43,25 @@ body {
 }
 
 @media screen and (display-mode: standalone) {
-  header {
-    height: 64px; /* 115px から 64px に変更 */
-    padding-top: env(safe-area-inset-top); /* Safe Area を考慮 */
+  body {
+    padding-top: 0; /* body に padding を追加しない */
   }
+  
+  header {
+    height: 64px;
+    padding-top: env(safe-area-inset-top);
+  }
+  
   .standalone-only {
     display: block;
   }
+  
   .standalone-top-adjust {
-    padding-top: 0; /* 49px から 0 に変更 */
+    padding-top: 0;
   }
-  /* Navigationコンポーネントの閉じるボタン調整 */
+  
   .standalone-nav-top-adjust {
-    padding-top: env(safe-area-inset-top); /* 49px から Safe Area に変更 */
+    padding-top: env(safe-area-inset-top);
   }
 }
 
