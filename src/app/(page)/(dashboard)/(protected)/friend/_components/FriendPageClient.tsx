@@ -1,10 +1,7 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { useFollow } from "@/app/hooks/useFollow";
-import axios from "axios";
+import { useState, useEffect } from "react";
 import { UserRound, Search } from "lucide-react";
-import BackMypageLink from "@/components/general/BackMypageLink";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { ROUTES } from "@/constants";
 
 interface User {
@@ -12,46 +9,58 @@ interface User {
   userName: string;
 }
 
-interface FriendPageClientProps {
+interface Props {
   followersNotFollowingBack: User[];
   mutualFollows: User[];
 }
 
 export default function FriendPageClient({
   followersNotFollowingBack: initialFollowersNotFollowingBack,
-}: FriendPageClientProps) {
-  // ユーザー検索関連の状態
+  mutualFollows: initialMutualFollows,
+}: Props) {
   const [searchId, setSearchId] = useState("");
   const [searchResults, setSearchResults] = useState<User[]>([]);
-  const [searchError, setSearchError] = useState<string | null>(null);
+  const [searchError, setSearchError] = useState("");
+  const [followersNotFollowingBack, setFollowersNotFollowingBack] = useState(
+    initialFollowersNotFollowingBack
+  );
+  const [mutualFollows, setMutualFollows] = useState(initialMutualFollows);
+  const [loading, setLoading] = useState(false);
 
-  // フォロー申請受信一覧の状態（Server Componentから受け取ったデータで初期化）
-  const [followersNotFollowingBack, setFollowersNotFollowingBack] = useState<
-    User[]
-  >(initialFollowersNotFollowingBack);
+  const handleFollow = async (userId: number) => {
+    setLoading(true);
+    try {
+      await fetch(`/api/follows/${userId}`, { method: "POST" });
 
-  const router = useRouter();
+      const followedUser = followersNotFollowingBack.find(
+        (u) => u.id === userId
+      );
+      setFollowersNotFollowingBack((prev) =>
+        prev.filter((u) => u.id !== userId)
+      );
+      if (followedUser) setMutualFollows((prev) => [...prev, followedUser]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // フォロー管理関連の状態
-  const {
-    mutualFollows,
-    following,
-    loading,
-    error,
-    fetchMutualFollows,
-    followUser,
-    unfollowUser,
-  } = useFollow();
+  const handleUnfollow = async (userId: number) => {
+    setLoading(true);
+    try {
+      await fetch(`/api/follows/${userId}`, { method: "DELETE" });
+      setMutualFollows((prev) => prev.filter((u) => u.id !== userId));
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // 検索処理関数
   const performSearch = async (id: string) => {
     if (!id.trim()) {
       setSearchResults([]);
-      setSearchError(null);
+      setSearchError("");
       return;
     }
 
-    // 入力が数値かどうかチェック
     const userId = parseInt(id, 10);
     if (isNaN(userId)) {
       setSearchError("ユーザーIDは数値で入力してください");
@@ -59,68 +68,60 @@ export default function FriendPageClient({
       return;
     }
 
-    setSearchError(null);
-
+    setSearchError("");
     try {
-      // ユーザーID検索API
-      const response = await axios.get(
-        `/api/users/search?id=${encodeURIComponent(userId)}`
-      );
-      setSearchResults(response.data);
+      const response = await fetch(`/api/users/search?id=${userId}`);
 
-      // 結果がなかった場合のエラーメッセージ
-      if (response.data.length === 0) {
-        setSearchError("指定されたIDのユーザーは見つかりませんでした");
+      if (!response.ok) {
+        setSearchError("ユーザーが見つかりませんでした");
+        setSearchResults([]);
+        return;
       }
-    } catch (error) {
-      console.error("ユーザー検索エラー:", error);
-      // axiosエラーからメッセージを取得
-      if (axios.isAxiosError(error) && error.response?.data?.message) {
-        setSearchError(error.response.data.message);
-      } else {
-        setSearchError("ユーザーの検索中にエラーが発生しました");
+
+      const data = await response.json();
+      setSearchResults(data);
+      if (data.length === 0) {
+        setSearchError("ユーザーが見つかりませんでした");
       }
+    } catch {
+      setSearchError("検索中にエラーが発生しました");
       setSearchResults([]);
     }
   };
 
-  // 検索IDが変わるたびに検索実行（debounceなし）
   useEffect(() => {
-    if (searchId) {
-      performSearch(searchId);
-    } else {
-      setSearchResults([]);
-      setSearchError(null);
-    }
+    performSearch(searchId);
   }, [searchId]);
 
-  // 初期データ読み込み
-  useEffect(() => {
-    fetchMutualFollows();
-  }, [fetchMutualFollows]);
+  const isFollowing = (userId: number) =>
+    mutualFollows.some((user) => user.id === userId);
 
-  // ユーザーがすでにフォロー中かチェック
-  const isFollowing = (userId: number): boolean => {
-    return following.some((user) => user.id === userId);
-  };
-
-  // フォロー後にフォロー申請受信一覧を更新
-  const handleFollowUser = async (userId: number) => {
-    await followUser(userId);
-    // フォロー後にフォロー申請受信一覧から該当ユーザーを削除
-    setFollowersNotFollowingBack((prev) =>
-      prev.filter((user) => user.id !== userId)
-    );
-  };
+  const UserItem = ({
+    user,
+    action,
+  }: {
+    user: User;
+    action: React.ReactNode;
+  }) => (
+    <div className="flex items-center justify-between p-3">
+      <Link
+        href={`${ROUTES.PERSONAL}/${user.id}`}
+        className="flex items-center"
+      >
+        <UserRound className="w-6 h-6 mr-2" />
+        {user.userName}
+        <span className="text-gray-500">（ID: {user.id}）</span>
+      </Link>
+      {action}
+    </div>
+  );
 
   return (
-    <div className="max-w-md mx-auto text-gray-700 bg-white rounded-lg p-4 mb-6 shadow-sm min-h-screen">
-      {/* ユーザー検索セクション */}
+    <>
+      {/* ユーザー検索 */}
       <div className="h-40">
         <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-gray-400" />
-          </div>
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
           <input
             type="text"
             inputMode="numeric"
@@ -132,96 +133,70 @@ export default function FriendPageClient({
           />
         </div>
 
-        {/* エラーメッセージ */}
         {searchError && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="text-red-400 text-center text-sm mt-4">
             {searchError}
           </div>
         )}
 
-        {/* 検索結果 */}
         {searchResults.length > 0 && (
           <div className="space-y-2 mt-6">
             {searchResults.map((user) => (
-              <div
+              <UserItem
                 key={user.id}
-                className="flex items-center justify-between p-3"
-              >
-                <button
-                  onClick={() => router.push(`${ROUTES.PERSONAL}/${user.id}`)}
-                  className="flex items-center"
-                >
-                  <UserRound className="w-6 h-6 mr-2" />
-                  {user.userName}
-                  <span className="text-gray-500">（ID: {user.id}）</span>
-                </button>
-
-                {isFollowing(user.id) ? (
-                  <button
-                    onClick={() => unfollowUser(user.id)}
-                    className="text-gray-500 px-3 py-1 border rounded text-sm"
-                    disabled={loading}
-                  >
-                    フォロー解除
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => handleFollowUser(user.id)}
-                    className="text-blue-500 px-3 py-1 border rounded text-sm"
-                    disabled={loading}
-                  >
-                    フォローする
-                  </button>
-                )}
-              </div>
+                user={user}
+                action={
+                  isFollowing(user.id) ? (
+                    <button
+                      onClick={() => handleUnfollow(user.id)}
+                      className="text-gray-500 px-3 py-1 border rounded text-sm"
+                      disabled={loading}
+                    >
+                      フォロー解除
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleFollow(user.id)}
+                      className="text-blue-500 px-3 py-1 border rounded text-sm"
+                      disabled={loading}
+                    >
+                      フォローする
+                    </button>
+                  )
+                }
+              />
             ))}
           </div>
         )}
       </div>
 
-      {/* フォロー申請受信一覧 */}
-      {followersNotFollowingBack.length !== 0 && (
+      {/* フォロー申請受信 */}
+      {followersNotFollowingBack.length > 0 && (
         <div className="mt-8">
           <h2 className="font-bold mb-2">フレンド申請されました</h2>
-
-          {/* フォロー申請受信一覧 */}
           <div className="space-y-2">
             {followersNotFollowingBack.map((user) => (
-              <div
+              <UserItem
                 key={user.id}
-                className="flex items-center justify-between p-3"
-              >
-                <button
-                  onClick={() => router.push(`${ROUTES.PERSONAL}/${user.id}`)}
-                  className="flex items-center"
-                >
-                  <UserRound className="w-6 h-6 mr-2" />
-                  {user.userName}
-                  <span className="text-gray-500">（ID: {user.id}）</span>
-                </button>
-                <button
-                  onClick={() => handleFollowUser(user.id)}
-                  className="text-blue-500 px-3 py-1 border border-blue-500 rounded text-sm hover:bg-blue-50"
-                  disabled={loading}
-                >
-                  フォローバック
-                </button>
-              </div>
+                user={user}
+                action={
+                  <button
+                    onClick={() => handleFollow(user.id)}
+                    className="text-blue-500 px-3 py-1 border border-blue-500 rounded text-sm hover:bg-blue-50"
+                    disabled={loading}
+                  >
+                    フォローバック
+                  </button>
+                }
+              />
             ))}
           </div>
         </div>
       )}
 
-      {/* 相互フォローユーザーセクション */}
+      {/* フレンドリスト */}
       <div className="mt-8">
         <h2 className="font-bold mb-2">フレンド</h2>
-        {/* エラー表示 */}
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
-        {/* 相互フォローユーザーリスト */}
         <div className="space-y-2">
           {mutualFollows.length === 0 ? (
             <p className="text-gray-500 text-center py-4">
@@ -229,34 +204,23 @@ export default function FriendPageClient({
             </p>
           ) : (
             mutualFollows.map((user) => (
-              <div
+              <UserItem
                 key={user.id}
-                className="flex items-center justify-between p-3"
-              >
-                <div
-                  onClick={() => router.push(`${ROUTES.PERSONAL}/${user.id}`)}
-                  className="flex items-center"
-                >
-                  <UserRound className="w-6 h-6 mr-2" />
-                  {user.userName}
-                  <span className="text-gray-500">（ID: {user.id}）</span>
-                </div>
-                <button
-                  onClick={() => unfollowUser(user.id)}
-                  className="text-gray-500 px-3 py-1 border rounded text-sm"
-                  disabled={loading}
-                >
-                  フォロー解除
-                </button>
-              </div>
+                user={user}
+                action={
+                  <button
+                    onClick={() => handleUnfollow(user.id)}
+                    className="text-gray-500 px-3 py-1 border rounded text-sm"
+                    disabled={loading}
+                  >
+                    フォロー解除
+                  </button>
+                }
+              />
             ))
           )}
         </div>
       </div>
-
-      <div className="mt-16">
-        <BackMypageLink />
-      </div>
-    </div>
+    </>
   );
 }
