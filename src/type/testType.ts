@@ -56,7 +56,7 @@ export interface FriendRadarChartProps {
   friendData: StudentData;
 }
 
-export type CustomTooltipType = TooltipProps & {
+export type CustomTooltipType = TooltipProps<number, string> & {
   payload?: Array<{
     value: number;
     dataKey: string;

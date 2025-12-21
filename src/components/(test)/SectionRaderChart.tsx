@@ -1,7 +1,7 @@
 import {
   CustomTooltipType,
   FriendRadarChartProps,
-  RaderChartData,
+  RadarChartData,
   SectionPercentages,
   StudentRadarChartProps,
 } from "@/type/testType";
@@ -21,11 +21,16 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipType) => {
     return (
       <div className="bg-white p-2 border border-gray-200 shadow-sm rounded text-sm">
         <p className="font-medium">{`${label}`}</p>
-        {payload.map((entry, index) => (
-          <p key={`item-${index}`} style={{ color: entry.color }}>
-            {entry.dataKey === "target" ? "目標" : ""}: {entry.value}%
-          </p>
-        ))}
+        {payload.map(
+          (
+            entry: { color: string; dataKey: string; value: number },
+            index: number
+          ) => (
+            <p key={`item-${index}`} style={{ color: entry.color }}>
+              {entry.dataKey === "target" ? "目標" : ""}: {entry.value}%
+            </p>
+          )
+        )}
       </div>
     );
   }
@@ -36,7 +41,7 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipType) => {
 const createChartDataFromPercentages = (
   sectionPercentages: SectionPercentages,
   targetSectionPercentages?: SectionPercentages
-): RaderChartData[] => {
+): RadarChartData[] => {
   // データベースから取得したデータはすでに順序付けられていると仮定
   return Object.entries(sectionPercentages).map(([sectionKey, percentage]) => {
     const sectionNumber = parseInt(sectionKey);
@@ -52,7 +57,7 @@ const createChartDataFromPercentages = (
 };
 
 type Props = {
-  data: RaderChartData[];
+  data: RadarChartData[];
   color?: string;
   targetColor?: string;
   size?: number;
