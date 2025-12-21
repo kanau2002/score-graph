@@ -44,17 +44,18 @@ body {
 
 @media screen and (display-mode: standalone) {
   header {
-    height: 115px !important;
+    height: 64px; /* 115px から 64px に変更 */
+    padding-top: env(safe-area-inset-top); /* Safe Area を考慮 */
   }
   .standalone-only {
     display: block;
   }
   .standalone-top-adjust {
-    padding-top: 49px; /* ヘッダーの通常の高さ(64px)とステータスバー分の追加高さの差 */
+    padding-top: 0; /* 49px から 0 に変更 */
   }
   /* Navigationコンポーネントの閉じるボタン調整 */
   .standalone-nav-top-adjust {
-    padding-top: 49px; /* ステータスバーの高さ分余白を追加 */
+    padding-top: env(safe-area-inset-top); /* 49px から Safe Area に変更 */
   }
 }
 

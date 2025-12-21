@@ -33,7 +33,7 @@ export interface SectionPercentages {
   [sectionIndex: number]: number;
 }
 
-export interface RaderChartData {
+export interface RadarChartData {
   subject: string;
   score: number;
   target?: number;
@@ -56,8 +56,7 @@ export interface FriendRadarChartProps {
   friendData: StudentData;
 }
 
-// カスタムツールチップの型定義
-export type CustomTooltipType = TooltipProps<number, string> & {
+export type CustomTooltipType = TooltipProps & {
   payload?: Array<{
     value: number;
     dataKey: string;
@@ -88,7 +87,6 @@ export interface TestData {
   }[];
 }
 
-// 型定義
 export interface TestScore {
   questionNumber: number;
   score: number | null;
@@ -131,8 +129,6 @@ export interface ChartData {
   targetPercentage?: number;
 }
 
-//TestResultClient
-// テストセクションの型定義（クライアント側で扱う拡張型）
 export interface ClientTestSection {
   section: number;
   questions: {
