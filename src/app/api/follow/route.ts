@@ -2,11 +2,10 @@
 import { followService } from "@/core/Service/followService";
 import { NextRequest, NextResponse } from "next/server";
 
-
-export async function GET(request: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
     // クエリパラメータに基づいて処理を分岐
-    const searchParams = request.nextUrl.searchParams;
+    const searchParams = req.nextUrl.searchParams;
     const type = searchParams.get("type");
 
     if (type === "following") {
@@ -27,9 +26,9 @@ export async function GET(request: NextRequest) {
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await req.json();
     const { userId } = body;
 
     if (!userId || typeof userId !== "number") {
@@ -50,9 +49,9 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function DELETE(request: NextRequest) {
+export async function DELETE(req: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await req.json();
     const { userId } = body;
 
     if (!userId || typeof userId !== "number") {
