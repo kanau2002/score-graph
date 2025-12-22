@@ -9,12 +9,6 @@ class FollowService {
     this.repository = new FollowRepository();
   }
 
-  // ユーザーIDによる検索
-  async searchUserById(targetUid: number): Promise<FollowUser | null> {
-    const userId = await getCurrentUserId();
-    return this.repository.searchUserById(targetUid, userId);
-  }
-
   // ユーザーをフォローする
   async followUser(targetUserId: number): Promise<void> {
     const userId = await getCurrentUserId();

@@ -1,4 +1,4 @@
-import { followService } from "@/core/Service/followService";
+import { userService } from "@/core/Service/userService";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 
   try {
     // プロフィールサービスを使用してユーザーを検索
-    const user = await followService.searchUserById(targetUid);
+    const user = await userService.searchUserById(targetUid);
 
     if (!user) {
       return NextResponse.json(

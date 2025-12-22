@@ -74,32 +74,7 @@ export class FollowRepository {
     }
   }
 
-  // ユーザー検索機能
-  // ユーザーID検索機能
-  async searchUserById(
-    targetUid: number,
-    userId: number
-  ): Promise<FollowUser | null> {
-    const query = `
-      SELECT id, user_name as "userName"
-      FROM users
-      WHERE 
-        id = $1 AND id != $2
-    `;
 
-    try {
-      const result = await pool.query(query, [targetUid, userId]);
-
-      if (result.rows.length === 0) {
-        return null;
-      }
-
-      return result.rows[0];
-    } catch (error) {
-      console.error("ユーザーID検索エラー:", error);
-      throw error;
-    }
-  }
 
   // フォロー状態をチェック
   async checkFollowStatus(

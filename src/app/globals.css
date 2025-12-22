@@ -20,21 +20,15 @@ body {
 
 /* 画面の向きを縦向きに固定 */
 html {
-  height: 100%;
   width: 100%;
+  /* height: 100% を削除してスクロール可能に */
 }
 
 body {
-  height: 100%;
+  min-height: 100vh;
   width: 100%;
-  /* デスクトップでのスクロールを妨げないよう、モバイル時のみoverflowを制御 */
-}
-
-/* モバイル（幅 <= 768px 目安）でのみスクロールを抑制 */
-@media screen and (max-width: 768px) {
-  body {
-    overflow: hidden;
-  }
+  position: relative;
+  /* overflow制限を解除してスクロール可能に */
 }
 
 /* iPhone用のスタイル設定 */

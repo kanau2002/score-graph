@@ -5,6 +5,7 @@ import {
 } from "@/type/userType";
 import { UserRepository } from "../Repository/userRepository";
 import { getCurrentUserId } from "@/lib/auth";
+import { FollowUser } from "@/type/followType";
 
 class UserService {
   private repository: UserRepository;
@@ -46,6 +47,12 @@ class UserService {
   // そのユーザーが卒業済みか否かの取得
   async fetchIsGraduated(userId: number): Promise<boolean> {
     return this.repository.fetchIsGraduated(userId);
+  }
+
+  // ユーザーIDによる検索
+  async searchUserById(targetUid: number): Promise<FollowUser | null> {
+    const userId = await getCurrentUserId();
+    return this.repository.searchUserById(targetUid, userId);
   }
 }
 
