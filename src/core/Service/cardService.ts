@@ -291,8 +291,11 @@ class CardService {
     testResults: TestResult[],
     monthlyTargets?: MonthlyTarget[]
   ): ChartData[] {
-    // 月別データを格納するためのマップ
-    const monthlyDataMap = new Map<string, ChartData>();
+    // 月別データを格納するためのマップ（合計値とカウント）
+    const monthlyDataMap = new Map<
+      string,
+      { sum: number; count: number; targetPercentage?: number }
+    >();
 
     // テスト結果データを処理
     testResults.forEach((result: TestResult) => {
@@ -301,10 +304,18 @@ class CardService {
       const year = date.getFullYear();
       const monthKey = `${year}/${month.toString().padStart(2, "0")}`;
 
-      monthlyDataMap.set(monthKey, {
-        month: monthKey,
-        percentage: result.percentage,
-      });
+      if (monthlyDataMap.has(monthKey)) {
+        // 既存のエントリがある場合は累積
+        const existing = monthlyDataMap.get(monthKey)!;
+        existing.sum += result.percentage;
+        existing.count += 1;
+      } else {
+        // 新しいエントリを作成
+        monthlyDataMap.set(monthKey, {
+          sum: result.percentage,
+          count: 1,
+        });
+      }
     });
 
     // 月次目標データが指定されている場合は統合
@@ -316,23 +327,27 @@ class CardService {
 
         if (monthlyDataMap.has(monthKey)) {
           // 既存のエントリがある場合は目標値を追加
-          const existingData = monthlyDataMap.get(monthKey)!;
-          existingData.targetPercentage = target.targetPercentage;
-          monthlyDataMap.set(monthKey, existingData);
+          const existing = monthlyDataMap.get(monthKey)!;
+          existing.targetPercentage = target.targetPercentage;
         } else {
           // テスト結果のないエントリを作成
           monthlyDataMap.set(monthKey, {
-            month: monthKey,
+            sum: 0,
+            count: 0,
             targetPercentage: target.targetPercentage,
           });
         }
       });
     }
 
-    // マップの値を配列に変換し、日付でソート
-    return Array.from(monthlyDataMap.values()).sort((a, b) =>
-      a.month.localeCompare(b.month)
-    );
+    // マップの値を配列に変換し、平均を計算してからソート
+    return Array.from(monthlyDataMap.entries())
+      .map(([monthKey, data]) => ({
+        month: monthKey,
+        percentage: data.count > 0 ? data.sum / data.count : undefined,
+        targetPercentage: data.targetPercentage,
+      }))
+      .sort((a, b) => a.month.localeCompare(b.month));
   }
 }
 
