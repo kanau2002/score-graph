@@ -1,4 +1,4 @@
-import { testStructureDatas } from "@/constants/TestStructureData";
+import { testStructureDataMap } from "@/constants/TestStructureData";
 import { TestRepository } from "../Repository/testRepository";
 import {
   AnsweredData,
@@ -20,16 +20,19 @@ class TestService {
     subject: string,
     year: number
   ): Promise<TestData> {
-    const testStructureData = testStructureDatas.find(
-      (testStructureData) =>
-        testStructureData.subject === subject && testStructureData.year === year
+    // O(1)でMapから取得
+    const key = `${subject}_${year}`;
+    const testStructureData = testStructureDataMap.get(
+      key as Parameters<typeof testStructureDataMap.get>[0]
     );
+
     if (!testStructureData) {
       throw new Error(
         `Test data not found for subject: ${subject}, year: ${year}`
       );
     }
-    return testStructureData;
+    // readonly型をTestData型にキャスト（データは不変なので安全）
+    return testStructureData as unknown as TestData;
   }
 
   // 生徒のテスト結果データの取得

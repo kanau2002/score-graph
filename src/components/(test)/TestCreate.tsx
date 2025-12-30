@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import React from "react";
 import { Answer, ClientTestSection, TestData } from "@/type/testType";
 import { useRouter } from "next/navigation";
 import DatePicker from "./DatePicker";
 import { displaySubjectName } from "@/lib/display";
 import { ROUTES } from "@/constants";
 import AnswerIcon from "./AnswerIcon";
-import { isCorrect, isMath } from "@/lib/test";
+import { isCorrect, mathOrNot } from "@/lib/test";
 import BackMypageLink from "../general/BackMypageLink";
+import { MATH_CHOICES, OTHER_CHOICES } from "@/constants/choices";
 
 interface Props {
   testStructureData: TestData;
@@ -22,21 +22,9 @@ export default function TestCreate({ testStructureData }: Props) {
   // 日付を保持するstate
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-  const isThreeChoice: boolean = isMath(testStructureData.subject);
+  const isMath: boolean = mathOrNot(testStructureData.subject);
 
-  const choice = isThreeChoice
-    ? [Answer.CORRECT, Answer.INCORRECT, Answer.SKIPPED]
-    : [
-        Answer.ONE,
-        Answer.TWO,
-        Answer.THREE,
-        Answer.FOUR,
-        Answer.FIVE,
-        Answer.SIX,
-        Answer.SEVEN,
-        Answer.EIGHT,
-        Answer.SKIPPED,
-      ];
+  const choice = isMath ? MATH_CHOICES : OTHER_CHOICES;
 
   // useMemoを使わずに直接テストデータを構築
   // ベーステストデータに学生の回答を追加
@@ -157,8 +145,8 @@ export default function TestCreate({ testStructureData }: Props) {
 
           // 回答の正誤を確認
           const isCorrect =
-            String(question.correctAnswer) === studentAnswer ||
-            studentAnswer === Answer.CORRECT;
+            (isMath && studentAnswer === Answer.CORRECT) ||
+            (!isMath && String(question.correctAnswer) === studentAnswer);
 
           // 不正解があれば、グループ全体が不正解
           if (!isCorrect) {
@@ -305,7 +293,7 @@ export default function TestCreate({ testStructureData }: Props) {
   const getButtonStyle = (
     option: Answer,
     selectedAnswer: Answer | undefined,
-    correctAnswer: number | null
+    correctAnswer?: number
   ) => {
     // 未選択の場合は白色
     if (!selectedAnswer) return "bg-white";
@@ -314,7 +302,7 @@ export default function TestCreate({ testStructureData }: Props) {
     if (selectedAnswer !== option) return "bg-white";
 
     // 選択されたオプションの場合、正誤に応じた色を返す
-    const status = isCorrect(correctAnswer, option, isThreeChoice);
+    const status = isCorrect(isMath, option, correctAnswer);
     switch (status) {
       case Answer.CORRECT:
         return "bg-blue-100 border-blue-200 text-blue-600";
@@ -371,9 +359,17 @@ export default function TestCreate({ testStructureData }: Props) {
               <table className="w-full table-fixed">
                 <thead>
                   <tr className="border-b border-gray-200 text-center text-xs text-gray-500">
-                    <th className="p-3 w-12 min-w-[3rem]">問題</th>
+                    <th
+                      className={`p-3 ${isMath ? "w-24" : "w-12"} min-w-[3rem]`}
+                    >
+                      問題
+                    </th>
                     <th className="p-3 w-12 min-w-[3rem]">配点</th>
-                    <th className="p-3 w-12 min-w-[3rem]">正解</th>
+                    <th
+                      className={`p-3 ${isMath ? "w-24" : "w-12"} min-w-[3rem]`}
+                    >
+                      正解
+                    </th>
                     <th className="p-3">解答</th>
                   </tr>
                 </thead>
@@ -384,15 +380,17 @@ export default function TestCreate({ testStructureData }: Props) {
                       className="border-b border-gray-100"
                     >
                       <td className="p-3 text-center">
-                        {question.questionNumber}.
+                        {isMath
+                          ? question.questionName
+                          : question.questionNumber}
                       </td>
                       <td className="p-3 text-center text-gray-500">
                         {question.score !== null ? "+" + question.score : "-"}
                       </td>
                       <td className="p-3 text-center text-gray-500">
-                        {question.correctAnswer !== null
-                          ? question.correctAnswer
-                          : "-"}
+                        {question.correctAnswer === undefined
+                          ? question.correctAnswerName
+                          : question.correctAnswer}
                       </td>
                       <td className="p-2">
                         <div

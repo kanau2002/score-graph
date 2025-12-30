@@ -8,7 +8,7 @@ import {
 } from "../../type/cardType";
 import { CardRepository } from "../Repository/cardRepository";
 import { TargetRepository } from "../Repository/targetRepository";
-import { testStructureDatas } from "@/constants/TestStructureData";
+import { yearsBySubjectMap } from "@/constants/TestStructureData";
 import { MonthlyTarget } from "@/type/targetType";
 import { getCurrentUserId } from "@/lib/auth";
 import { UserRepository } from "../Repository/userRepository";
@@ -273,11 +273,12 @@ class CardService {
     subject: Subject,
     answeredYears: number[]
   ): number[] {
-    const allYears: number[] = testStructureDatas
-      .filter((testStructureData) => testStructureData.subject === subject)
-      .map((testStructureData) => testStructureData.year);
+    // O(1)でMapから科目の全年度を取得
+    const allYears = yearsBySubjectMap.get(subject) ?? [];
 
-    return allYears.filter((year) => !answeredYears.includes(year));
+    // answeredYearsをSetに変換してO(1)検索に最適化
+    const answeredSet = new Set(answeredYears);
+    return allYears.filter((year) => !answeredSet.has(year));
   }
 
   /**

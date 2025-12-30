@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { UsersRound } from "lucide-react";
-import React from "react";
 import {
   Answer,
   AnsweredData,
@@ -14,7 +13,7 @@ import { ROUTES } from "@/constants";
 import FriendSelector from "./FriendSelecter";
 import { FriendRadarChart, StudentRadarChart } from "./SectionRaderChart";
 import AnswerIcon from "./AnswerIcon";
-import { isCorrect, isMath } from "@/lib/test";
+import { isCorrect, mathOrNot } from "@/lib/test";
 import BackPersonalButton from "../general/BackPersonalButton";
 import BackMypageLink from "../general/BackMypageLink";
 
@@ -37,10 +36,8 @@ export default function TestRead({
     null
   );
 
-  console.log("isHome", isHome);
-
   // 単純な値の計算
-  const isThreeChoice = isMath(testStructureData.subject);
+  const isMath = mathOrNot(testStructureData.subject);
   const rightData = isHome ? rightDatas[0] : selectedFriend;
 
   // フレンド選択のハンドラー
@@ -56,16 +53,19 @@ export default function TestRead({
   };
 
   // 背景スタイルの計算関数
-  const bgStyle = (correct: number | null, answer: Answer | null) => {
-    if (answer === null) return;
-    const status = isCorrect(correct, answer, isThreeChoice);
+  const bgStyle = (answer: Answer | null, correctAnswer?: number) => {
+    if (answer === null || answer === undefined) return "";
+
+    const status = isCorrect(isMath, answer, correctAnswer);
     switch (status) {
       case Answer.CORRECT:
         return "bg-blue-100";
       case Answer.INCORRECT:
         return "bg-red-100";
       case Answer.SKIPPED:
-        break;
+        return "";
+      default:
+        return "";
     }
   };
 
@@ -112,7 +112,7 @@ export default function TestRead({
           studentAnswer:
             leftData.answers?.[question.questionNumber] || Answer.SKIPPED,
           friendAnswer: rightData
-            ? rightData.answers[question.questionNumber] || 0
+            ? rightData.answers[question.questionNumber] || Answer.SKIPPED
             : null,
         };
       });
@@ -272,22 +272,24 @@ export default function TestRead({
                       className="border-b border-gray-100"
                     >
                       <td className="p-3 text-center">
-                        {question.questionNumber}.
+                        {isMath
+                          ? question.questionName
+                          : question.questionNumber}
                       </td>
                       <td className="p-3 text-center text-gray-500">
                         {question.score !== null ? "+" + question.score : "-"}
                       </td>
                       <td className="p-3 text-center text-gray-500">
-                        {question.correctAnswer !== null
-                          ? question.correctAnswer
-                          : "-"}
+                        {question.correctAnswer === undefined
+                          ? question.correctAnswerName
+                          : question.correctAnswer}
                       </td>
                       <td className="p-3">
                         <div className="flex justify-center">
                           <div
                             className={`flex items-center justify-center rounded-full w-8 h-8 ${bgStyle(
-                              question.correctAnswer,
-                              question.studentAnswer
+                              question.studentAnswer,
+                              question.correctAnswer
                             )}`}
                           >
                             {AnswerIcon(question.studentAnswer)}
@@ -299,8 +301,8 @@ export default function TestRead({
                           {rightData ? (
                             <div
                               className={`flex items-center justify-center rounded-full w-8 h-8 ${bgStyle(
-                                question.correctAnswer,
-                                question.friendAnswer
+                                question.friendAnswer,
+                                question.correctAnswer
                               )}`}
                             >
                               {AnswerIcon(question.friendAnswer)}

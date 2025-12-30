@@ -78,19 +78,16 @@ export interface TestData {
     section: number;
     questions: {
       questionNumber: number;
+      questionName?: string;
       score: number | null;
-      correctAnswer: number | null;
+      correctAnswer?: number; // nullは不要と思われる
+      correctAnswerName?: string;
+      // baseOn: number[];
     }[];
     sectionTotal: {
       score: number;
     };
   }[];
-}
-
-export interface TestScore {
-  questionNumber: number;
-  score: number | null;
-  correctAnswer: number | null;
 }
 
 export interface AnsweredData {
@@ -133,8 +130,11 @@ export interface ClientTestSection {
   section: number;
   questions: {
     questionNumber: number;
+    questionName?: string;
     score: number | null;
-    correctAnswer: number | null;
+    // baseOn: number[];
+    correctAnswer?: number; // nullは不要と思われる
+    correctAnswerName?: string;
     studentAnswer: Answer;
     friendAnswer: Answer | null;
   }[];
